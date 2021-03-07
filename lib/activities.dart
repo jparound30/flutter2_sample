@@ -41,6 +41,14 @@ class Project {
         archived: json['archived'] as bool?,
         displayOrder: json['displayOrder'] as int?);
   }
+
+  bool operator==(Object other) {
+    return (other is Project) && (id == other.id);
+  }
+
+  @override
+  int get hashCode => id.hashCode ^ name.hashCode;
+
 }
 
 class Content {

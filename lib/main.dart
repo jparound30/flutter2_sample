@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter2_sample/activities.dart';
 import 'package:flutter2_sample/const.dart';
@@ -78,6 +81,8 @@ class _MyHomePageState extends State<MyHomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
+        actions: [MyStatefulWidget()],
+        centerTitle: false,
       ),
       // body: Center(
       //   // Center is a layout widget. It takes a single child and positions it
@@ -138,14 +143,16 @@ class ActivityList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      itemCount: activities.length,
-      itemBuilder: (context, index) {
-        return ActivitySimple(activities[index]);
-      },
-      separatorBuilder: (context, index) {
-        return Divider();
-      },
+    return Scrollbar(
+      child: ListView.separated(
+        itemCount: activities.length,
+        itemBuilder: (context, index) {
+          return ActivitySimple(activities[index]);
+        },
+        separatorBuilder: (context, index) {
+          return Divider();
+        },
+      ),
     );
   }
 }
@@ -176,4 +183,77 @@ class ActivitySimple extends StatelessWidget {
       trailing: Text(_activity.createdUser.name),
     );
   }
+}
+
+/// This is the stateful widget that the main application instantiates.
+class MyStatefulWidget extends StatefulWidget {
+  MyStatefulWidget({Key? key}) : super(key: key);
+
+  @override
+  _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
+}
+
+// This is the type used by the popup menu below.
+enum WhyFarther { harder, smarter, selfStarter, tradingCharter }
+
+/// This is the private State class that goes with MyStatefulWidget.
+class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+  Project? dropdownValue;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<Project>>(
+      future: fetchProjects(http.Client()),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) print(snapshot.error);
+
+        return snapshot.hasData
+            ? Container(
+                color: Colors.white,
+                padding: EdgeInsets.symmetric(horizontal: 24),
+                child: DropdownButton<Project>(
+                  value: dropdownValue,
+                  icon: Icon(Icons.arrow_downward),
+                  iconSize: 24,
+                  elevation: 16,
+                  // style: TextStyle(color: Colors.deepPurple),
+                  underline: Container(
+                    height: 2,
+                    color: Colors.blueAccent.shade100,
+                  ),
+                  onChanged: (Project? newValue) {
+                    setState(() {
+                      dropdownValue = newValue!;
+                    });
+                  },
+                  items: snapshot.data!
+                      .map<DropdownMenuItem<Project>>((Project value) {
+                    return DropdownMenuItem<Project>(
+                      value: value,
+                      child: Text(value.name),
+                    );
+                  }).toList(),
+                ),
+              )
+            : Center(child: CircularProgressIndicator());
+      },
+    );
+  }
+}
+
+List<Project> parseProjects(String responseBody) {
+  final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+
+  return parsed.map<Project>((json) => Project.fromJson(json)).toList();
+}
+
+Future<List<Project>> fetchProjects(http.Client client) async {
+  var url = Uri.https(EnvVars.spaceName, PROJECTS, {
+    'apiKey': EnvVars.apiKey,
+    'archived': false.toString(),
+  });
+
+  final response = await client.get(url);
+  final responseBody = utf8.decode(response.bodyBytes);
+  return compute(parseProjects, responseBody);
 }
