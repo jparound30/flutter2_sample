@@ -60,7 +60,7 @@ class MyHomePage extends StatelessWidget {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return ChangeNotifierProvider(
+    return ChangeNotifierProvider<SelectedProject>(
       create: (_) => SelectedProject(),
       child: Scaffold(
         appBar: AppBar(
@@ -99,13 +99,25 @@ class ActivityList extends StatelessWidget {
 
   ActivityList({Key? key, required this.activities}) : super(key: key);
 
+  List<Activity> filteredByProject(Project? project) {
+    if (project == null) {
+      return [];
+    }
+
+    return activities
+        .where((element) => element.project.id == project.id)
+        .toList(growable: false);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final selectedProject = Provider.of<SelectedProject>(context);
+    final filtered = filteredByProject(selectedProject.project);
     return Scrollbar(
       child: ListView.separated(
-        itemCount: activities.length,
+        itemCount: filtered.length,
         itemBuilder: (context, index) {
-          return ActivitySimple(activities[index]);
+          return ActivitySimple(filtered[index]);
         },
         separatorBuilder: (context, index) {
           return Divider();
@@ -156,7 +168,6 @@ enum WhyFarther { harder, smarter, selfStarter, tradingCharter }
 
 /// This is the private State class that goes with MyStatefulWidget.
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  // Project? dropdownValue;
 
   @override
   Widget build(BuildContext context) {
@@ -165,7 +176,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       builder: (context, snapshot) {
         if (snapshot.hasError) print(snapshot.error);
 
-        final selectedProject = Provider.of<SelectedProject>(context);
+        final selectedProject = Provider.of<SelectedProject>(context, listen: true);
 
         return snapshot.hasData
             ? Container(
