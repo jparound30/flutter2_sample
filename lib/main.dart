@@ -35,7 +35,80 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         textTheme: GoogleFonts.mPlus1pTextTheme(),
       ),
-      home: MyHomePage(title: 'Backlog Alternate with Flutter2'),
+      // home: MyHomePage(title: 'Backlog Alternate with Flutter2'),
+      home: LoginPage(),
+    );
+  }
+}
+
+class LoginPage extends StatelessWidget {
+  LoginPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    double width;
+    if (MediaQuery.of(context).size.width > 500) {
+      width = 500;
+    } else {
+      width = MediaQuery.of(context).size.width;
+    }
+    print("MQ:" + MediaQuery.of(context).size.width.toString());
+    print(width);
+    return Scaffold(
+      body: Center(
+        child: Container(
+          width: width,
+          padding: EdgeInsets.symmetric(vertical: 48.0),
+          child: Column(
+            children: [
+              Spacer(),
+              Text("Welcom to Backlog Alternate with Flutter2"),
+              Row(
+                textBaseline: TextBaseline.alphabetic,
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    width: 100,
+                    child: Text("APIキー"),
+                  ),
+                  Expanded(
+                    child: TextFormField(
+                      obscureText: true,
+                      onSaved: (value) => print("APIキー: " + value!),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                textBaseline: TextBaseline.alphabetic,
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    width: 100,
+                    child: Text("スペース"),
+                  ),
+                  Expanded(
+                    child: TextFormField(
+                      obscureText: false,
+                      onSaved: (value) => print("スペース: " + value!),
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 48.0),
+                child: ElevatedButton(
+                  onPressed: () => print("Login pressed"),
+                  child: Text("ログイン"),
+                ),
+              ),
+              Spacer(),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -170,7 +243,6 @@ enum WhyFarther { harder, smarter, selfStarter, tradingCharter }
 
 /// This is the private State class that goes with MyStatefulWidget.
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Project>>(
@@ -178,7 +250,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       builder: (context, snapshot) {
         if (snapshot.hasError) print(snapshot.error);
 
-        final selectedProject = Provider.of<SelectedProject>(context, listen: true);
+        final selectedProject =
+            Provider.of<SelectedProject>(context, listen: true);
 
         return snapshot.hasData
             ? Container(
