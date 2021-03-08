@@ -2,13 +2,15 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter2_sample/activities.dart';
-import 'package:flutter2_sample/const.dart';
-import 'package:flutter2_sample/env_vars.dart';
-import 'package:flutter2_sample/provider/selected_project.dart';
-import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+
+import 'activities.dart';
+import 'const.dart';
+import 'env_vars.dart';
+import 'models/project.dart';
+import 'provider/selected_project.dart';
 
 void main() {
   runApp(MyApp());

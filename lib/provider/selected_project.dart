@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter2_sample/activities.dart';
+
+import '../models/project.dart';
 
 class SelectedProject with ChangeNotifier {
   Project? _project;
