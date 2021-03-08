@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter2_sample/activities.dart';
 import 'package:flutter2_sample/const.dart';
 import 'package:flutter2_sample/env_vars.dart';
+import 'package:flutter2_sample/provider/selected_project.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(MyApp());
@@ -36,7 +38,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends StatelessWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
@@ -51,24 +53,6 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
@@ -76,44 +60,18 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-        actions: [MyStatefulWidget()],
-        centerTitle: false,
+    return ChangeNotifierProvider(
+      create: (_) => SelectedProject(),
+      child: Scaffold(
+        appBar: AppBar(
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
+          title: Text(title),
+          actions: [MyStatefulWidget()],
+          centerTitle: false,
+        ),
+        body: RecentActivityList(),
       ),
-      // body: Center(
-      //   // Center is a layout widget. It takes a single child and positions it
-      //   // in the middle of the parent.
-      //   child: Column(
-      //     // Column is also a layout widget. It takes a list of children and
-      //     // arranges them vertically. By default, it sizes itself to fit its
-      //     // children horizontally, and tries to be as tall as its parent.
-      //     //
-      //     // Invoke "debug painting" (press "p" in the console, choose the
-      //     // "Toggle Debug Paint" action from the Flutter Inspector in Android
-      //     // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-      //     // to see the wireframe for each widget.
-      //     //
-      //     // Column has various properties to control how it sizes itself and
-      //     // how it positions its children. Here we use mainAxisAlignment to
-      //     // center the children vertically; the main axis here is the vertical
-      //     // axis because Columns are vertical (the cross axis would be
-      //     // horizontal).
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     children: <Widget>[
-      //       Text(
-      //         'YOU HAVE PUSHED the button this many times:',
-      //       ),
-      //       Text(
-      //         '$_counter',
-      //         style: Theme.of(context).textTheme.headline4,
-      //       ),
-      //     ],
-      //   ),
-      body: RecentActivityList(),
     );
   }
 }
@@ -198,7 +156,7 @@ enum WhyFarther { harder, smarter, selfStarter, tradingCharter }
 
 /// This is the private State class that goes with MyStatefulWidget.
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  Project? dropdownValue;
+  // Project? dropdownValue;
 
   @override
   Widget build(BuildContext context) {
@@ -207,24 +165,23 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       builder: (context, snapshot) {
         if (snapshot.hasError) print(snapshot.error);
 
+        final selectedProject = Provider.of<SelectedProject>(context);
+
         return snapshot.hasData
             ? Container(
                 color: Colors.white,
                 padding: EdgeInsets.symmetric(horizontal: 24),
                 child: DropdownButton<Project>(
-                  value: dropdownValue,
+                  value: selectedProject.project,
                   icon: Icon(Icons.arrow_downward),
                   iconSize: 24,
                   elevation: 16,
-                  // style: TextStyle(color: Colors.deepPurple),
                   underline: Container(
                     height: 2,
                     color: Colors.blueAccent.shade100,
                   ),
                   onChanged: (Project? newValue) {
-                    setState(() {
-                      dropdownValue = newValue!;
-                    });
+                    selectedProject.project = newValue;
                   },
                   items: snapshot.data!
                       .map<DropdownMenuItem<Project>>((Project value) {
