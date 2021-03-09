@@ -52,8 +52,6 @@ class LoginPage extends StatelessWidget {
     } else {
       width = MediaQuery.of(context).size.width;
     }
-    print("MQ:" + MediaQuery.of(context).size.width.toString());
-    print(width);
     return Scaffold(
       body: Center(
         child: Container(
