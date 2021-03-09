@@ -1,11 +1,13 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 import 'const.dart';
-import 'env_vars.dart';
 import 'models/project.dart';
+import 'provider/credential_info.dart';
 
 
 
@@ -87,9 +89,12 @@ List<Activity> parseActivities(String responseBody) {
   return parsed.map<Activity>((json) => Activity.fromJson(json)).toList();
 }
 
-Future<List<Activity>> fetchActivities(http.Client client) async {
-  var url = Uri.https(EnvVars.spaceName, SPACE_ACTIVITIES, {
-    'apiKey': EnvVars.apiKey,
+Future<List<Activity>> fetchActivities(BuildContext context, http.Client client) async {
+  final credentialInfo = Provider.of<CredentialInfo>(context);
+  final apiKey = credentialInfo.apiKey;
+  final space = credentialInfo.space!;
+  var url = Uri.https(space, SPACE_ACTIVITIES, {
+    'apiKey': apiKey,
     'count': 100.toString()
   });
 

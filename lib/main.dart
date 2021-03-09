@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter2_sample/provider/credential_info.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -11,6 +10,7 @@ import 'activities.dart';
 import 'const.dart';
 import 'env_vars.dart';
 import 'models/project.dart';
+import 'provider/credential_info.dart';
 import 'provider/selected_project.dart';
 
 void main() {
@@ -21,7 +21,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return ChangeNotifierProvider<CredentialInfo>(
+      create: (_) => CredentialInfo(),
+      child: MaterialApp(
         title: 'Backlog Alternate',
         theme: ThemeData(
           // This is the theme of your application.
@@ -37,18 +39,17 @@ class MyApp extends StatelessWidget {
           textTheme: GoogleFonts.mPlus1pTextTheme(),
         ),
         // home: MyHomePage(title: 'Backlog Alternate with Flutter2'),
-        home: ChangeNotifierProvider<CredentialInfo>(
-          create: (_) => CredentialInfo(),
-          child: LoginPage(),
-        ));
+        home: LoginPage(),
+      ),
+    );
   }
 }
 
 class LoginPage extends StatelessWidget {
   LoginPage({Key? key}) : super(key: key);
 
-  final _userController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final _userController = TextEditingController(text: EnvVars.spaceName);
+  final _passwordController = TextEditingController(text: EnvVars.apiKey);
 
   Future<bool> login(String space, String apiKey) async {
     var client = http.Client();
@@ -177,6 +178,9 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final a = Provider.of<CredentialInfo>(context);
+    print("MyHomeApp: " + a.space! + "/" + a.apiKey!);
+
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -205,7 +209,7 @@ class RecentActivityList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Activity>>(
-      future: fetchActivities(http.Client()),
+      future: fetchActivities(context, http.Client()),
       builder: (context, snapshot) {
         if (snapshot.hasError) print(snapshot.error);
 
@@ -257,10 +261,13 @@ class ActivitySimple extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final credentialInfo = Provider.of<CredentialInfo>(context);
+    final apiKey = credentialInfo.apiKey;
+    final space = credentialInfo.space!;
     Uri userIconUri = Uri.https(
-        EnvVars.spaceName,
+        space,
         "/api/v2/users/" + _activity.createdUser.id.toString() + "/icon",
-        {'apiKey': EnvVars.apiKey});
+        {'apiKey': apiKey});
     final String content;
     if (_activity.content!.summary != null) {
       content = _activity.content!.summary!;
@@ -294,7 +301,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Project>>(
-      future: fetchProjects(http.Client()),
+      future: fetchProjects(context, http.Client()),
       builder: (context, snapshot) {
         if (snapshot.hasError) print(snapshot.error);
 
@@ -338,9 +345,13 @@ List<Project> parseProjects(String responseBody) {
   return parsed.map<Project>((json) => Project.fromJson(json)).toList();
 }
 
-Future<List<Project>> fetchProjects(http.Client client) async {
-  var url = Uri.https(EnvVars.spaceName, PROJECTS, {
-    'apiKey': EnvVars.apiKey,
+Future<List<Project>> fetchProjects(
+    BuildContext context, http.Client client) async {
+  final credentialInfo = Provider.of<CredentialInfo>(context);
+  final apiKey = credentialInfo.apiKey;
+  final space = credentialInfo.space!;
+  var url = Uri.https(space, PROJECTS, {
+    'apiKey': apiKey,
     'archived': false.toString(),
   });
 
