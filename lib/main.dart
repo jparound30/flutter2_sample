@@ -59,53 +59,57 @@ class LoginPage extends StatelessWidget {
         child: Container(
           width: width,
           padding: EdgeInsets.symmetric(vertical: 48.0),
-          child: Column(
-            children: [
-              Spacer(),
-              Text("Welcome to Backlog Alternate with Flutter2"),
-              Row(
-                textBaseline: TextBaseline.alphabetic,
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    width: 100,
-                    child: Text("APIキー"),
-                  ),
-                  Expanded(
-                    child: TextFormField(
-                      obscureText: true,
-                      onSaved: (value) => print("APIキー: " + value!),
+          child: AutofillGroup(
+            child: Column(
+              children: [
+                Spacer(),
+                Text("Welcome to Backlog Alternate with Flutter2"),
+                Row(
+                  textBaseline: TextBaseline.alphabetic,
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      width: 100,
+                      child: Text("APIキー"),
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                textBaseline: TextBaseline.alphabetic,
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    width: 100,
-                    child: Text("スペース"),
-                  ),
-                  Expanded(
-                    child: TextFormField(
-                      obscureText: false,
-                      onSaved: (value) => print("スペース: " + value!),
+                    Expanded(
+                      child: TextFormField(
+                        autofillHints: [AutofillHints.password],
+                        obscureText: true,
+                        onSaved: (value) => print("APIキー: " + value!),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 48.0),
-                child: ElevatedButton(
-                  onPressed: () => print("Login pressed"),
-                  child: Text("ログイン"),
+                  ],
                 ),
-              ),
-              Spacer(),
-            ],
+                Row(
+                  textBaseline: TextBaseline.alphabetic,
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      width: 100,
+                      child: Text("スペース"),
+                    ),
+                    Expanded(
+                      child: TextFormField(
+                        autofillHints: [AutofillHints.username],
+                        obscureText: false,
+                        onSaved: (value) => print("スペース: " + value!),
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 48.0),
+                  child: ElevatedButton(
+                    onPressed: () => print("Login pressed"),
+                    child: Text("ログイン"),
+                  ),
+                ),
+                Spacer(),
+              ],
+            ),
           ),
         ),
       ),
