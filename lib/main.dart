@@ -62,7 +62,7 @@ class LoginPage extends StatelessWidget {
           child: Column(
             children: [
               Spacer(),
-              Text("Welcom to Backlog Alternate with Flutter2"),
+              Text("Welcome to Backlog Alternate with Flutter2"),
               Row(
                 textBaseline: TextBaseline.alphabetic,
                 crossAxisAlignment: CrossAxisAlignment.baseline,
