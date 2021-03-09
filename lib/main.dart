@@ -26,19 +26,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Backlog Alternate',
         theme: ThemeData(
-          // This is the theme of your application.
-          //
-          // Try running your application with "flutter run". You'll see the
-          // application has a blue toolbar. Then, without quitting the app, try
-          // changing the primarySwatch below to Colors.green and then invoke
-          // "hot reload" (press "r" in the console where you ran "flutter run",
-          // or simply save your changes to "hot reload" in a Flutter IDE).
-          // Notice that the counter didn't reset back to zero; the application
-          // is not restarted.
           primarySwatch: Colors.blue,
           textTheme: GoogleFonts.mPlus1pTextTheme(),
         ),
-        // home: MyHomePage(title: 'Backlog Alternate with Flutter2'),
         home: LoginPage(),
       ),
     );
@@ -292,9 +282,6 @@ class MyStatefulWidget extends StatefulWidget {
   @override
   _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
 }
-
-// This is the type used by the popup menu below.
-enum WhyFarther { harder, smarter, selfStarter, tradingCharter }
 
 /// This is the private State class that goes with MyStatefulWidget.
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
