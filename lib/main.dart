@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter2_sample/provider/credential_info.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -21,23 +22,25 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Backlog Alternate',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-        textTheme: GoogleFonts.mPlus1pTextTheme(),
-      ),
-      // home: MyHomePage(title: 'Backlog Alternate with Flutter2'),
-      home: LoginPage(),
-    );
+        title: 'Backlog Alternate',
+        theme: ThemeData(
+          // This is the theme of your application.
+          //
+          // Try running your application with "flutter run". You'll see the
+          // application has a blue toolbar. Then, without quitting the app, try
+          // changing the primarySwatch below to Colors.green and then invoke
+          // "hot reload" (press "r" in the console where you ran "flutter run",
+          // or simply save your changes to "hot reload" in a Flutter IDE).
+          // Notice that the counter didn't reset back to zero; the application
+          // is not restarted.
+          primarySwatch: Colors.blue,
+          textTheme: GoogleFonts.mPlus1pTextTheme(),
+        ),
+        // home: MyHomePage(title: 'Backlog Alternate with Flutter2'),
+        home: ChangeNotifierProvider<CredentialInfo>(
+          create: (_) => CredentialInfo(),
+          child: LoginPage(),
+        ));
   }
 }
 
@@ -68,16 +71,10 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width;
-    if (MediaQuery
-        .of(context)
-        .size
-        .width > 500) {
+    if (MediaQuery.of(context).size.width > 500) {
       width = 500;
     } else {
-      width = MediaQuery
-          .of(context)
-          .size
-          .width;
+      width = MediaQuery.of(context).size.width;
     }
     return Scaffold(
       body: Center(
@@ -130,12 +127,26 @@ class LoginPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 48.0),
                   child: ElevatedButton(
-                    onPressed: () {
-                      print(
-                          "Login pressed:" + _userController.value.text + ":" +
-                              _passwordController.value.text);
-                      login(_userController.value.text,
-                          _passwordController.value.text);
+                    onPressed: () async {
+                      final pass = _passwordController.value.text;
+                      final user = _userController.value.text;
+                      print("Login pressed:" + user + ":" + pass);
+                      final isValid = await login(user, pass);
+                      if (isValid) {
+                        final credentialInfo =
+                            Provider.of<CredentialInfo>(context, listen: false);
+                        credentialInfo.apiKey = pass;
+                        credentialInfo.space = user;
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return MyHomePage(
+                                title: 'Backlog Alternate with Flutter2',
+                              );
+                            },
+                          ),
+                        );
+                      }
                     },
                     child: Text("ログイン"),
                   ),
@@ -288,33 +299,33 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         if (snapshot.hasError) print(snapshot.error);
 
         final selectedProject =
-        Provider.of<SelectedProject>(context, listen: true);
+            Provider.of<SelectedProject>(context, listen: true);
 
         return snapshot.hasData
             ? Container(
-          color: Colors.white,
-          padding: EdgeInsets.symmetric(horizontal: 24),
-          child: DropdownButton<Project>(
-            value: selectedProject.project,
-            icon: Icon(Icons.arrow_downward),
-            iconSize: 24,
-            elevation: 16,
-            underline: Container(
-              height: 2,
-              color: Colors.blueAccent.shade100,
-            ),
-            onChanged: (Project? newValue) {
-              selectedProject.project = newValue;
-            },
-            items: snapshot.data!
-                .map<DropdownMenuItem<Project>>((Project value) {
-              return DropdownMenuItem<Project>(
-                value: value,
-                child: Text(value.name),
-              );
-            }).toList(),
-          ),
-        )
+                color: Colors.white,
+                padding: EdgeInsets.symmetric(horizontal: 24),
+                child: DropdownButton<Project>(
+                  value: selectedProject.project,
+                  icon: Icon(Icons.arrow_downward),
+                  iconSize: 24,
+                  elevation: 16,
+                  underline: Container(
+                    height: 2,
+                    color: Colors.blueAccent.shade100,
+                  ),
+                  onChanged: (Project? newValue) {
+                    selectedProject.project = newValue;
+                  },
+                  items: snapshot.data!
+                      .map<DropdownMenuItem<Project>>((Project value) {
+                    return DropdownMenuItem<Project>(
+                      value: value,
+                      child: Text(value.name),
+                    );
+                  }).toList(),
+                ),
+              )
             : Center(child: CircularProgressIndicator());
       },
     );
