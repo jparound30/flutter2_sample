@@ -44,13 +44,40 @@ class MyApp extends StatelessWidget {
 class LoginPage extends StatelessWidget {
   LoginPage({Key? key}) : super(key: key);
 
+  final _userController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  Future<bool> login(String space, String apiKey) async {
+    var client = http.Client();
+
+    var url = Uri.https(space, SPACE_INFO, {
+      'apiKey': apiKey,
+    });
+
+    final response = await client.get(url);
+    final responseBody = utf8.decode(response.bodyBytes);
+    if (response.statusCode != 200) {
+      print(responseBody);
+      return false;
+    } else {
+      print(responseBody);
+      return true;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double width;
-    if (MediaQuery.of(context).size.width > 500) {
+    if (MediaQuery
+        .of(context)
+        .size
+        .width > 500) {
       width = 500;
     } else {
-      width = MediaQuery.of(context).size.width;
+      width = MediaQuery
+          .of(context)
+          .size
+          .width;
     }
     return Scaffold(
       body: Center(
@@ -69,13 +96,14 @@ class LoginPage extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       width: 100,
-                      child: Text("APIキー"),
+                      child: Text("スペース"),
                     ),
                     Expanded(
                       child: TextFormField(
-                        autofillHints: [AutofillHints.password],
-                        obscureText: true,
-                        onSaved: (value) => print("APIキー: " + value!),
+                        controller: _userController,
+                        autofillHints: [AutofillHints.username],
+                        obscureText: false,
+                        onSaved: (value) => print("スペース: " + value!),
                       ),
                     ),
                   ],
@@ -87,13 +115,14 @@ class LoginPage extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       width: 100,
-                      child: Text("スペース"),
+                      child: Text("APIキー"),
                     ),
                     Expanded(
                       child: TextFormField(
-                        autofillHints: [AutofillHints.username],
-                        obscureText: false,
-                        onSaved: (value) => print("スペース: " + value!),
+                        controller: _passwordController,
+                        autofillHints: [AutofillHints.password],
+                        obscureText: true,
+                        onSaved: (value) => print("APIキー: " + value!),
                       ),
                     ),
                   ],
@@ -101,7 +130,13 @@ class LoginPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 48.0),
                   child: ElevatedButton(
-                    onPressed: () => print("Login pressed"),
+                    onPressed: () {
+                      print(
+                          "Login pressed:" + _userController.value.text + ":" +
+                              _passwordController.value.text);
+                      login(_userController.value.text,
+                          _passwordController.value.text);
+                    },
                     child: Text("ログイン"),
                   ),
                 ),
@@ -253,33 +288,33 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         if (snapshot.hasError) print(snapshot.error);
 
         final selectedProject =
-            Provider.of<SelectedProject>(context, listen: true);
+        Provider.of<SelectedProject>(context, listen: true);
 
         return snapshot.hasData
             ? Container(
-                color: Colors.white,
-                padding: EdgeInsets.symmetric(horizontal: 24),
-                child: DropdownButton<Project>(
-                  value: selectedProject.project,
-                  icon: Icon(Icons.arrow_downward),
-                  iconSize: 24,
-                  elevation: 16,
-                  underline: Container(
-                    height: 2,
-                    color: Colors.blueAccent.shade100,
-                  ),
-                  onChanged: (Project? newValue) {
-                    selectedProject.project = newValue;
-                  },
-                  items: snapshot.data!
-                      .map<DropdownMenuItem<Project>>((Project value) {
-                    return DropdownMenuItem<Project>(
-                      value: value,
-                      child: Text(value.name),
-                    );
-                  }).toList(),
-                ),
-              )
+          color: Colors.white,
+          padding: EdgeInsets.symmetric(horizontal: 24),
+          child: DropdownButton<Project>(
+            value: selectedProject.project,
+            icon: Icon(Icons.arrow_downward),
+            iconSize: 24,
+            elevation: 16,
+            underline: Container(
+              height: 2,
+              color: Colors.blueAccent.shade100,
+            ),
+            onChanged: (Project? newValue) {
+              selectedProject.project = newValue;
+            },
+            items: snapshot.data!
+                .map<DropdownMenuItem<Project>>((Project value) {
+              return DropdownMenuItem<Project>(
+                value: value,
+                child: Text(value.name),
+              );
+            }).toList(),
+          ),
+        )
             : Center(child: CircularProgressIndicator());
       },
     );
