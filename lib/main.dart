@@ -153,7 +153,6 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -273,7 +272,11 @@ class ActivitySimple extends StatelessWidget {
     }
     var dateFormat = DateFormat('yyyy/MM/dd HH:mm', 'ja');
     return ListTile(
-      title: Text(content),
+      title: Text(
+        content,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
       leading: Image.network(userIconUri.toString()),
       subtitle: Text(_activity.project.name),
       trailing: Column(
