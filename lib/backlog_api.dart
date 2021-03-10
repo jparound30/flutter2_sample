@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import 'activities.dart';
 import 'const.dart';
+import 'models/project.dart';
 import 'provider/credential_info.dart';
 
 class BacklogApiClient {
@@ -30,4 +31,26 @@ class BacklogApiClient {
     final responseBody = utf8.decode(response.bodyBytes);
     return compute(_parseActivities, responseBody);
   }
+
+  List<Project> _parseProjects(String responseBody) {
+    final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+
+    return parsed.map<Project>((json) => Project.fromJson(json)).toList();
+  }
+
+  Future<List<Project>> fetchProjects(
+      BuildContext context, http.Client client) async {
+    final credentialInfo = Provider.of<CredentialInfo>(context);
+    final apiKey = credentialInfo.apiKey;
+    final space = credentialInfo.space!;
+    var url = Uri.https(space, PROJECTS, {
+      'apiKey': apiKey,
+      'archived': false.toString(),
+    });
+
+    final response = await client.get(url);
+    final responseBody = utf8.decode(response.bodyBytes);
+    return compute(_parseProjects, responseBody);
+  }
+
 }

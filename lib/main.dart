@@ -307,8 +307,9 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   @override
   Widget build(BuildContext context) {
+    final backlogApiClient = BacklogApiClient();
     return FutureBuilder<List<Project>>(
-      future: fetchProjects(context, http.Client()),
+      future: backlogApiClient.fetchProjects(context, http.Client()),
       builder: (context, snapshot) {
         if (snapshot.hasError) print(snapshot.error);
 
@@ -344,25 +345,4 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       },
     );
   }
-}
-
-List<Project> parseProjects(String responseBody) {
-  final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
-
-  return parsed.map<Project>((json) => Project.fromJson(json)).toList();
-}
-
-Future<List<Project>> fetchProjects(
-    BuildContext context, http.Client client) async {
-  final credentialInfo = Provider.of<CredentialInfo>(context);
-  final apiKey = credentialInfo.apiKey;
-  final space = credentialInfo.space!;
-  var url = Uri.https(space, PROJECTS, {
-    'apiKey': apiKey,
-    'archived': false.toString(),
-  });
-
-  final response = await client.get(url);
-  final responseBody = utf8.decode(response.bodyBytes);
-  return compute(parseProjects, responseBody);
 }
