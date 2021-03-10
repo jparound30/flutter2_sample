@@ -179,15 +179,33 @@ class MyHomePage extends StatelessWidget {
     // than having to individually change instances of widgets.
     return ChangeNotifierProvider<SelectedProject>(
       create: (_) => SelectedProject(),
-      child: Scaffold(
-        appBar: AppBar(
-          // Here we take the value from the MyHomePage object that was created by
-          // the App.build method, and use it to set our appbar title.
-          title: Text(title),
-          actions: [MyStatefulWidget()],
-          centerTitle: false,
+      child: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            // Here we take the value from the MyHomePage object that was created by
+            // the App.build method, and use it to set our appbar title.
+            title: Text(title),
+            actions: [MyStatefulWidget()],
+            centerTitle: false,
+            bottom: TabBar(
+              tabs: [
+                Tab(
+                  text: "最近の更新",
+                ),
+                Tab(
+                  text: "課題",
+                ),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              RecentActivityList(),
+              Text("かだいたち"),
+            ],
+          ),
         ),
-        body: RecentActivityList(),
       ),
     );
   }
