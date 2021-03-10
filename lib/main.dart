@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter2_sample/backlog_api.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -216,8 +217,9 @@ class RecentActivityList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final backlogApiClient = BacklogApiClient();
     return FutureBuilder<List<Activity>>(
-      future: fetchActivities(context, http.Client()),
+      future: backlogApiClient.fetchActivities(context, http.Client()),
       builder: (context, snapshot) {
         if (snapshot.hasError) print(snapshot.error);
 

@@ -82,23 +82,3 @@ class Activity {
   }
 }
 
-// A function that converts a response body into a List<Photo>.
-List<Activity> parseActivities(String responseBody) {
-  final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
-
-  return parsed.map<Activity>((json) => Activity.fromJson(json)).toList();
-}
-
-Future<List<Activity>> fetchActivities(BuildContext context, http.Client client) async {
-  final credentialInfo = Provider.of<CredentialInfo>(context);
-  final apiKey = credentialInfo.apiKey;
-  final space = credentialInfo.space!;
-  var url = Uri.https(space, SPACE_ACTIVITIES, {
-    'apiKey': apiKey,
-    'count': 100.toString()
-  });
-
-  final response = await client.get(url);
-  final responseBody = utf8.decode(response.bodyBytes);
-  return compute(parseActivities, responseBody);
-}
