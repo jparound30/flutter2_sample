@@ -1,7 +1,8 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import 'activities.dart';
@@ -12,7 +13,10 @@ import 'provider/credential_info.dart';
 import 'provider/selected_project.dart';
 
 void main() {
-  runApp(MyApp());
+  Intl.defaultLocale = 'ja_JP';
+  initializeDateFormatting('ja_JP', null).then((_) {
+    runApp(MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -266,11 +270,17 @@ class ActivitySimple extends StatelessWidget {
     } else {
       content = "NODATA";
     }
+    var dateFormat = DateFormat('yyyy/MM/dd HH:mm', 'ja');
     return ListTile(
       title: Text(content),
       leading: Image.network(userIconUri.toString()),
       subtitle: Text(_activity.project.name),
-      trailing: Text(_activity.createdUser.name),
+      trailing: Column(
+        children: [
+          Text(dateFormat.format(_activity.created)),
+          Text(_activity.createdUser.name),
+        ],
+      ),
     );
   }
 }
