@@ -153,8 +153,6 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final a = Provider.of<CredentialInfo>(context);
-    print("MyHomeApp: " + a.space! + "/" + a.apiKey!);
 
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
