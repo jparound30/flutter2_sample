@@ -41,13 +41,12 @@ class BacklogApiClient {
     return parsed.map<Activity>((json) => Activity.fromJson(json)).toList();
   }
 
-  Future<List<Activity>> fetchActivities(
-      BuildContext context) async {
+  Future<List<Activity>> fetchActivities(BuildContext context) async {
     final credentialInfo = Provider.of<CredentialInfo>(context);
     final apiKey = credentialInfo.apiKey;
     final space = credentialInfo.space!;
-    var url = Uri.https(
-        space, SPACE_ACTIVITIES, {'apiKey': apiKey, 'count': 100.toString()});
+    var url = Uri.https(space, SPACE_ACTIVITIES,
+        {'apiKey': apiKey, 'count': RECENT_ACTIVITIES_COUNTS});
 
     final response = await _client.get(url);
     final responseBody = utf8.decode(response.bodyBytes);
@@ -60,8 +59,7 @@ class BacklogApiClient {
     return parsed.map<Project>((json) => Project.fromJson(json)).toList();
   }
 
-  Future<List<Project>> fetchProjects(
-      BuildContext context) async {
+  Future<List<Project>> fetchProjects(BuildContext context) async {
     final credentialInfo = Provider.of<CredentialInfo>(context);
     final apiKey = credentialInfo.apiKey;
     final space = credentialInfo.space!;
