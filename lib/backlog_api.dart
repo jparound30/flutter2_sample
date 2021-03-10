@@ -1,4 +1,3 @@
-// A function that converts a response body into a List<Photo>.
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -10,6 +9,10 @@ import 'activities.dart';
 import 'const.dart';
 import 'models/project.dart';
 import 'provider/credential_info.dart';
+
+const int HTTP_STATUS_OK = 200;
+
+const String RECENT_ACTIVITIES_COUNTS = "100";
 
 class BacklogApiClient {
   final http.Client _client;
@@ -23,7 +26,7 @@ class BacklogApiClient {
 
     final response = await _client.get(url);
     final responseBody = utf8.decode(response.bodyBytes);
-    if (response.statusCode != 200) {
+    if (response.statusCode != HTTP_STATUS_OK) {
       print(responseBody);
       return false;
     } else {
