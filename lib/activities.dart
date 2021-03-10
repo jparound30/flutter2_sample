@@ -1,15 +1,5 @@
-import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
-
-import 'const.dart';
 import 'models/project.dart';
-import 'provider/credential_info.dart';
-
-
 
 class Content {
   final int? id;
@@ -65,20 +55,30 @@ class Activity {
   final Content? content;
   final Notification? notification;
   final User createdUser;
+  final String _createdStr;
 
-  Activity(this.type,
-      {required this.id,
-      required this.project,
-      this.content,
-      this.notification,
-      required this.createdUser});
+  Activity(
+    this.type, {
+    required this.id,
+    required this.project,
+    this.content,
+    this.notification,
+    required this.createdUser,
+    required String createdStr,
+  }) : _createdStr = createdStr;
+
+  DateTime get created {
+    return DateTime.parse(_createdStr).toLocal();
+  }
 
   factory Activity.fromJson(Map<String, dynamic> json) {
-    return Activity(json['type'] as int,
-        id: json['id'],
-        project: Project.fromJson(json['project']),
-        content: Content.fromJson(json['content']),
-        createdUser: User.fromJson(json['createdUser']));
+    return Activity(
+      json['type'],
+      id: json['id'],
+      project: Project.fromJson(json['project']),
+      content: Content.fromJson(json['content']),
+      createdUser: User.fromJson(json['createdUser']),
+      createdStr: json['created'],
+    );
   }
 }
-
