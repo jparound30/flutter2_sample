@@ -12,12 +12,24 @@ import 'provider/credential_info.dart';
 
 const int HTTP_STATUS_OK = 200;
 
-const String RECENT_ACTIVITIES_COUNTS = "100";
+const String RECENT_ACTIVITIES_COUNTS = "40";
 
 class BacklogApiClient {
   final http.Client _client;
 
   BacklogApiClient() : _client = http.Client();
+
+  void _debugLog(String msg) {
+    print(msg);
+  }
+
+  Future<String> _get(Uri uri) async {
+    final response = await _client.get(uri);
+    final responseBody = utf8.decode(response.bodyBytes, allowMalformed: true);
+    _debugLog("HTTP GET: " + uri.toString());
+    _debugLog(responseBody);
+    return responseBody;
+  }
 
   Future<bool> login(String space, String apiKey) async {
     var url = Uri.https(space, SPACE_INFO, {
@@ -25,14 +37,9 @@ class BacklogApiClient {
     });
 
     final response = await _client.get(url);
-    final responseBody = utf8.decode(response.bodyBytes);
-    if (response.statusCode != HTTP_STATUS_OK) {
-      print(responseBody);
-      return false;
-    } else {
-      print(responseBody);
-      return true;
-    }
+    final responseBody = utf8.decode(response.bodyBytes, allowMalformed: true);
+    print(responseBody);
+    return response.statusCode == HTTP_STATUS_OK;
   }
 
   List<Activity> _parseActivities(String responseBody) {
@@ -48,8 +55,7 @@ class BacklogApiClient {
     var url = Uri.https(space, SPACE_ACTIVITIES,
         {'apiKey': apiKey, 'count': RECENT_ACTIVITIES_COUNTS});
 
-    final response = await _client.get(url);
-    final responseBody = utf8.decode(response.bodyBytes);
+    final responseBody = await _get(url);
     return compute(_parseActivities, responseBody);
   }
 
@@ -68,8 +74,7 @@ class BacklogApiClient {
       'archived': false.toString(),
     });
 
-    final response = await _client.get(url);
-    final responseBody = utf8.decode(response.bodyBytes);
+    final responseBody = await _get(url);
     return compute(_parseProjects, responseBody);
   }
 }
