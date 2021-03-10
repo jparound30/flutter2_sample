@@ -5,7 +5,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import 'activities.dart';
+import 'models/activity.dart';
 import 'backlog_api.dart';
 import 'env_vars.dart';
 import 'models/project.dart';

@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
-import 'activities.dart';
+import 'models/activity.dart';
 import 'const.dart';
 import 'models/project.dart';
 import 'provider/credential_info.dart';
