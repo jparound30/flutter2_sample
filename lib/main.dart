@@ -232,15 +232,18 @@ class ActivityList extends StatelessWidget {
   Widget build(BuildContext context) {
     final selectedProject = Provider.of<SelectedProject>(context);
     final filtered = filteredByProject(selectedProject.project);
-    return Scrollbar(
-      child: ListView.separated(
-        itemCount: filtered.length,
-        itemBuilder: (context, index) {
-          return ActivitySimple(filtered[index]);
-        },
-        separatorBuilder: (context, index) {
-          return Divider();
-        },
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Scrollbar(
+        child: ListView.separated(
+          itemCount: filtered.length,
+          itemBuilder: (context, index) {
+            return ActivitySimple(filtered[index]);
+          },
+          separatorBuilder: (context, index) {
+            return Divider();
+          },
+        ),
       ),
     );
   }
