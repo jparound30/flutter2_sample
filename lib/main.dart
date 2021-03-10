@@ -1,14 +1,11 @@
-import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter2_sample/backlog_api.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 import 'activities.dart';
-import 'const.dart';
+import 'backlog_api.dart';
 import 'env_vars.dart';
 import 'models/project.dart';
 import 'provider/credential_info.dart';
@@ -41,24 +38,6 @@ class LoginPage extends StatelessWidget {
 
   final _userController = TextEditingController(text: EnvVars.spaceName);
   final _passwordController = TextEditingController(text: EnvVars.apiKey);
-
-  Future<bool> login(String space, String apiKey) async {
-    var client = http.Client();
-
-    var url = Uri.https(space, SPACE_INFO, {
-      'apiKey': apiKey,
-    });
-
-    final response = await client.get(url);
-    final responseBody = utf8.decode(response.bodyBytes);
-    if (response.statusCode != 200) {
-      print(responseBody);
-      return false;
-    } else {
-      print(responseBody);
-      return true;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +102,8 @@ class LoginPage extends StatelessWidget {
                       final pass = _passwordController.value.text;
                       final user = _userController.value.text;
                       print("Login pressed:" + user + ":" + pass);
-                      final isValid = await login(user, pass);
+                      final backlogApiClient = BacklogApiClient();
+                      final isValid = await backlogApiClient.login(user, pass);
                       if (isValid) {
                         final credentialInfo =
                             Provider.of<CredentialInfo>(context, listen: false);

@@ -16,6 +16,22 @@ class BacklogApiClient {
 
   BacklogApiClient() : _client = http.Client();
 
+  Future<bool> login(String space, String apiKey) async {
+    var url = Uri.https(space, SPACE_INFO, {
+      'apiKey': apiKey,
+    });
+
+    final response = await _client.get(url);
+    final responseBody = utf8.decode(response.bodyBytes);
+    if (response.statusCode != 200) {
+      print(responseBody);
+      return false;
+    } else {
+      print(responseBody);
+      return true;
+    }
+  }
+
   List<Activity> _parseActivities(String responseBody) {
     final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
 
