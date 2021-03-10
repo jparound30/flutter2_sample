@@ -12,22 +12,25 @@ import 'models/project.dart';
 import 'provider/credential_info.dart';
 
 class BacklogApiClient {
+  final http.Client _client;
+
+  BacklogApiClient() : _client = http.Client();
+
   List<Activity> _parseActivities(String responseBody) {
     final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
 
     return parsed.map<Activity>((json) => Activity.fromJson(json)).toList();
   }
 
-  Future<List<Activity>> fetchActivities(BuildContext context, http.Client client) async {
+  Future<List<Activity>> fetchActivities(
+      BuildContext context) async {
     final credentialInfo = Provider.of<CredentialInfo>(context);
     final apiKey = credentialInfo.apiKey;
     final space = credentialInfo.space!;
-    var url = Uri.https(space, SPACE_ACTIVITIES, {
-      'apiKey': apiKey,
-      'count': 100.toString()
-    });
+    var url = Uri.https(
+        space, SPACE_ACTIVITIES, {'apiKey': apiKey, 'count': 100.toString()});
 
-    final response = await client.get(url);
+    final response = await _client.get(url);
     final responseBody = utf8.decode(response.bodyBytes);
     return compute(_parseActivities, responseBody);
   }
@@ -39,7 +42,7 @@ class BacklogApiClient {
   }
 
   Future<List<Project>> fetchProjects(
-      BuildContext context, http.Client client) async {
+      BuildContext context) async {
     final credentialInfo = Provider.of<CredentialInfo>(context);
     final apiKey = credentialInfo.apiKey;
     final space = credentialInfo.space!;
@@ -48,9 +51,8 @@ class BacklogApiClient {
       'archived': false.toString(),
     });
 
-    final response = await client.get(url);
+    final response = await _client.get(url);
     final responseBody = utf8.decode(response.bodyBytes);
     return compute(_parseProjects, responseBody);
   }
-
 }
