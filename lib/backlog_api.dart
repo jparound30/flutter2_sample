@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
+import 'issuesList.dart';
 import 'models/activity.dart';
 import 'const.dart';
 import 'models/issue.dart';
@@ -30,7 +31,7 @@ class BacklogApiClient {
     final response = await _client.get(uri);
     final responseBody = utf8.decode(response.bodyBytes, allowMalformed: true);
     _debugLog("HTTP GET: " + uri.toString());
-    _debugLog(responseBody);
+    // _debugLog(responseBody);
     return responseBody;
   }
 
@@ -92,6 +93,7 @@ class BacklogApiClient {
   Future<List<Issue>> fetchIssues({
     required BuildContext context,
     required Project? project,
+    IssueField? sort,
   }) async {
     final credentialInfo = Provider.of<CredentialInfo>(context);
     final apiKey = credentialInfo.apiKey;
@@ -101,6 +103,9 @@ class BacklogApiClient {
     query['count'] = ISSUES_COUNTS;
     if (project != null) {
       query['projectId[]'] = project.id.toString();
+    }
+    if (sort != null) {
+      query['sort'] = IssueFieldEnumHelper().name(sort);
     }
 
     var url = Uri.https(space, ISSUES, query);
