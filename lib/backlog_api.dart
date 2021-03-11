@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import 'models/activity.dart';
 import 'const.dart';
+import 'models/issue.dart';
 import 'models/project.dart';
 import 'models/space.dart';
 import 'provider/credential_info.dart';
@@ -14,6 +15,7 @@ import 'provider/credential_info.dart';
 const int HTTP_STATUS_OK = 200;
 
 const String RECENT_ACTIVITIES_COUNTS = "40";
+const String ISSUES_COUNTS = "40";
 
 class BacklogApiClient {
   final http.Client _client;
@@ -79,5 +81,31 @@ class BacklogApiClient {
 
     final responseBody = await _get(url);
     return compute(_parseProjects, responseBody);
+  }
+
+  List<Issue> _parseIssues(String responseBody) {
+    final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+
+    return parsed.map<Issue>((json) => Issue.fromJson(json)).toList();
+  }
+
+  Future<List<Issue>> fetchIssues({
+    required BuildContext context,
+    required Project? project,
+  }) async {
+    final credentialInfo = Provider.of<CredentialInfo>(context);
+    final apiKey = credentialInfo.apiKey;
+    final space = credentialInfo.space!;
+    final query = Map<String, dynamic>();
+    query['apiKey'] = apiKey;
+    query['count'] = ISSUES_COUNTS;
+    if (project != null) {
+      query['projectId[]'] = project.id.toString();
+    }
+
+    var url = Uri.https(space, ISSUES, query);
+
+    final responseBody = await _get(url);
+    return compute(_parseIssues, responseBody);
   }
 }
