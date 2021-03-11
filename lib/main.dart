@@ -107,8 +107,8 @@ class LoginPage extends StatelessWidget {
                       final user = _userController.value.text;
                       print("Login pressed:" + user + ":" + pass);
                       final backlogApiClient = BacklogApiClient();
-                      final isValid = await backlogApiClient.login(user, pass);
-                      if (isValid) {
+                      try {
+                        final space = await backlogApiClient.login(user, pass);
                         final credentialInfo =
                             Provider.of<CredentialInfo>(context, listen: false);
                         credentialInfo.apiKey = pass;
@@ -117,11 +117,16 @@ class LoginPage extends StatelessWidget {
                           MaterialPageRoute(
                             builder: (context) {
                               return MyHomePage(
-                                title: 'Backlog Alternate with Flutter2',
+                                title: 'Backlog Alternate with Flutter2:[' +
+                                    space.name +
+                                    ']',
                               );
                             },
                           ),
                         );
+                      } catch (e) {
+                        // TODO エラー表示 statefulに修正必要？
+                        print(e);
                       }
                     },
                     child: Text("ログイン"),

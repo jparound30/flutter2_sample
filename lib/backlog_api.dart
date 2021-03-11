@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'models/activity.dart';
 import 'const.dart';
 import 'models/project.dart';
+import 'models/space.dart';
 import 'provider/credential_info.dart';
 
 const int HTTP_STATUS_OK = 200;
@@ -31,7 +32,7 @@ class BacklogApiClient {
     return responseBody;
   }
 
-  Future<bool> login(String space, String apiKey) async {
+  Future<Space> login(String space, String apiKey) async {
     var url = Uri.https(space, SPACE_INFO, {
       'apiKey': apiKey,
     });
@@ -39,7 +40,9 @@ class BacklogApiClient {
     final response = await _client.get(url);
     final responseBody = utf8.decode(response.bodyBytes, allowMalformed: true);
     print(responseBody);
-    return response.statusCode == HTTP_STATUS_OK;
+
+    final parsed = jsonDecode(responseBody);
+    return Space.fromJson(parsed);
   }
 
   List<Activity> _parseActivities(String responseBody) {
