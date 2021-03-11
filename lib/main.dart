@@ -5,6 +5,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import 'issuesList.dart';
 import 'models/activity.dart';
 import 'backlog_api.dart';
 import 'env_vars.dart';
@@ -189,7 +190,7 @@ class MyHomePage extends StatelessWidget {
           body: TabBarView(
             children: [
               RecentActivityList(),
-              Text("かだいたち"),
+              IssueList(),
             ],
           ),
         ),
