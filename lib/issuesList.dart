@@ -3,37 +3,51 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import 'backlog_api.dart';
 import 'models/issue.dart';
-import 'models/project.dart';
 import 'provider/credential_info.dart';
 import 'provider/selected_project.dart';
 
 class IssueList extends StatelessWidget {
-  final List<Issue> issues;
-
-  IssueList({Key? key, required this.issues}) : super(key: key);
-
-  List<Issue> filteredByProject(Project? project) {
-    if (project == null) {
-      return [];
-    }
-
-    return issues
-        .where((element) => element.projectId == project.id)
-        .toList(growable: false);
-  }
+  IssueList({Key? key}) : super(key: key);
+  final backlogApiClient = BacklogApiClient();
 
   @override
   Widget build(BuildContext context) {
-    final selectedProject = Provider.of<SelectedProject>(context);
-    final filtered = filteredByProject(selectedProject.project);
+    final selectedProject = Provider.of<SelectedProject>(context, listen: true);
+    if (selectedProject.project == null) {
+      return Center(child: Text("プロジェクトを選択してください"));
+    }
+    return FutureBuilder<List<Issue>>(
+      future: backlogApiClient.fetchIssues(
+        context: context,
+        project: selectedProject.project,
+      ),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) print(snapshot.error);
+
+        return snapshot.hasData
+            ? IssueListView(issues: snapshot.data!)
+            : Center(child: CircularProgressIndicator());
+      },
+    );
+  }
+}
+
+class IssueListView extends StatelessWidget {
+  final List<Issue> issues;
+
+  IssueListView({Key? key, required this.issues}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Scrollbar(
         child: ListView.separated(
-          itemCount: filtered.length,
+          itemCount: issues.length,
           itemBuilder: (context, index) {
-            return IssueSimple(filtered[index]);
+            return IssueSimple(issues[index]);
           },
           separatorBuilder: (context, index) {
             return Divider();
