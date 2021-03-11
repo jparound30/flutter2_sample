@@ -128,41 +128,94 @@ class IssueList extends StatelessWidget {
     if (selectedProject.project == null) {
       return Center(child: Text("プロジェクトを選択してください"));
     }
-    return FutureBuilder<List<Issue>>(
-      future: backlogApiClient.fetchIssues(
-        context: context,
-        project: selectedProject.project,
-      ),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) print(snapshot.error);
-
-        return snapshot.hasData
-            ? IssueListView(issues: snapshot.data!)
-            : Center(child: CircularProgressIndicator());
-      },
-    );
+    return IssueListView();
   }
 }
 
-class IssueListView extends StatelessWidget {
-  final List<Issue> issues;
+class IssueListView extends StatefulWidget {
+  final IssueFieldEnumHelper _issueFieldEnumHelper = IssueFieldEnumHelper();
+  final backlogApiClient = BacklogApiClient();
 
-  IssueListView({Key? key, required this.issues}) : super(key: key);
+  IssueListView({Key? key}) : super(key: key);
+
+  @override
+  _IssueListViewState createState() => _IssueListViewState();
+}
+
+class _IssueListViewState extends State<IssueListView> {
+  IssueField? _selectedSortField;
+  List<Issue> _issues = [];
+
+  void _onSortFieldChanged(IssueField? v) {
+    setState(() {
+      _selectedSortField = v;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final selectedProject = Provider.of<SelectedProject>(context, listen: true);
+    return FutureBuilder<List<Issue>>(
+      future: widget.backlogApiClient.fetchIssues(
+        context: context,
+        project: selectedProject.project,
+        sort: _selectedSortField,
+      ).then((v) {
+        _issues = v;
+        return v;
+      }),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) print(snapshot.error);
+        if (snapshot.hasData) {
+          return showList(context);
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
+    );
+  }
+
+  Widget showList(BuildContext context) {
+    List<DropdownMenuItem<IssueField>> dropDownItems =
+        IssueField.values.map<DropdownMenuItem<IssueField>>((IssueField value) {
+      return DropdownMenuItem<IssueField>(
+        value: value,
+        child: Text(widget._issueFieldEnumHelper.description(value)),
+      );
+    }).toList();
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Scrollbar(
-        child: ListView.separated(
-          itemCount: issues.length,
-          itemBuilder: (context, index) {
-            return IssueSimple(issues[index]);
-          },
-          separatorBuilder: (context, index) {
-            return Divider();
-          },
-        ),
+      child: Column(
+        children: [
+          DropdownButton<IssueField>(
+            value: _selectedSortField,
+            hint: Text("並び替え"),
+            items: dropDownItems,
+            icon: Icon(Icons.arrow_downward),
+            iconSize: 24,
+            elevation: 16,
+            underline: Container(
+              height: 2,
+              color: Colors.blueAccent.shade100,
+            ),
+            onChanged: (IssueField? newValue) {
+              _onSortFieldChanged(newValue);
+            },
+          ),
+          Flexible(
+            child: Scrollbar(
+              child: ListView.separated(
+                itemCount: _issues.length,
+                itemBuilder: (context, index) {
+                  return IssueSimple(_issues[index]);
+                },
+                separatorBuilder: (context, index) {
+                  return Divider();
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
