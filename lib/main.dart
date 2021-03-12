@@ -41,9 +41,6 @@ class MyApp extends StatelessWidget {
 class LoginPage extends StatelessWidget {
   LoginPage({Key? key}) : super(key: key);
 
-  final _userController = TextEditingController(text: EnvVars.spaceName);
-  final _passwordController = TextEditingController(text: EnvVars.apiKey);
-
   @override
   Widget build(BuildContext context) {
     double width;
@@ -57,90 +54,115 @@ class LoginPage extends StatelessWidget {
         child: Container(
           width: width,
           padding: EdgeInsets.symmetric(vertical: 48.0),
-          child: AutofillGroup(
-            child: Column(
-              children: [
-                Spacer(),
-                Text("Welcome to Backlog Alternate with Flutter2"),
-                Row(
-                  textBaseline: TextBaseline.alphabetic,
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      width: 100,
-                      child: Text("スペース"),
-                    ),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _userController,
-                        autofillHints: [AutofillHints.username],
-                        obscureText: false,
-                        onSaved: (value) => print("スペース: " + value!),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  textBaseline: TextBaseline.alphabetic,
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      width: 100,
-                      child: Text("APIキー"),
-                    ),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _passwordController,
-                        autofillHints: [AutofillHints.password],
-                        obscureText: true,
-                        onSaved: (value) => print("APIキー: " + value!),
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 48.0),
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      final pass = _passwordController.value.text;
-                      final user = _userController.value.text;
-                      print("Login pressed:" + user + ":" + pass);
-                      final backlogApiClient = BacklogApiClient();
-                      try {
-                        final space = await backlogApiClient.login(user, pass);
-                        final credentialInfo =
-                            Provider.of<CredentialInfo>(context, listen: false);
-                        credentialInfo.apiKey = pass;
-                        credentialInfo.space = user;
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return MyHomePage(
-                                title: 'Backlog Alternate with Flutter2:[' +
-                                    space.name +
-                                    ']',
-                              );
-                            },
-                          ),
-                        );
-                      } catch (e) {
-                        // TODO エラー表示 statefulに修正必要？
-                        print(e);
-                      }
-                    },
-                    child: Text("ログイン"),
-                  ),
-                ),
-                Spacer(),
-              ],
-            ),
+          child: Column(
+            children: [
+              Spacer(),
+              Text("Welcome to Backlog Alternate with Flutter2"),
+              LoginForm(),
+              Spacer(),
+            ],
           ),
         ),
       ),
     );
   }
+}
+
+class LoginForm extends StatefulWidget {
+  @override
+  LoginFormState createState() {
+    return LoginFormState();
+  }
+}
+class LoginFormState extends State<LoginForm> {
+  final _formKey = GlobalKey<FormState>();
+  final _userController = TextEditingController(text: EnvVars.spaceName);
+  final _passwordController = TextEditingController(text: EnvVars.apiKey);
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: AutofillGroup(
+        child: Column(
+          children: [
+            Row(
+              textBaseline: TextBaseline.alphabetic,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  width: 100,
+                  child: Text("スペース"),
+                ),
+                Expanded(
+                  child: TextFormField(
+                    controller: _userController,
+                    autofillHints: [AutofillHints.username],
+                    obscureText: false,
+                    onSaved: (value) => print("スペース: " + value!),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              textBaseline: TextBaseline.alphabetic,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  width: 100,
+                  child: Text("APIキー"),
+                ),
+                Expanded(
+                  child: TextFormField(
+                    controller: _passwordController,
+                    autofillHints: [AutofillHints.password],
+                    obscureText: true,
+                    onSaved: (value) => print("APIキー: " + value!),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 48.0),
+              child: ElevatedButton(
+                onPressed: () async {
+                  final pass = _passwordController.value.text;
+                  final user = _userController.value.text;
+                  print("Login pressed:" + user + ":" + pass);
+                  final backlogApiClient = BacklogApiClient();
+                  try {
+                    final space = await backlogApiClient.login(user, pass);
+                    final credentialInfo =
+                    Provider.of<CredentialInfo>(context, listen: false);
+                    credentialInfo.apiKey = pass;
+                    credentialInfo.space = user;
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return MyHomePage(
+                            title: 'Backlog Alternate with Flutter2:[' +
+                                space.name +
+                                ']',
+                          );
+                        },
+                      ),
+                    );
+                  } catch (e) {
+                    // TODO エラー表示 statefulに修正必要？
+                    print(e);
+                  }
+                },
+                child: Text("ログイン"),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
 }
 
 class MyHomePage extends StatelessWidget {
