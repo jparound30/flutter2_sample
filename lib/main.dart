@@ -321,6 +321,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 color: Colors.white,
                 padding: EdgeInsets.symmetric(horizontal: 24),
                 child: DropdownButton<Project>(
+                  hint: Text("プロジェクトを選択"),
                   value: selectedProject.project,
                   icon: Icon(Icons.arrow_downward),
                   iconSize: 24,
