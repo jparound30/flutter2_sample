@@ -125,6 +125,11 @@ class LoginFormState extends State<LoginForm> {
                 Expanded(
                   child: TextFormField(
                     controller: _userController,
+                    decoration: InputDecoration(
+                      labelText: "スペース",
+                      helperText: ' ',
+                      enabled: true,
+                    ),
                     autofillHints: [AutofillHints.username],
                     obscureText: false,
                     onSaved: (value) => print("スペース: " + value!),
@@ -151,6 +156,12 @@ class LoginFormState extends State<LoginForm> {
                 Expanded(
                   child: TextFormField(
                     controller: _passwordController,
+                    decoration: InputDecoration(
+                      labelText: "APIキー",
+                      helperText: ' ',
+                      // 以下でエラーメッセージのスタイルを指定可
+                      enabled: true,
+                    ),
                     autofillHints: [AutofillHints.password],
                     obscureText: true,
                     onSaved: (value) => print("APIキー: " + value!),
