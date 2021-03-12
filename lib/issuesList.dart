@@ -156,11 +156,13 @@ class _IssueListViewState extends State<IssueListView> {
   Widget build(BuildContext context) {
     final selectedProject = Provider.of<SelectedProject>(context, listen: true);
     return FutureBuilder<List<Issue>>(
-      future: widget.backlogApiClient.fetchIssues(
+      future: widget.backlogApiClient
+          .fetchIssues(
         context: context,
         project: selectedProject.project,
         sort: _selectedSortField,
-      ).then((v) {
+      )
+          .then((v) {
         _issues = v;
         return v;
       }),
@@ -176,6 +178,44 @@ class _IssueListViewState extends State<IssueListView> {
   }
 
   Widget showList(BuildContext context) {
+    var paginatedDataTable = Expanded(
+      child: SingleChildScrollView(
+        child: PaginatedDataTable(
+          columns: [
+            DataColumn(label: Text("種別")),
+            DataColumn(label: Text("キー")),
+            DataColumn(label: Text("件名")),
+            DataColumn(label: Text("担当者")),
+            DataColumn(label: Text("状態")),
+            DataColumn(label: Text("優先度")),
+            DataColumn(label: Text("登録日")),
+            DataColumn(label: Text("開始日")),
+            DataColumn(label: Text("期限日")),
+            DataColumn(label: Text("予定時間")),
+            DataColumn(label: Text("実績時間")),
+            DataColumn(label: Text("更新日")),
+            DataColumn(label: Text("登録者")),
+            // DataColumn(label: Text("添付")),
+          ],
+          source: IssueTableSource(),
+        ),
+      ),
+    );
+
+    var listView = Flexible(
+      child: Scrollbar(
+        child: ListView.separated(
+          itemCount: _issues.length,
+          itemBuilder: (context, index) {
+            return IssueSimple(_issues[index]);
+          },
+          separatorBuilder: (context, index) {
+            return Divider();
+          },
+        ),
+      ),
+    );
+
     List<DropdownMenuItem<IssueField>> dropDownItems =
         IssueField.values.map<DropdownMenuItem<IssueField>>((IssueField value) {
       return DropdownMenuItem<IssueField>(
@@ -202,19 +242,7 @@ class _IssueListViewState extends State<IssueListView> {
               _onSortFieldChanged(newValue);
             },
           ),
-          Flexible(
-            child: Scrollbar(
-              child: ListView.separated(
-                itemCount: _issues.length,
-                itemBuilder: (context, index) {
-                  return IssueSimple(_issues[index]);
-                },
-                separatorBuilder: (context, index) {
-                  return Divider();
-                },
-              ),
-            ),
-          ),
+          paginatedDataTable,
         ],
       ),
     );
@@ -259,4 +287,66 @@ class IssueSimple extends StatelessWidget {
       ),
     );
   }
+}
+
+class IssueTableSource extends DataTableSource {
+  @override
+  DataRow? getRow(int index) {
+    // TODO: implement getRow
+    return DataRow(
+      cells: [
+        DataCell(
+          Text("タスク"),
+        ),
+        DataCell(
+          Text("AAA-1"),
+        ),
+        DataCell(
+          Text("なにかのタスク"),
+        ),
+        DataCell(
+          Text("担当者A"),
+        ),
+        DataCell(
+          Text("完了"),
+        ),
+        DataCell(
+          Text("→"),
+        ),
+        DataCell(
+          Text("2030/1/1"),
+        ),
+        DataCell(
+          Text("2030/1/2"),
+        ),
+        DataCell(
+          Text("2030/1/3"),
+        ),
+        DataCell(
+          Text("100"),
+        ),
+        DataCell(
+          Text("200"),
+        ),
+        DataCell(
+          Text("更新日"),
+        ),
+        DataCell(
+          Text("登録者B"),
+        ),
+      ],
+    );
+  }
+
+  @override
+  // TODO: implement isRowCountApproximate
+  bool get isRowCountApproximate => true;
+
+  @override
+  // TODO: implement rowCount
+  int get rowCount => 200;
+
+  @override
+  // TODO: implement selectedRowCount
+  int get selectedRowCount => 0;
 }
