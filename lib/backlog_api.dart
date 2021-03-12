@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 import 'issuesList.dart';
+import 'log.dart';
 import 'models/activity.dart';
 import 'const.dart';
 import 'models/issue.dart';
@@ -23,26 +24,23 @@ class BacklogApiClient {
 
   BacklogApiClient() : _client = http.Client();
 
-  void _debugLog(String msg) {
-    print(msg);
-  }
-
   Future<String> _get(Uri uri) async {
     final response = await _client.get(uri);
     final responseBody = utf8.decode(response.bodyBytes, allowMalformed: true);
-    _debugLog("HTTP GET: " + uri.toString());
-    // _debugLog(responseBody);
+    Log.httpRequest("HTTP GET: " + uri.toString());
+    Log.httpResponse(responseBody);
     return responseBody;
   }
 
   Future<Space> login(String space, String apiKey) async {
-    var url = Uri.https(space, SPACE_INFO, {
+    var uri = Uri.https(space, SPACE_INFO, {
       'apiKey': apiKey,
     });
 
-    final response = await _client.get(url);
+    final response = await _client.get(uri);
+    Log.httpRequest("HTTP GET: " + uri.toString());
     final responseBody = utf8.decode(response.bodyBytes, allowMalformed: true);
-    print(responseBody);
+    Log.httpResponse(responseBody);
 
     final parsed = jsonDecode(responseBody);
     return Space.fromJson(parsed);
