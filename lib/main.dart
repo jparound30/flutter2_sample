@@ -74,10 +74,37 @@ class LoginForm extends StatefulWidget {
     return LoginFormState();
   }
 }
+
 class LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
   final _userController = TextEditingController(text: EnvVars.spaceName);
   final _passwordController = TextEditingController(text: EnvVars.apiKey);
+  bool _loginButtonEnabled = false;
+
+  LoginFormState() {
+    _userController.addListener(_inputChanged);
+    _passwordController.addListener(_inputChanged);
+  }
+
+  void _inputChanged() {
+    bool newLoginButtonEnabled = false;
+    if (_formKey.currentState != null && _formKey.currentState!.validate()) {
+      newLoginButtonEnabled = true;
+    }
+
+    if (newLoginButtonEnabled != _loginButtonEnabled) {
+      setState(() {
+        _loginButtonEnabled = newLoginButtonEnabled;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _userController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,6 +128,13 @@ class LoginFormState extends State<LoginForm> {
                     autofillHints: [AutofillHints.username],
                     obscureText: false,
                     onSaved: (value) => print("スペース: " + value!),
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
                   ),
                 ),
               ],
@@ -120,6 +154,13 @@ class LoginFormState extends State<LoginForm> {
                     autofillHints: [AutofillHints.password],
                     obscureText: true,
                     onSaved: (value) => print("APIキー: " + value!),
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
                   ),
                 ),
               ],
@@ -127,33 +168,38 @@ class LoginFormState extends State<LoginForm> {
             Padding(
               padding: const EdgeInsets.only(top: 48.0),
               child: ElevatedButton(
-                onPressed: () async {
-                  final pass = _passwordController.value.text;
-                  final user = _userController.value.text;
-                  print("Login pressed:" + user + ":" + pass);
-                  final backlogApiClient = BacklogApiClient();
-                  try {
-                    final space = await backlogApiClient.login(user, pass);
-                    final credentialInfo =
-                    Provider.of<CredentialInfo>(context, listen: false);
-                    credentialInfo.apiKey = pass;
-                    credentialInfo.space = user;
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return MyHomePage(
-                            title: 'Backlog Alternate with Flutter2:[' +
-                                space.name +
-                                ']',
+                onPressed: (_formKey.currentState == null ||
+                        !_formKey.currentState!.validate())
+                    ? null
+                    : () async {
+                        final pass = _passwordController.value.text;
+                        final user = _userController.value.text;
+                        print("Login pressed:" + user + ":" + pass);
+                        final backlogApiClient = BacklogApiClient();
+                        try {
+                          final space =
+                              await backlogApiClient.login(user, pass);
+                          final credentialInfo = Provider.of<CredentialInfo>(
+                              context,
+                              listen: false);
+                          credentialInfo.apiKey = pass;
+                          credentialInfo.space = user;
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return MyHomePage(
+                                  title: 'Backlog Alternate with Flutter2:[' +
+                                      space.name +
+                                      ']',
+                                );
+                              },
+                            ),
                           );
-                        },
-                      ),
-                    );
-                  } catch (e) {
-                    // TODO エラー表示 statefulに修正必要？
-                    print(e);
-                  }
-                },
+                        } catch (e) {
+                          // TODO エラー表示 statefulに修正必要？
+                          print(e);
+                        }
+                      },
                 child: Text("ログイン"),
               ),
             ),
@@ -162,7 +208,6 @@ class LoginFormState extends State<LoginForm> {
       ),
     );
   }
-
 }
 
 class MyHomePage extends StatelessWidget {
