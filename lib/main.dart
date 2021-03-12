@@ -79,25 +79,8 @@ class LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
   final _userController = TextEditingController(text: EnvVars.spaceName);
   final _passwordController = TextEditingController(text: EnvVars.apiKey);
-  bool _loginButtonEnabled = false;
 
-  LoginFormState() {
-    _userController.addListener(_inputChanged);
-    _passwordController.addListener(_inputChanged);
-  }
-
-  void _inputChanged() {
-    bool newLoginButtonEnabled = false;
-    if (_formKey.currentState != null && _formKey.currentState!.validate()) {
-      newLoginButtonEnabled = true;
-    }
-
-    if (newLoginButtonEnabled != _loginButtonEnabled) {
-      setState(() {
-        _loginButtonEnabled = newLoginButtonEnabled;
-      });
-    }
-  }
+  bool _isValid = true; // TODO initial state handling
 
   @override
   void dispose() {
@@ -108,81 +91,69 @@ class LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    var spaceField = TextFormField(
+      controller: _userController,
+      decoration: InputDecoration(
+        labelText: "スペース",
+        helperText: ' ',
+        enabled: true,
+      ),
+      autofillHints: [AutofillHints.username],
+      obscureText: false,
+      onSaved: (value) => print("スペース: " + value!),
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter some text';
+        }
+        return null;
+      },
+    );
+
+    final apiKeyField = TextFormField(
+      controller: _passwordController,
+      decoration: InputDecoration(
+        labelText: "APIキー",
+        helperText: 'Backlogの個人設定で払い出したAPIキーを入力してください',
+        // 以下でエラーメッセージのスタイルを指定可
+        enabled: true,
+      ),
+      autofillHints: [AutofillHints.password],
+      obscureText: true,
+      onSaved: (value) => print("APIキー: " + value!),
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter some text';
+        }
+        return null;
+      },
+    );
+
     return Form(
       key: _formKey,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      onChanged: () {
+        var isValid = _formKey.currentState!.validate();
+        setState(() {
+          _isValid = isValid;
+        });
+      },
       child: AutofillGroup(
         child: Column(
           children: [
-            Row(
-              textBaseline: TextBaseline.alphabetic,
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  width: 100,
-                  child: Text("スペース"),
-                ),
-                Expanded(
-                  child: TextFormField(
-                    controller: _userController,
-                    decoration: InputDecoration(
-                      labelText: "スペース",
-                      helperText: ' ',
-                      enabled: true,
-                    ),
-                    autofillHints: [AutofillHints.username],
-                    obscureText: false,
-                    onSaved: (value) => print("スペース: " + value!),
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              textBaseline: TextBaseline.alphabetic,
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  width: 100,
-                  child: Text("APIキー"),
-                ),
-                Expanded(
-                  child: TextFormField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      labelText: "APIキー",
-                      helperText: ' ',
-                      // 以下でエラーメッセージのスタイルを指定可
-                      enabled: true,
-                    ),
-                    autofillHints: [AutofillHints.password],
-                    obscureText: true,
-                    onSaved: (value) => print("APIキー: " + value!),
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-              ],
-            ),
+            spaceField,
+            apiKeyField,
             Padding(
               padding: const EdgeInsets.only(top: 48.0),
               child: ElevatedButton(
-                onPressed: (_formKey.currentState == null ||
-                        !_formKey.currentState!.validate())
+                onPressed: !_isValid
                     ? null
                     : () async {
+                        if (_formKey.currentState == null ||
+                            !_formKey.currentState!.validate()) {
+                          return;
+                        }
                         final pass = _passwordController.value.text;
                         final user = _userController.value.text;
                         print("Login pressed:" + user + ":" + pass);
