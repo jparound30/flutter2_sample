@@ -30,7 +30,8 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider<CredentialInfo>(
       create: (_) {
         if (EnvVars.apiKey.isNotEmpty && EnvVars.spaceName.isNotEmpty) {
-          return CredentialInfo(space: EnvVars.spaceName, apiKey: EnvVars.apiKey);
+          return CredentialInfo(
+              space: EnvVars.spaceName, apiKey: EnvVars.apiKey);
         }
         return CredentialInfo();
       },
@@ -65,23 +66,23 @@ class EntryScreenState extends State<EntryScreen> {
     }
   }
 
-  _startTransition() async {
+  _startTransition(Space space) async {
     final d = new Duration(seconds: 0);
-    return Timer(d, _transition);
-  }
 
-  _transition() {
-    final credentialInfo = Provider.of<CredentialInfo>(context, listen: false);
-    final space = credentialInfo.space!;
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) {
-          return MyHomePage(
-            title: '[' + space + ']',
-          );
-        },
-      ),
-    );
+    final _transition = () {
+      if (!mounted) return;
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) {
+            return MyHomePage(
+              title: '[' + space.name + ']',
+            );
+          },
+        ),
+      );
+    };
+
+    return Timer(d, _transition);
   }
 
   @override
@@ -92,14 +93,20 @@ class EntryScreenState extends State<EntryScreen> {
       print("CREDENTIALS EXISTS. CHECK WHETHER VALID OR NOT!");
       return FutureBuilder(
         future: test(credentialInfo),
-        builder: (context, snapshot) {
+        builder: (context, AsyncSnapshot<Space> snapshot) {
+          print(snapshot);
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
           if (snapshot.hasError) {
             print(snapshot.error);
           }
           if (snapshot.hasData) {
-            _startTransition();
+            print('SHOW RecentActivity');
+            _startTransition(snapshot.data!);
             return Center(child: CircularProgressIndicator());
           } else {
+            print('SHOW LoginPage');
             return LoginPage();
           }
         },
@@ -107,7 +114,6 @@ class EntryScreenState extends State<EntryScreen> {
     } else {
       print("NO CREDENTIAL");
       return LoginPage();
-
     }
   }
 }
