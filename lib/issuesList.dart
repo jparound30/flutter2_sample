@@ -223,25 +223,27 @@ class _IssueListViewState extends State<IssueListView> {
         child: Text(widget._issueFieldEnumHelper.description(value)),
       );
     }).toList();
+
+    var dropdownButton = DropdownButton<IssueField>(
+      value: _selectedSortField,
+      hint: Text("並び替え"),
+      items: dropDownItems,
+      icon: Icon(Icons.arrow_downward),
+      iconSize: 24,
+      elevation: 16,
+      underline: Container(
+        height: 2,
+        color: Colors.blueAccent.shade100,
+      ),
+      onChanged: (IssueField? newValue) {
+        _onSortFieldChanged(newValue);
+      },
+    );
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          DropdownButton<IssueField>(
-            value: _selectedSortField,
-            hint: Text("並び替え"),
-            items: dropDownItems,
-            icon: Icon(Icons.arrow_downward),
-            iconSize: 24,
-            elevation: 16,
-            underline: Container(
-              height: 2,
-              color: Colors.blueAccent.shade100,
-            ),
-            onChanged: (IssueField? newValue) {
-              _onSortFieldChanged(newValue);
-            },
-          ),
+          // dropdownButton,
           paginatedDataTable,
         ],
       ),
