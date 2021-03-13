@@ -46,7 +46,7 @@ class BacklogApiClient {
     return Space.fromJson(parsed);
   }
 
-  List<Activity> _parseActivities(String responseBody) {
+  static List<Activity> _parseActivities(String responseBody) {
     final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
 
     return parsed.map<Activity>((json) => Activity.fromJson(json)).toList();
@@ -63,7 +63,7 @@ class BacklogApiClient {
     return compute(_parseActivities, responseBody);
   }
 
-  List<Project> _parseProjects(String responseBody) {
+  static List<Project> _parseProjects(String responseBody) {
     final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
 
     return parsed.map<Project>((json) => Project.fromJson(json)).toList();
@@ -82,7 +82,7 @@ class BacklogApiClient {
     return compute(_parseProjects, responseBody);
   }
 
-  List<Issue> _parseIssues(String responseBody) {
+  static List<Issue> _parseIssues(String responseBody) {
     final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
 
     return parsed.map<Issue>((json) => Issue.fromJson(json)).toList();
