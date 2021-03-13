@@ -314,6 +314,7 @@ class MyHomePage extends StatelessWidget {
             ),
           ),
           body: TabBarView(
+            physics: NeverScrollableScrollPhysics(),
             children: [
               RecentActivityList(),
               IssueList(),
