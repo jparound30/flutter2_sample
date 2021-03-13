@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -5,11 +7,12 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import 'issuesList.dart';
-import 'models/activity.dart';
 import 'backlog_api.dart';
 import 'env_vars.dart';
+import 'issuesList.dart';
+import 'models/activity.dart';
 import 'models/project.dart';
+import 'models/space.dart';
 import 'provider/credential_info.dart';
 import 'provider/selected_project.dart';
 
@@ -25,17 +28,87 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<CredentialInfo>(
-      create: (_) => CredentialInfo(),
+      create: (_) {
+        if (EnvVars.apiKey.isNotEmpty && EnvVars.spaceName.isNotEmpty) {
+          return CredentialInfo(space: EnvVars.spaceName, apiKey: EnvVars.apiKey);
+        }
+        return CredentialInfo();
+      },
       child: MaterialApp(
         title: 'Backlog Alternate',
         theme: ThemeData(
           primarySwatch: Colors.blue,
           textTheme: GoogleFonts.mPlus1pTextTheme(),
         ),
-        home: LoginPage(),
+        home: EntryScreen(),
         debugShowCheckedModeBanner: false,
       ),
     );
+  }
+}
+
+class EntryScreen extends StatefulWidget {
+  @override
+  EntryScreenState createState() {
+    return EntryScreenState();
+  }
+}
+
+class EntryScreenState extends State<EntryScreen> {
+  final BacklogApiClient apiClient = BacklogApiClient();
+
+  Future<Space>? test(CredentialInfo info) async {
+    if (info.apiKey!.isNotEmpty && info.space!.isNotEmpty) {
+      return apiClient.login(info.space!, info.apiKey!);
+    } else {
+      return Future<Space>.error("no apikey / space");
+    }
+  }
+
+  _startTransition() async {
+    final d = new Duration(seconds: 0);
+    return Timer(d, _transition);
+  }
+
+  _transition() {
+    final credentialInfo = Provider.of<CredentialInfo>(context, listen: false);
+    final space = credentialInfo.space!;
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) {
+          return MyHomePage(
+            title: '[' + space + ']',
+          );
+        },
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var credentialInfo = Provider.of<CredentialInfo>(context);
+
+    if (credentialInfo.apiKey != null) {
+      print("CREDENTIALS EXISTS. CHECK WHETHER VALID OR NOT!");
+      return FutureBuilder(
+        future: test(credentialInfo),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            print(snapshot.error);
+          }
+          if (snapshot.hasData) {
+            _startTransition();
+            return Center(child: CircularProgressIndicator());
+          } else {
+            return LoginPage();
+          }
+        },
+      );
+    } else {
+      print("NO CREDENTIAL");
+      return LoginPage();
+
+    }
   }
 }
 
