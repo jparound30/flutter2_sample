@@ -96,7 +96,7 @@ class LoginFormState extends State<LoginForm> {
       controller: _userController,
       decoration: InputDecoration(
         labelText: "スペース",
-        helperText: ' ',
+        helperText: 'Backlogのスペース名を入力してください 例) example.backlog.jp',
         enabled: true,
       ),
       autofillHints: [AutofillHints.username],
@@ -116,7 +116,6 @@ class LoginFormState extends State<LoginForm> {
       decoration: InputDecoration(
         labelText: "APIキー",
         helperText: 'Backlogの個人設定で払い出したAPIキーを入力してください',
-        // 以下でエラーメッセージのスタイルを指定可
         enabled: true,
       ),
       autofillHints: [AutofillHints.password],
@@ -171,9 +170,7 @@ class LoginFormState extends State<LoginForm> {
                             MaterialPageRoute(
                               builder: (context) {
                                 return MyHomePage(
-                                  title: 'Backlog Alternate with Flutter2:[' +
-                                      space.name +
-                                      ']',
+                                  title: '[' + space.name + ']',
                                 );
                               },
                             ),
