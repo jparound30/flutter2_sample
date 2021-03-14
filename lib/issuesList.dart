@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import 'backlog_api.dart';
 import 'models/issue.dart';
+import 'models/project.dart';
 import 'provider/credential_info.dart';
 import 'provider/selected_project.dart';
 
@@ -177,7 +178,7 @@ class _IssueListViewState extends State<IssueListView> {
     );
   }
 
-  Widget showList(BuildContext context) {
+  Widget showList(BuildContext context, SelectedProject selectedProject) {
     var paginatedDataTable = Expanded(
       child: SingleChildScrollView(
         child: PaginatedDataTable(
@@ -197,7 +198,7 @@ class _IssueListViewState extends State<IssueListView> {
             DataColumn(label: Text("登録者")),
             // DataColumn(label: Text("添付")),
           ],
-          source: IssueTableSource(),
+          source: IssueTableSource(context, selectedProject),
         ),
       ),
     );
@@ -292,52 +293,94 @@ class IssueSimple extends StatelessWidget {
 }
 
 class IssueTableSource extends DataTableSource {
+  IssueField? sort;
+  int sortOrder = 0; //0:desc, 1:asc
+
+  List<Issue>? cachedIssues;
+  int pageOfCachedIssues = 0;
+  int itemPerPage = 20;
+
+  BuildContext _context;
+  Project? _project;
+
+  bool requestInProgress = false;
+
+  BacklogApiClient apiClient = BacklogApiClient();
+
+  IssueTableSource(BuildContext context, SelectedProject selectedProject)
+      : _context = context,
+        _project = selectedProject.project;
+
   @override
   DataRow? getRow(int index) {
-    // TODO: implement getRow
-    return DataRow(
-      cells: [
-        DataCell(
-          Text("タスク"),
-        ),
-        DataCell(
-          Text("AAA-1"),
-        ),
-        DataCell(
-          Text("なにかのタスク"),
-        ),
-        DataCell(
-          Text("担当者A"),
-        ),
-        DataCell(
-          Text("完了"),
-        ),
-        DataCell(
-          Text("→"),
-        ),
-        DataCell(
-          Text("2030/1/1"),
-        ),
-        DataCell(
-          Text("2030/1/2"),
-        ),
-        DataCell(
-          Text("2030/1/3"),
-        ),
-        DataCell(
-          Text("100"),
-        ),
-        DataCell(
-          Text("200"),
-        ),
-        DataCell(
-          Text("更新日"),
-        ),
-        DataCell(
-          Text("登録者B"),
-        ),
-      ],
-    );
+    var page = (index / itemPerPage).floor();
+    if (cachedIssues == null || pageOfCachedIssues != page) {
+      if (requestInProgress) {
+        return null;
+      }
+      requestInProgress = true;
+      // request
+      apiClient
+          .fetchIssues(
+        context: _context,
+        project: _project,
+      )
+          .then(
+        (value) {
+          cachedIssues = value;
+          pageOfCachedIssues = page;
+          notifyListeners();
+        },
+      ).whenComplete(() => requestInProgress = false);
+      return null;
+    } else {
+      var translateIndex = index - (page * itemPerPage);
+      var issue = cachedIssues![translateIndex];
+      return DataRow.byIndex(
+        index: index,
+        cells: [
+          DataCell(
+            Text("タスク"),
+          ),
+          DataCell(
+            Text("AAA-1"),
+          ),
+          DataCell(
+            Text(issue.summary),
+          ),
+          DataCell(
+            Text("担当者A"),
+          ),
+          DataCell(
+            Text("完了"),
+          ),
+          DataCell(
+            Text("→"),
+          ),
+          DataCell(
+            Text("2030/1/1"),
+          ),
+          DataCell(
+            Text("2030/1/2"),
+          ),
+          DataCell(
+            Text("2030/1/3"),
+          ),
+          DataCell(
+            Text("100"),
+          ),
+          DataCell(
+            Text("200"),
+          ),
+          DataCell(
+            Text("更新日"),
+          ),
+          DataCell(
+            Text("登録者B"),
+          ),
+        ],
+      );
+    }
   }
 
   @override
@@ -346,7 +389,14 @@ class IssueTableSource extends DataTableSource {
 
   @override
   // TODO: implement rowCount
-  int get rowCount => 200;
+  int get rowCount {
+    if (_project == null) {
+      return 0;
+    } else {
+      // TODO
+      return 200;
+    }
+  }
 
   @override
   // TODO: implement selectedRowCount
