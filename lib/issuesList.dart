@@ -156,26 +156,7 @@ class _IssueListViewState extends State<IssueListView> {
   @override
   Widget build(BuildContext context) {
     final selectedProject = Provider.of<SelectedProject>(context, listen: true);
-    return FutureBuilder<List<Issue>>(
-      future: widget.backlogApiClient
-          .fetchIssues(
-        context: context,
-        project: selectedProject.project,
-        sort: _selectedSortField,
-      )
-          .then((v) {
-        _issues = v;
-        return v;
-      }),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) print(snapshot.error);
-        if (snapshot.hasData) {
-          return showList(context);
-        } else {
-          return Center(child: CircularProgressIndicator());
-        }
-      },
-    );
+    return showList(context, selectedProject);
   }
 
   Widget showList(BuildContext context, SelectedProject selectedProject) {
