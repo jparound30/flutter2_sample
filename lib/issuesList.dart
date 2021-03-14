@@ -317,14 +317,16 @@ class IssueTableSource extends DataTableSource {
     } else {
       var translateIndex = index - (page * itemPerPage);
       var issue = cachedIssues![translateIndex];
+      var dateFormat = DateFormat('yyyy/MM/dd HH:mm', 'ja');
+
       return DataRow.byIndex(
         index: index,
         cells: [
           DataCell(
-            Text("タスク"),
+            Text(issue.issueType.name),
           ),
           DataCell(
-            Text("AAA-1"),
+            Text(issue.issueKey),
           ),
           DataCell(
             Text(issue.summary),
@@ -339,7 +341,7 @@ class IssueTableSource extends DataTableSource {
             Text("→"),
           ),
           DataCell(
-            Text("2030/1/1"),
+            Text(dateFormat.format(issue.created!)),
           ),
           DataCell(
             Text("2030/1/2"),
@@ -354,10 +356,10 @@ class IssueTableSource extends DataTableSource {
             Text("200"),
           ),
           DataCell(
-            Text("更新日"),
+            Text(dateFormat.format(issue.updated!)),
           ),
           DataCell(
-            Text("登録者B"),
+            Text(issue.createdUser.name),
           ),
         ],
       );

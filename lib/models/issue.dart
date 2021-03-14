@@ -1,8 +1,28 @@
 import 'user.dart';
 
+class IssueType {
+  final String name;
+  final String color;
+
+  IssueType({
+    required this.name,
+    required this.color,
+  });
+
+  factory IssueType.fromJson(Map<String, dynamic> json) {
+    return IssueType(
+      name: json['name'],
+      color: json['color'],
+    );
+  }
+}
+
 class Issue {
   final int id;
   final int projectId;
+  final String issueKey;
+  final int keyId;
+  final IssueType issueType;
   final String summary;
   final String description;
 
@@ -32,6 +52,9 @@ class Issue {
   Issue({
     required this.id,
     required this.projectId,
+    required this.issueKey,
+    required this.keyId,
+    required this.issueType,
     required this.summary,
     required this.description,
     required this.createdUser,
@@ -45,6 +68,9 @@ class Issue {
     return Issue(
       id: json['id'],
       projectId: json['projectId'],
+      issueKey: json['issueKey'],
+      keyId: json['keyId'],
+      issueType: IssueType.fromJson(json['issueType']),
       summary: json['summary'],
       description: json['description'],
       createdUser: User.fromJson(json['createdUser']),
