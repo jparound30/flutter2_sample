@@ -345,6 +345,12 @@ class IssueTableSource extends DataTableSource {
 
       return DataRow.byIndex(
         index: index,
+        color: MaterialStateProperty.resolveWith<Color?>(
+            (Set<MaterialState> states) {
+          if (states.contains(MaterialState.hovered))
+            return Theme.of(_context).colorScheme.secondary.withOpacity(0.08);
+          return null;
+        }),
         cells: [
           DataCell(
             Text(issue.issueType.name),
