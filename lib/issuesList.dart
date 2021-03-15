@@ -296,6 +296,9 @@ class IssueTableSource extends DataTableSource {
       : _context = context,
         _project = selectedProject.project {
     print('IssueTableSource called');
+    apiClient
+        .fetchIssueCount(context: _context, project: _project)
+        .then((value) => totalRowCount = value);
   }
 
   @override
@@ -403,13 +406,17 @@ class IssueTableSource extends DataTableSource {
     print("called rowCount");
     if (_project == null ||
         (cachedIssues != null && cachedIssues!.length == 0)) {
-      print("called rowCount = 0");
+      print("called totalRowCount = 0");
       totalRowCount = 0;
       return 0;
     } else {
-      // TODO
-      print("called rowCount = 200");
-      return 200;
+      if (totalRowCount != null) {
+        print("called totalRowCount = " + totalRowCount!.toString());
+        return totalRowCount!;
+      } else {
+        print("called totalRowCount = 0");
+        return 0;
+      }
     }
   }
 
