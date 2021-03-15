@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -281,6 +283,8 @@ class IssueTableSource extends DataTableSource {
   int pageOfCachedIssues = 0;
   int itemPerPage = 20;
 
+  int? totalRowCount;
+
   BuildContext _context;
   Project? _project;
 
@@ -290,12 +294,15 @@ class IssueTableSource extends DataTableSource {
 
   IssueTableSource(BuildContext context, SelectedProject selectedProject)
       : _context = context,
-        _project = selectedProject.project;
+        _project = selectedProject.project {
+    print('IssueTableSource called');
+  }
 
   @override
   DataRow? getRow(int index) {
     var page = (index / itemPerPage).floor();
-    if (cachedIssues == null || pageOfCachedIssues != page) {
+    if (cachedIssues == null ||
+        (cachedIssues != null && pageOfCachedIssues != page)) {
       if (requestInProgress) {
         return null;
       }
@@ -316,8 +323,22 @@ class IssueTableSource extends DataTableSource {
       return null;
     } else {
       var translateIndex = index - (page * itemPerPage);
+      if (cachedIssues!.length <= translateIndex) {
+        Timer(Duration(seconds: 0), () => notifyListeners());
+        return null;
+      }
       var issue = cachedIssues![translateIndex];
       var dateFormat = DateFormat('yyyy/MM/dd HH:mm', 'ja');
+
+      var startDate =
+          issue.startDate != null ? dateFormat.format(issue.startDate!) : "";
+      var dueDate =
+          issue.dueDate != null ? dateFormat.format(issue.dueDate!) : "";
+
+      var estimateHours =
+          issue.estimatedHours != null ? issue.estimatedHours.toString() : "";
+      var actualHours =
+          issue.actualHours != null ? issue.actualHours.toString() : "";
 
       return DataRow.byIndex(
         index: index,
@@ -332,28 +353,28 @@ class IssueTableSource extends DataTableSource {
             Text(issue.summary),
           ),
           DataCell(
-            Text("担当者A"),
+            Text(issue.assignee != null ? issue.assignee!.name : ""),
           ),
           DataCell(
-            Text("完了"),
+            Text(issue.status.name),
           ),
           DataCell(
-            Text("→"),
+            Text(issue.priority.name),
           ),
           DataCell(
             Text(dateFormat.format(issue.created!)),
           ),
           DataCell(
-            Text("2030/1/2"),
+            Text(startDate),
           ),
           DataCell(
-            Text("2030/1/3"),
+            Text(dueDate),
           ),
           DataCell(
-            Text("100"),
+            Text(estimateHours),
           ),
           DataCell(
-            Text("200"),
+            Text(actualHours),
           ),
           DataCell(
             Text(dateFormat.format(issue.updated!)),
@@ -368,15 +389,26 @@ class IssueTableSource extends DataTableSource {
 
   @override
   // TODO: implement isRowCountApproximate
-  bool get isRowCountApproximate => true;
+  bool get isRowCountApproximate {
+    print("called isRowCountApproximate");
+    if (totalRowCount != null) {
+      return false;
+    }
+    return true;
+  }
 
   @override
   // TODO: implement rowCount
   int get rowCount {
-    if (_project == null) {
+    print("called rowCount");
+    if (_project == null ||
+        (cachedIssues != null && cachedIssues!.length == 0)) {
+      print("called rowCount = 0");
+      totalRowCount = 0;
       return 0;
     } else {
       // TODO
+      print("called rowCount = 200");
       return 200;
     }
   }
