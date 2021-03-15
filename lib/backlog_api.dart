@@ -111,4 +111,30 @@ class BacklogApiClient {
     final responseBody = await _get(url);
     return compute(_parseIssues, responseBody);
   }
+
+  Future<int> fetchIssueCount({
+    required BuildContext context,
+    required Project? project,
+    IssueField? sort,
+  }) async {
+    final credentialInfo = Provider.of<CredentialInfo>(context);
+    final apiKey = credentialInfo.apiKey;
+    final space = credentialInfo.space!;
+    final query = Map<String, dynamic>();
+    // TODO fetchIssuesのリクエスト生成処理（クエリー）などを共通化
+    query['apiKey'] = apiKey;
+    if (project != null) {
+      query['projectId[]'] = project.id.toString();
+    }
+    if (sort != null) {
+      query['sort'] = IssueFieldEnumHelper().name(sort);
+    }
+
+    var url = Uri.https(space, ISSUES_COUNT, query);
+
+    final responseBody = await _get(url);
+    final parsed = jsonDecode(responseBody);
+    return parsed['count'];
+  }
+
 }
