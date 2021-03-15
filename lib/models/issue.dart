@@ -66,6 +66,32 @@ class Issue {
   final String summary;
   final String description;
 
+  final Priority priority;
+  final Status status;
+  final User? assignee;
+
+  final String? _startDateStr;
+  final String? _dueDateStr;
+
+  DateTime? get startDate {
+    if (_startDateStr != null) {
+      return DateTime.parse(_startDateStr!).toLocal();
+    } else {
+      return null;
+    }
+  }
+
+  DateTime? get dueDate {
+    if (_dueDateStr != null) {
+      return DateTime.parse(_dueDateStr!).toLocal();
+    } else {
+      return null;
+    }
+  }
+
+  final double? estimatedHours;
+  final double? actualHours;
+
   // TODO add more fields
   final User createdUser;
   final User? updatedUser;
@@ -97,14 +123,27 @@ class Issue {
     required this.issueType,
     required this.summary,
     required this.description,
+    required this.priority,
+    required this.status,
+    this.assignee,
+    String? startDate,
+    String? dueDate,
+    this.estimatedHours,
+    this.actualHours,
     required this.createdUser,
     this.updatedUser,
     String? created,
     String? updated,
-  })  : _createdStr = created,
+  })  : _startDateStr = startDate,
+        _dueDateStr = dueDate,
+        _createdStr = created,
         _updatedStr = updated;
 
   factory Issue.fromJson(Map<String, dynamic> json) {
+    User? assignee;
+    if (json['assignee'] != null) {
+      assignee = User.fromJson(json['assignee']);
+    }
     return Issue(
       id: json['id'],
       projectId: json['projectId'],
@@ -113,6 +152,13 @@ class Issue {
       issueType: IssueType.fromJson(json['issueType']),
       summary: json['summary'],
       description: json['description'],
+      priority: Priority.fromJson(json['priority']),
+      status: Status.fromJson(json['status']),
+      assignee: assignee,
+      startDate: json['startDate'],
+      dueDate: json['dueDate'],
+      estimatedHours: json['estimateHours'],
+      actualHours: json['actualHours'],
       createdUser: User.fromJson(json['createdUser']),
       updatedUser: User.fromJson(json['updatedUser']),
       created: json['created'],
