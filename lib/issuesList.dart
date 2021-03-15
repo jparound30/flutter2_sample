@@ -359,7 +359,13 @@ class IssueTableSource extends DataTableSource {
             Text(issue.issueKey),
           ),
           DataCell(
-            Text(issue.summary),
+            SizedBox(
+              width: 400,
+              child: Text(
+                issue.summary,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           ),
           DataCell(
             Text(issue.assignee != null ? issue.assignee!.name : ""),
