@@ -1,5 +1,45 @@
 import 'user.dart';
 
+class Priority {
+  final int id;
+  final String name;
+
+  Priority({
+    required this.id,
+    required this.name,
+  });
+
+  factory Priority.fromJson(Map<String, dynamic> json) {
+    return Priority(
+      id: json['id'],
+      name: json['name'],
+    );
+  }
+}
+
+class Status {
+  final int id;
+  final int projectId;
+  final String name;
+  final String color;
+
+  Status({
+    required this.id,
+    required this.projectId,
+    required this.name,
+    required this.color,
+  });
+
+  factory Status.fromJson(Map<String, dynamic> json) {
+    return Status(
+      id: json['id'],
+      projectId: json['projectId'],
+      name: json['name'],
+      color: json['color'],
+    );
+  }
+}
+
 class IssueType {
   final String name;
   final String color;
