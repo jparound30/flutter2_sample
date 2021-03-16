@@ -362,9 +362,18 @@ class IssueTableSource extends DataTableSource {
           DataCell(
             SizedBox(
               width: 400,
-              child: Text(
-                issue.summary,
-                overflow: TextOverflow.ellipsis,
+              child: Tooltip(
+                message: issue.summary,
+                padding: EdgeInsets.all(16.0),
+                textStyle: TextStyle(
+                  fontSize: 14.0,
+                  color: Colors.white,
+                ),
+                child: Text(
+                  issue.summary,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
               ),
             ),
           ),
