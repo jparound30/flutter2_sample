@@ -470,7 +470,18 @@ class IssueTableSource extends DataTableSource {
         }),
         cells: [
           DataCell(
-            Text(issue.issueType.name),
+            Text(
+              issue.issueType.name,
+              style: TextStyle(
+                backgroundColor: Color.fromARGB(
+                  255,
+                  int.parse(issue.issueType.color.substring(1, 3), radix: 16),
+                  int.parse(issue.issueType.color.substring(3, 6), radix: 16),
+                  int.parse(issue.issueType.color.substring(6), radix: 16),
+                ),
+                color: Colors.white,
+              ),
+            ),
           ),
           DataCell(
             Text(issue.issueKey),
