@@ -149,14 +149,30 @@ class _IssueListViewState extends State<IssueListView> {
   IssueField? _selectedSortField;
   List<Issue> _issues = [];
 
+  int? _sortColumnIndex = 2;
+  bool _ascending = false;
+
+  _IssueListViewState() {
+    print('_IssueListViewState()');
+  }
+
   void _onSortFieldChanged(IssueField? v) {
     setState(() {
       _selectedSortField = v;
     });
   }
 
+  void _toggleSortOrder(int columnIndex, bool ascending) {
+    setState(() {
+      print("_toggleSortOrder: ascending = " + ascending.toString());
+      _ascending = ascending;
+      _sortColumnIndex = columnIndex;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    print("_IssueListViewState: build() _ascending = " + _ascending.toString());
     final selectedProject = Provider.of<SelectedProject>(context, listen: true);
     return showList(context, selectedProject);
   }
@@ -165,20 +181,58 @@ class _IssueListViewState extends State<IssueListView> {
     var paginatedDataTable = Expanded(
       child: SingleChildScrollView(
         child: PaginatedDataTable(
+          sortColumnIndex: _sortColumnIndex,
+          sortAscending: _ascending,
           columns: [
-            DataColumn(label: Text("種別")),
-            DataColumn(label: Text("キー")),
+            DataColumn(
+              label: Text("種別"),
+              onSort: _toggleSortOrder,
+            ),
+            DataColumn(
+              label: Text("キー"),
+              onSort: _toggleSortOrder,
+            ),
             DataColumn(label: Text("件名")),
-            DataColumn(label: Text("担当者")),
-            DataColumn(label: Text("状態")),
-            DataColumn(label: Text("優先度")),
-            DataColumn(label: Text("登録日")),
-            DataColumn(label: Text("開始日")),
-            DataColumn(label: Text("期限日")),
-            DataColumn(label: Text("予定時間")),
-            DataColumn(label: Text("実績時間")),
-            DataColumn(label: Text("更新日")),
-            DataColumn(label: Text("登録者")),
+            DataColumn(
+              label: Text("担当者"),
+              onSort: _toggleSortOrder,
+            ),
+            DataColumn(
+              label: Text("状態"),
+              onSort: _toggleSortOrder,
+            ),
+            DataColumn(
+              label: Text("優先度"),
+              onSort: _toggleSortOrder,
+            ),
+            DataColumn(
+              label: Text("登録日"),
+              onSort: _toggleSortOrder,
+            ),
+            DataColumn(
+              label: Text("開始日"),
+              onSort: _toggleSortOrder,
+            ),
+            DataColumn(
+              label: Text("期限日"),
+              onSort: _toggleSortOrder,
+            ),
+            DataColumn(
+              label: Text("予定時間"),
+              onSort: _toggleSortOrder,
+            ),
+            DataColumn(
+              label: Text("実績時間"),
+              onSort: _toggleSortOrder,
+            ),
+            DataColumn(
+              label: Text("更新日"),
+              onSort: _toggleSortOrder,
+            ),
+            DataColumn(
+              label: Text("登録者"),
+              onSort: _toggleSortOrder,
+            ),
             // DataColumn(label: Text("添付")),
           ],
           source: IssueTableSource(context, selectedProject),
@@ -279,6 +333,7 @@ class IssueTableSource extends DataTableSource {
   IssueField? sort;
   int sortOrder = 0; //0:desc, 1:asc
 
+  // TODO このへんの数字の辻褄はAPIのリクエスト内容などとあってないので直す
   List<Issue>? cachedIssues;
   int pageOfCachedIssues = 0;
   int itemPerPage = 20;
