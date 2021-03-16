@@ -92,6 +92,7 @@ class BacklogApiClient {
     required BuildContext context,
     required Project? project,
     IssueField? sort,
+    bool? ascending,
   }) async {
     final credentialInfo = Provider.of<CredentialInfo>(context);
     final apiKey = credentialInfo.apiKey;
@@ -105,6 +106,9 @@ class BacklogApiClient {
     if (sort != null) {
       query['sort'] = IssueFieldEnumHelper().name(sort);
     }
+    if (ascending != null) {
+      query['order'] = ascending ? "asc" : "desc";
+    }
 
     var url = Uri.https(space, ISSUES, query);
 
@@ -116,6 +120,7 @@ class BacklogApiClient {
     required BuildContext context,
     required Project? project,
     IssueField? sort,
+    bool? ascending,
   }) async {
     final credentialInfo = Provider.of<CredentialInfo>(context);
     final apiKey = credentialInfo.apiKey;
@@ -129,6 +134,9 @@ class BacklogApiClient {
     if (sort != null) {
       query['sort'] = IssueFieldEnumHelper().name(sort);
     }
+    if (ascending != null) {
+      query['order'] = ascending ? "asc" : "desc";
+    }
 
     var url = Uri.https(space, ISSUES_COUNT, query);
 
@@ -136,5 +144,4 @@ class BacklogApiClient {
     final parsed = jsonDecode(responseBody);
     return parsed['count'];
   }
-
 }
