@@ -470,16 +470,26 @@ class IssueTableSource extends DataTableSource {
         }),
         cells: [
           DataCell(
-            Text(
-              issue.issueType.name,
-              style: TextStyle(
-                backgroundColor: Color.fromARGB(
-                  255,
-                  int.parse(issue.issueType.color.substring(1, 3), radix: 16),
-                  int.parse(issue.issueType.color.substring(3, 6), radix: 16),
-                  int.parse(issue.issueType.color.substring(6), radix: 16),
+            Center(
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                decoration: ShapeDecoration(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                  ),
+                  color: Color.fromARGB(
+                    255,
+                    int.parse(issue.issueType.color.substring(1, 3), radix: 16),
+                    int.parse(issue.issueType.color.substring(3, 5), radix: 16),
+                    int.parse(issue.issueType.color.substring(5), radix: 16),
+                  ),
                 ),
-                color: Colors.white,
+                child: Text(
+                  issue.issueType.name,
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ),
           ),
