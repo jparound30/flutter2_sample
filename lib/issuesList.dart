@@ -171,6 +171,45 @@ class _IssueListViewState extends State<IssueListView> {
       print("_toggleSortOrder: ascending = " + ascending.toString());
       _ascending = ascending;
       _sortColumnIndex = columnIndex;
+      // TODO カラムのリストと連動させる
+      switch (_sortColumnIndex) {
+        case 0:
+          _selectedSortField = IssueField.issueType;
+          break;
+        case 1:
+          _selectedSortField = IssueField.id;
+          break;
+        case 3:
+          _selectedSortField = IssueField.assignee;
+          break;
+        case 4:
+          _selectedSortField = IssueField.status;
+          break;
+        case 5:
+          _selectedSortField = IssueField.priority;
+          break;
+        case 6:
+          _selectedSortField = IssueField.created;
+          break;
+        case 7:
+          _selectedSortField = IssueField.startDate;
+          break;
+        case 8:
+          _selectedSortField = IssueField.dueDate;
+          break;
+        case 9:
+          _selectedSortField = IssueField.estimatedHours;
+          break;
+        case 10:
+          _selectedSortField = IssueField.actualHours;
+          break;
+        case 11:
+          _selectedSortField = IssueField.updated;
+          break;
+        case 12:
+          _selectedSortField = IssueField.createdUser;
+          break;
+      }
     });
   }
 
