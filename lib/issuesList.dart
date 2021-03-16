@@ -278,7 +278,11 @@ class _IssueListViewState extends State<IssueListView> {
             ),
             // DataColumn(label: Text("添付")),
           ],
-          source: IssueTableSource(context, selectedProject),
+          source: IssueTableSource(
+              context: context,
+              selectedProject: selectedProject,
+              sort: _selectedSortField,
+              ascending: _ascending),
         ),
       ),
     );
@@ -385,17 +389,30 @@ class IssueTableSource extends DataTableSource {
 
   BuildContext _context;
   Project? _project;
+  IssueField? _sort;
+  bool? _ascending;
 
   bool requestInProgress = false;
 
   BacklogApiClient apiClient = BacklogApiClient();
 
-  IssueTableSource(BuildContext context, SelectedProject selectedProject)
+  IssueTableSource(
+      {required BuildContext context,
+      required SelectedProject selectedProject,
+      IssueField? sort,
+      bool? ascending})
       : _context = context,
-        _project = selectedProject.project {
+        _project = selectedProject.project,
+        _sort = sort,
+        _ascending = ascending {
     print('IssueTableSource called');
+
     apiClient
-        .fetchIssueCount(context: _context, project: _project)
+        .fetchIssueCount(
+            context: _context,
+            project: _project,
+            sort: _sort,
+            ascending: _ascending)
         .then((value) => totalRowCount = value);
   }
 
@@ -411,9 +428,10 @@ class IssueTableSource extends DataTableSource {
       // request
       apiClient
           .fetchIssues(
-        context: _context,
-        project: _project,
-      )
+              context: _context,
+              project: _project,
+              sort: _sort,
+              ascending: _ascending)
           .then(
         (value) {
           cachedIssues = value;
