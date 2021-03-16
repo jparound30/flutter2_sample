@@ -332,11 +332,12 @@ class IssueTableSource extends DataTableSource {
       }
       var issue = cachedIssues![translateIndex];
       var dateFormat = DateFormat('yyyy/MM/dd HH:mm', 'ja');
+      var dateFormatYmd = DateFormat('yyyy/MM/dd', 'ja');
 
       var startDate =
-          issue.startDate != null ? dateFormat.format(issue.startDate!) : "";
+          issue.startDate != null ? dateFormatYmd.format(issue.startDate!) : "";
       var dueDate =
-          issue.dueDate != null ? dateFormat.format(issue.dueDate!) : "";
+          issue.dueDate != null ? dateFormatYmd.format(issue.dueDate!) : "";
 
       var estimateHours =
           issue.estimatedHours != null ? issue.estimatedHours.toString() : "";
