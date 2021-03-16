@@ -16,6 +16,9 @@ enum IssueField {
   /// 種類
   issueType,
 
+  /// ID
+  id,
+
   /// カテゴリー
   category,
 
@@ -99,6 +102,7 @@ class IssueFieldEnumHelper extends EnumHelper<IssueField> {
   Map<IssueField, String> maps() {
     final ret = Map<IssueField, String>();
     ret[IssueField.issueType] = "種類";
+    ret[IssueField.id] = "キー";
     ret[IssueField.category] = "カテゴリー";
     ret[IssueField.version] = "発生バージョン";
     ret[IssueField.milestone] = "マイルストーン";
