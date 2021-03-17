@@ -262,11 +262,11 @@ class _IssueListViewState extends State<IssueListView> {
               onSort: _toggleSortOrder,
             ),
             DataColumn(
-              label: Expanded(child: Center(child: Text("予定時間"))),
+              label: Expanded(child: Center(child: Text("予定\n時間", maxLines: 2))),
               onSort: _toggleSortOrder,
             ),
             DataColumn(
-              label: Expanded(child: Center(child: Text("実績時間"))),
+              label: Expanded(child: Center(child: Text("実績\n時間", maxLines: 2))),
               onSort: _toggleSortOrder,
             ),
             DataColumn(
