@@ -395,6 +395,13 @@ class IssueTableSource extends DataTableSource {
   bool requestInProgress = false;
 
   BacklogApiClient apiClient = BacklogApiClient();
+  final TextStyle textStyleInCells = TextStyle(
+    fontSize: 12.0,
+  );
+  final TextStyle textStyleInCellsWhile = TextStyle(
+    fontSize: 12.0,
+    color: Colors.white,
+  );
 
   IssueTableSource(
       {required BuildContext context,
@@ -486,15 +493,16 @@ class IssueTableSource extends DataTableSource {
                 ),
                 child: Text(
                   issue.issueType.name,
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
+                  style: textStyleInCellsWhile,
                 ),
               ),
             ),
           ),
           DataCell(
-            Text(issue.issueKey),
+            Text(
+              issue.issueKey,
+              style: textStyleInCells,
+            ),
           ),
           DataCell(
             SizedBox(
@@ -502,12 +510,10 @@ class IssueTableSource extends DataTableSource {
               child: Tooltip(
                 message: issue.summary,
                 padding: EdgeInsets.all(16.0),
-                textStyle: TextStyle(
-                  fontSize: 14.0,
-                  color: Colors.white,
-                ),
+                textStyle: textStyleInCellsWhile,
                 child: Text(
                   issue.summary,
+                  style: textStyleInCells,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
                 ),
@@ -515,34 +521,64 @@ class IssueTableSource extends DataTableSource {
             ),
           ),
           DataCell(
-            Text(issue.assignee != null ? issue.assignee!.name : ""),
+            Text(
+              issue.assignee != null ? issue.assignee!.name : "",
+              style: textStyleInCells,
+            ),
           ),
           DataCell(
-            Text(issue.status.name),
+            Text(
+              issue.status.name,
+              style: textStyleInCells,
+            ),
           ),
           DataCell(
-            Text(issue.priority.name),
+            Text(
+              issue.priority.name,
+              style: textStyleInCells,
+            ),
           ),
           DataCell(
-            Text(dateFormat.format(issue.created!)),
+            Text(
+              dateFormat.format(issue.created!),
+              style: textStyleInCells,
+            ),
           ),
           DataCell(
-            Text(startDate),
+            Text(
+              startDate,
+              style: textStyleInCells,
+            ),
           ),
           DataCell(
-            Text(dueDate),
+            Text(
+              dueDate,
+              style: textStyleInCells,
+            ),
           ),
           DataCell(
-            Text(estimateHours),
+            Text(
+              estimateHours,
+              style: textStyleInCells,
+            ),
           ),
           DataCell(
-            Text(actualHours),
+            Text(
+              actualHours,
+              style: textStyleInCells,
+            ),
           ),
           DataCell(
-            Text(dateFormat.format(issue.updated!)),
+            Text(
+              dateFormat.format(issue.updated!),
+              style: textStyleInCells,
+            ),
           ),
           DataCell(
-            Text(issue.createdUser.name),
+            Text(
+              issue.createdUser.name,
+              style: textStyleInCells,
+            ),
           ),
         ],
       );
