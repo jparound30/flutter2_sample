@@ -528,57 +528,75 @@ class IssueTableSource extends DataTableSource {
             ),
           ),
           DataCell(
-            Text(
-              issue.status.name,
-              style: textStyleInCells,
+            Center(
+              child: Text(
+                issue.status.name,
+                style: textStyleInCells,
+              ),
             ),
           ),
           DataCell(
-            Text(
-              issue.priority.name,
-              style: textStyleInCells,
+            Center(
+              child: Text(
+                issue.priority.name,
+                style: textStyleInCells,
+              ),
             ),
           ),
           DataCell(
-            Text(
-              dateFormat.format(issue.created!),
-              style: textStyleInCells,
+            Center(
+              child: Text(
+                dateFormat.format(issue.created!),
+                style: textStyleInCells,
+              ),
             ),
           ),
           DataCell(
-            Text(
-              startDate,
-              style: textStyleInCells,
+            Center(
+              child: Text(
+                startDate,
+                style: textStyleInCells,
+              ),
             ),
           ),
           DataCell(
-            Text(
-              dueDate,
-              style: textStyleInCells,
+            Center(
+              child: Text(
+                dueDate,
+                style: textStyleInCells,
+              ),
             ),
           ),
           DataCell(
-            Text(
-              estimateHours,
-              style: textStyleInCells,
+            Center(
+              child: Text(
+                estimateHours,
+                style: textStyleInCells,
+              ),
             ),
           ),
           DataCell(
-            Text(
-              actualHours,
-              style: textStyleInCells,
+            Center(
+              child: Text(
+                actualHours,
+                style: textStyleInCells,
+              ),
             ),
           ),
           DataCell(
-            Text(
-              dateFormat.format(issue.updated!),
-              style: textStyleInCells,
+            Center(
+              child: Text(
+                dateFormat.format(issue.updated!),
+                style: textStyleInCells,
+              ),
             ),
           ),
           DataCell(
-            Text(
-              issue.createdUser.name,
-              style: textStyleInCells,
+            Center(
+              child: Text(
+                issue.createdUser.name,
+                style: textStyleInCells,
+              ),
             ),
           ),
         ],
