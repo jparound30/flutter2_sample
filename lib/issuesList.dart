@@ -229,52 +229,52 @@ class _IssueListViewState extends State<IssueListView> {
           columnSpacing: 16,
           columns: [
             DataColumn(
-              label: Text("種別"),
+              label: Expanded(child: Center(child: Text("種別"))),
               onSort: _toggleSortOrder,
             ),
             DataColumn(
-              label: Text("キー"),
+              label: Expanded(child: Center(child: Text("キー"))),
               onSort: _toggleSortOrder,
             ),
-            DataColumn(label: Text("件名")),
+            DataColumn(label: Expanded(child: Center(child: Text("件名")))),
             DataColumn(
-              label: Text("担当者"),
-              onSort: _toggleSortOrder,
-            ),
-            DataColumn(
-              label: Text("状態"),
+              label: Expanded(child: Center(child: Text("担当者"))),
               onSort: _toggleSortOrder,
             ),
             DataColumn(
-              label: Text("優先度"),
+              label: Expanded(child: Center(child: Text("状態"))),
               onSort: _toggleSortOrder,
             ),
             DataColumn(
-              label: Text("登録日"),
+              label: Expanded(child: Center(child: Text("優先度"))),
               onSort: _toggleSortOrder,
             ),
             DataColumn(
-              label: Text("開始日"),
+              label: Expanded(child: Center(child: Text("登録日"))),
               onSort: _toggleSortOrder,
             ),
             DataColumn(
-              label: Text("期限日"),
+              label: Expanded(child: Center(child: Text("開始日"))),
               onSort: _toggleSortOrder,
             ),
             DataColumn(
-              label: Text("予定時間"),
+              label: Expanded(child: Center(child: Text("期限日"))),
               onSort: _toggleSortOrder,
             ),
             DataColumn(
-              label: Text("実績時間"),
+              label: Expanded(child: Center(child: Text("予定時間"))),
               onSort: _toggleSortOrder,
             ),
             DataColumn(
-              label: Text("更新日"),
+              label: Expanded(child: Center(child: Text("実績時間"))),
               onSort: _toggleSortOrder,
             ),
             DataColumn(
-              label: Text("登録者"),
+              label: Expanded(child: Center(child: Text("更新日"))),
+              onSort: _toggleSortOrder,
+            ),
+            DataColumn(
+              label: Expanded(child: Center(child: Text("登録者"))),
               onSort: _toggleSortOrder,
             ),
             // DataColumn(label: Text("添付")),
