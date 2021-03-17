@@ -226,6 +226,7 @@ class _IssueListViewState extends State<IssueListView> {
         child: PaginatedDataTable(
           sortColumnIndex: _sortColumnIndex,
           sortAscending: _ascending,
+          columnSpacing: 16,
           columns: [
             DataColumn(
               label: Text("種別"),
