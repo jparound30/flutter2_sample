@@ -27,6 +27,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    // PaginatedDataTableのヘッダ行部分の背景色を設定
+    var dataTableThemeData = ThemeData.dark().dataTableTheme.copyWith(
+      headingRowColor: MaterialStateProperty.resolveWith<Color?>(
+        (Set<MaterialState> states) {
+          return Theme.of(context).colorScheme.primary.withOpacity(0.18);
+        },
+      ),
+    );
     return ChangeNotifierProvider<CredentialInfo>(
       create: (_) {
         if (EnvVars.apiKey.isNotEmpty && EnvVars.spaceName.isNotEmpty) {
@@ -40,6 +48,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
           textTheme: GoogleFonts.mPlus1pTextTheme(),
+          dataTableTheme: dataTableThemeData,
         ),
         home: EntryScreen(),
         debugShowCheckedModeBanner: false,
