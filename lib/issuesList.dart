@@ -155,6 +155,7 @@ class _IssueListViewState extends State<IssueListView> {
 
   int? _sortColumnIndex = 2;
   bool _ascending = false;
+  int _itemPerPage = 10;
 
   _IssueListViewState() {
     print('_IssueListViewState()');
@@ -224,6 +225,15 @@ class _IssueListViewState extends State<IssueListView> {
     var paginatedDataTable = Expanded(
       child: SingleChildScrollView(
         child: PaginatedDataTable(
+          rowsPerPage: _itemPerPage,
+          onRowsPerPageChanged: (value) {
+            if (value == null) {
+              return;
+            }
+            setState(() {
+              _itemPerPage = value;
+            });
+          },
           sortColumnIndex: _sortColumnIndex,
           sortAscending: _ascending,
           columnSpacing: 16,
@@ -282,10 +292,12 @@ class _IssueListViewState extends State<IssueListView> {
             // DataColumn(label: Text("添付")),
           ],
           source: IssueTableSource(
-              context: context,
-              selectedProject: selectedProject,
-              sort: _selectedSortField,
-              ascending: _ascending),
+            context: context,
+            selectedProject: selectedProject,
+            sort: _selectedSortField,
+            ascending: _ascending,
+            itemPerPage: _itemPerPage,
+          ),
         ),
       ),
     );
@@ -386,7 +398,7 @@ class IssueTableSource extends DataTableSource {
   // TODO このへんの数字の辻褄はAPIのリクエスト内容などとあってないので直す
   List<Issue>? cachedIssues;
   int pageOfCachedIssues = 0;
-  int itemPerPage = 10;
+  int _itemPerPage;
 
   int? totalRowCount;
 
@@ -410,11 +422,13 @@ class IssueTableSource extends DataTableSource {
       {required BuildContext context,
       required SelectedProject selectedProject,
       IssueField? sort,
-      bool? ascending})
+      bool? ascending,
+      required int itemPerPage})
       : _context = context,
         _project = selectedProject.project,
         _sort = sort,
-        _ascending = ascending {
+        _ascending = ascending,
+        _itemPerPage = itemPerPage {
     print('IssueTableSource called');
 
     apiClient
@@ -429,7 +443,7 @@ class IssueTableSource extends DataTableSource {
 
   @override
   DataRow? getRow(int index) {
-    var page = (index / itemPerPage).floor();
+    var page = (index / _itemPerPage).floor();
     if (cachedIssues == null ||
         (cachedIssues != null && pageOfCachedIssues != page)) {
       if (requestInProgress) {
@@ -443,7 +457,7 @@ class IssueTableSource extends DataTableSource {
         project: _project,
         sort: _sort,
         ascending: _ascending,
-        count: itemPerPage,
+        count: _itemPerPage,
       )
           .then(
         (value) {
@@ -454,7 +468,7 @@ class IssueTableSource extends DataTableSource {
       ).whenComplete(() => requestInProgress = false);
       return null;
     } else {
-      var translateIndex = index - (page * itemPerPage);
+      var translateIndex = index - (page * _itemPerPage);
       if (cachedIssues!.length <= translateIndex) {
         Timer(Duration(seconds: 0), () => notifyListeners());
         return null;
