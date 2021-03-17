@@ -386,7 +386,7 @@ class IssueTableSource extends DataTableSource {
   // TODO このへんの数字の辻褄はAPIのリクエスト内容などとあってないので直す
   List<Issue>? cachedIssues;
   int pageOfCachedIssues = 0;
-  int itemPerPage = 20;
+  int itemPerPage = 10;
 
   int? totalRowCount;
 
@@ -419,10 +419,11 @@ class IssueTableSource extends DataTableSource {
 
     apiClient
         .fetchIssueCount(
-            context: _context,
-            project: _project,
-            sort: _sort,
-            ascending: _ascending)
+          context: _context,
+          project: _project,
+          sort: _sort,
+          ascending: _ascending,
+        )
         .then((value) => totalRowCount = value);
   }
 
@@ -438,10 +439,12 @@ class IssueTableSource extends DataTableSource {
       // request
       apiClient
           .fetchIssues(
-              context: _context,
-              project: _project,
-              sort: _sort,
-              ascending: _ascending)
+        context: _context,
+        project: _project,
+        sort: _sort,
+        ascending: _ascending,
+        count: itemPerPage,
+      )
           .then(
         (value) {
           cachedIssues = value;
