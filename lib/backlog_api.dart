@@ -94,6 +94,7 @@ class BacklogApiClient {
     IssueField? sort,
     bool? ascending,
     int? count,
+    int? offset,
   }) async {
     final credentialInfo = Provider.of<CredentialInfo>(context);
     final apiKey = credentialInfo.apiKey;
@@ -112,6 +113,9 @@ class BacklogApiClient {
     }
     if (count != null) {
       query['count'] = count.toString();
+    }
+    if (offset != null) {
+      query['offset'] = offset.toString();
     }
 
     var url = Uri.https(space, ISSUES, query);

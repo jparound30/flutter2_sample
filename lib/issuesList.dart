@@ -156,6 +156,7 @@ class _IssueListViewState extends State<IssueListView> {
   int? _sortColumnIndex = 2;
   bool _ascending = false;
   int _itemPerPage = 10;
+  int _firstRowIndex = 0;
 
   _IssueListViewState() {
     print('_IssueListViewState()');
@@ -234,6 +235,12 @@ class _IssueListViewState extends State<IssueListView> {
               _itemPerPage = value;
             });
           },
+          onPageChanged: (value) {
+            print('onPageChanged: ' + value.toString());
+            setState(() {
+              _firstRowIndex = value;
+            });
+          },
           sortColumnIndex: _sortColumnIndex,
           sortAscending: _ascending,
           columnSpacing: 16,
@@ -297,6 +304,7 @@ class _IssueListViewState extends State<IssueListView> {
             sort: _selectedSortField,
             ascending: _ascending,
             itemPerPage: _itemPerPage,
+            firstRowIndex: _firstRowIndex,
           ),
         ),
       ),
@@ -399,6 +407,7 @@ class IssueTableSource extends DataTableSource {
   List<Issue>? cachedIssues;
   int pageOfCachedIssues = 0;
   int _itemPerPage;
+  int _firstRowIndex;
 
   int? totalRowCount;
 
@@ -418,17 +427,19 @@ class IssueTableSource extends DataTableSource {
     color: Colors.white,
   );
 
-  IssueTableSource(
-      {required BuildContext context,
-      required SelectedProject selectedProject,
-      IssueField? sort,
-      bool? ascending,
-      required int itemPerPage})
-      : _context = context,
+  IssueTableSource({
+    required BuildContext context,
+    required SelectedProject selectedProject,
+    IssueField? sort,
+    bool? ascending,
+    required int itemPerPage,
+    required int firstRowIndex,
+  })   : _context = context,
         _project = selectedProject.project,
         _sort = sort,
         _ascending = ascending,
-        _itemPerPage = itemPerPage {
+        _itemPerPage = itemPerPage,
+        _firstRowIndex = firstRowIndex {
     print('IssueTableSource called');
 
     apiClient
@@ -458,6 +469,7 @@ class IssueTableSource extends DataTableSource {
         sort: _sort,
         ascending: _ascending,
         count: _itemPerPage,
+        offset: _firstRowIndex,
       )
           .then(
         (value) {
@@ -626,7 +638,7 @@ class IssueTableSource extends DataTableSource {
   @override
   // TODO: implement isRowCountApproximate
   bool get isRowCountApproximate {
-    print("called isRowCountApproximate");
+    print("called isRowCountApproximate: " + totalRowCount.toString());
     if (totalRowCount != null) {
       return false;
     }
@@ -639,7 +651,7 @@ class IssueTableSource extends DataTableSource {
     print("called rowCount");
     if (_project == null ||
         (cachedIssues != null && cachedIssues!.length == 0)) {
-      print("called totalRowCount = 0");
+      print("called project is null or cachedIssues.length == 0 ");
       totalRowCount = 0;
       return 0;
     } else {
