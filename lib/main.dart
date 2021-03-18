@@ -46,8 +46,11 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Backlog Alternate',
         theme: ThemeData(
+          brightness: Brightness.light,
           primarySwatch: Colors.blue,
-          textTheme: GoogleFonts.mPlus1pTextTheme(),
+
+          // textTheme: GoogleFonts.mPlus1pTextTheme(),
+          textTheme: GoogleFonts.notoSansTextTheme(),
           dataTableTheme: dataTableThemeData,
         ),
         home: EntryScreen(),
