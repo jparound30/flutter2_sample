@@ -444,16 +444,23 @@ class IssueTableSource extends DataTableSource {
 
     apiClient
         .fetchIssueCount(
-          context: _context,
-          project: _project,
-          sort: _sort,
-          ascending: _ascending,
-        )
-        .then((value) => totalRowCount = value);
+      context: _context,
+      project: _project,
+      sort: _sort,
+      ascending: _ascending,
+    )
+        .then((value) {
+      totalRowCount = value;
+      notifyListeners();
+    });
   }
 
   @override
   DataRow? getRow(int index) {
+    if (totalRowCount == null) {
+      // fetchIssueCount() is running...
+      return null;
+    }
     var page = (index / _itemPerPage).floor();
     if (cachedIssues == null ||
         (cachedIssues != null && pageOfCachedIssues != page)) {
@@ -636,7 +643,6 @@ class IssueTableSource extends DataTableSource {
   }
 
   @override
-  // TODO: implement isRowCountApproximate
   bool get isRowCountApproximate {
     print("called isRowCountApproximate: " + totalRowCount.toString());
     if (totalRowCount != null) {
@@ -646,7 +652,6 @@ class IssueTableSource extends DataTableSource {
   }
 
   @override
-  // TODO: implement rowCount
   int get rowCount {
     print("called rowCount");
     if (_project == null ||
