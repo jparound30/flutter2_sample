@@ -341,8 +341,9 @@ class RecentActivityList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final backlogApiClient = BacklogApiClient();
+    final credentialInfo = Provider.of<CredentialInfo>(context);
     return FutureBuilder<List<Activity>>(
-      future: backlogApiClient.fetchActivities(context),
+      future: backlogApiClient.fetchActivities(credentialInfo),
       builder: (context, snapshot) {
         if (snapshot.hasError) print(snapshot.error);
 
@@ -444,8 +445,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   @override
   Widget build(BuildContext context) {
     final backlogApiClient = BacklogApiClient();
+    final credentialInfo = Provider.of<CredentialInfo>(context);
+
     return FutureBuilder<List<Project>>(
-      future: backlogApiClient.fetchProjects(context),
+      future: backlogApiClient.fetchProjects(credentialInfo),
       builder: (context, snapshot) {
         if (snapshot.hasError) print(snapshot.error);
 

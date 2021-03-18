@@ -411,6 +411,7 @@ class IssueTableSource extends DataTableSource {
 
   int? totalRowCount;
 
+  late CredentialInfo _credentialInfo;
   BuildContext _context;
   Project? _project;
   IssueField? _sort;
@@ -441,10 +442,11 @@ class IssueTableSource extends DataTableSource {
         _itemPerPage = itemPerPage,
         _firstRowIndex = firstRowIndex {
     print('IssueTableSource called');
+    _credentialInfo = Provider.of<CredentialInfo>(context);
 
     apiClient
         .fetchIssueCount(
-      context: _context,
+      credentialInfo: _credentialInfo,
       project: _project,
       sort: _sort,
       ascending: _ascending,
@@ -471,7 +473,7 @@ class IssueTableSource extends DataTableSource {
       // request
       apiClient
           .fetchIssues(
-        context: _context,
+        credentialInfo: _credentialInfo,
         project: _project,
         sort: _sort,
         ascending: _ascending,

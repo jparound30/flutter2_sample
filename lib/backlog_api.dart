@@ -1,14 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 
+import 'const.dart';
 import 'issuesList.dart';
 import 'log.dart';
 import 'models/activity.dart';
-import 'const.dart';
 import 'models/issue.dart';
 import 'models/project.dart';
 import 'models/space.dart';
@@ -52,8 +50,7 @@ class BacklogApiClient {
     return parsed.map<Activity>((json) => Activity.fromJson(json)).toList();
   }
 
-  Future<List<Activity>> fetchActivities(BuildContext context) async {
-    final credentialInfo = Provider.of<CredentialInfo>(context);
+  Future<List<Activity>> fetchActivities(CredentialInfo credentialInfo) async {
     final apiKey = credentialInfo.apiKey;
     final space = credentialInfo.space!;
     var url = Uri.https(space, SPACE_ACTIVITIES,
@@ -69,8 +66,7 @@ class BacklogApiClient {
     return parsed.map<Project>((json) => Project.fromJson(json)).toList();
   }
 
-  Future<List<Project>> fetchProjects(BuildContext context) async {
-    final credentialInfo = Provider.of<CredentialInfo>(context);
+  Future<List<Project>> fetchProjects(CredentialInfo credentialInfo) async {
     final apiKey = credentialInfo.apiKey;
     final space = credentialInfo.space!;
     var url = Uri.https(space, PROJECTS, {
@@ -89,14 +85,13 @@ class BacklogApiClient {
   }
 
   Future<List<Issue>> fetchIssues({
-    required BuildContext context,
+    required CredentialInfo credentialInfo,
     required Project? project,
     IssueField? sort,
     bool? ascending,
     int? count,
     int? offset,
   }) async {
-    final credentialInfo = Provider.of<CredentialInfo>(context);
     final apiKey = credentialInfo.apiKey;
     final space = credentialInfo.space!;
     final query = Map<String, dynamic>();
@@ -125,12 +120,11 @@ class BacklogApiClient {
   }
 
   Future<int> fetchIssueCount({
-    required BuildContext context,
+    required CredentialInfo credentialInfo,
     required Project? project,
     IssueField? sort,
     bool? ascending,
   }) async {
-    final credentialInfo = Provider.of<CredentialInfo>(context);
     final apiKey = credentialInfo.apiKey;
     final space = credentialInfo.space!;
     final query = Map<String, dynamic>();
