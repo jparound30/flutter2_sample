@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import 'backlog_api.dart';
+import 'issue_detail.dart';
 import 'models/issue.dart';
 import 'models/project.dart';
 import 'provider/credential_info.dart';
@@ -560,6 +561,16 @@ class IssueTableSource extends DataTableSource {
                 ),
               ),
             ),
+            onTap: () {
+              // TODO 詳細画面の表示
+              Navigator.of(_context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return IssueDetail(issue: issue);
+                  },
+                ),
+              );
+            },
           ),
           DataCell(
             Text(
