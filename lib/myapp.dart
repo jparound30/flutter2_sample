@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter2_sample/launch_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import 'env_vars.dart';
-import 'main.dart';
 import 'provider/credential_info.dart';
 
 class MyApp extends StatelessWidget {
@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
             dataTableTheme: dataTableThemeData,
             pageTransitionsTheme: PageTransitionsTheme(builders: _defaultBuilders)
         ),
-        home: EntryScreen(),
+        home: LaunchScreen(),
         debugShowCheckedModeBanner: false,
       ),
     );
