@@ -52,7 +52,7 @@ class EntryScreenState extends State<EntryScreen> {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) {
-            return MyHomePage(
+            return HomePage(
               title: '[' + space.name + ']',
             );
           },

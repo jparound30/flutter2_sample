@@ -137,7 +137,7 @@ class LoginFormState extends State<LoginForm> {
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                         builder: (context) {
-                          return MyHomePage(
+                          return HomePage(
                             title: '[' + space.name + ']',
                           );
                         },
