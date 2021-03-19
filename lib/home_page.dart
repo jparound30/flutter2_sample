@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'issuesList.dart';
-import 'provider/selected_project.dart';
+import 'providers/selected_project.dart';
 import 'recent_activity_component.dart';
 import 'select_project_component.dart';
 

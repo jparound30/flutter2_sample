@@ -5,7 +5,7 @@ import 'backlog_api.dart';
 import 'env_vars.dart';
 import 'home_page.dart';
 import 'main.dart';
-import 'provider/credential_info.dart';
+import 'providers/credential_info.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({Key? key}) : super(key: key);

@@ -7,7 +7,7 @@ import 'backlog_api.dart';
 import 'home_page.dart';
 import 'login.dart';
 import 'models/space.dart';
-import 'provider/credential_info.dart';
+import 'providers/credential_info.dart';
 
 class LaunchScreen extends StatefulWidget {
   @override

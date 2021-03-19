@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 
 import 'backlog_api.dart';
 import 'models/project.dart';
-import 'provider/credential_info.dart';
-import 'provider/selected_project.dart';
+import 'providers/credential_info.dart';
+import 'providers/selected_project.dart';
 
 class SelectProjectDropdown extends StatefulWidget {
   SelectProjectDropdown({Key? key}) : super(key: key);

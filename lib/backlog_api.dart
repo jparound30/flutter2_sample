@@ -10,7 +10,7 @@ import 'models/activity.dart';
 import 'models/issue.dart';
 import 'models/project.dart';
 import 'models/space.dart';
-import 'provider/credential_info.dart';
+import 'providers/credential_info.dart';
 
 const int HTTP_STATUS_OK = 200;
 

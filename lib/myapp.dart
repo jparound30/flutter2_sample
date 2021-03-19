@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import 'env_vars.dart';
-import 'provider/credential_info.dart';
+import 'providers/credential_info.dart';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

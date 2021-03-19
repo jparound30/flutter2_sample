@@ -9,8 +9,8 @@ import 'backlog_api.dart';
 import 'issue_detail.dart';
 import 'models/issue.dart';
 import 'models/project.dart';
-import 'provider/credential_info.dart';
-import 'provider/selected_project.dart';
+import 'providers/credential_info.dart';
+import 'providers/selected_project.dart';
 
 /// 課題のフィールド列挙型（ソートキー用）
 enum IssueField {
