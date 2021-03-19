@@ -6,15 +6,15 @@ import 'models/project.dart';
 import 'provider/credential_info.dart';
 import 'provider/selected_project.dart';
 
-class MyStatefulWidget extends StatefulWidget {
-  MyStatefulWidget({Key? key}) : super(key: key);
+class SelectProjectDropdown extends StatefulWidget {
+  SelectProjectDropdown({Key? key}) : super(key: key);
 
   @override
-  _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
+  _SelectProjectDropdownState createState() => _SelectProjectDropdownState();
 }
 
 /// This is the private State class that goes with MyStatefulWidget.
-class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+class _SelectProjectDropdownState extends State<SelectProjectDropdown> {
   @override
   Widget build(BuildContext context) {
     final backlogApiClient = BacklogApiClient();

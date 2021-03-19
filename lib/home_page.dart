@@ -37,7 +37,7 @@ class HomePage extends StatelessWidget {
             // Here we take the value from the MyHomePage object that was created by
             // the App.build method, and use it to set our appbar title.
             title: Text(title),
-            actions: [MyStatefulWidget()],
+            actions: [SelectProjectDropdown()],
             centerTitle: false,
             bottom: TabBar(
               tabs: [
