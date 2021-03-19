@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import 'models/issue.dart';
+import '../../models/issue.dart';
 
 class IssueDetailPage extends StatelessWidget {
   IssueDetailPage({Key? key, required issue})

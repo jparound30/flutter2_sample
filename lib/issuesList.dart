@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import 'backlog_api.dart';
-import 'issue_detail.dart';
+import 'views/screens/issue_detail_page.dart';
 import 'models/issue.dart';
 import 'models/project.dart';
 import 'providers/credential_info.dart';
