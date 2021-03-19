@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'env_vars.dart';
 import 'providers/credential_info.dart';
 
-class MyApp extends StatelessWidget {
+class BacklogAlternateApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
