@@ -3,8 +3,8 @@ import 'package:flutter/widgets.dart';
 
 import 'models/issue.dart';
 
-class IssueDetail extends StatelessWidget {
-  IssueDetail({Key? key, required issue})
+class IssueDetailPage extends StatelessWidget {
+  IssueDetailPage({Key? key, required issue})
       : _issue = issue,
         super(key: key);
 

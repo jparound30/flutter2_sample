@@ -566,7 +566,7 @@ class IssueTableSource extends DataTableSource {
               Navigator.of(_context).push(
                 MaterialPageRoute(
                   builder: (context) {
-                    return IssueDetail(issue: issue);
+                    return IssueDetailPage(issue: issue);
                   },
                 ),
               );
