@@ -144,6 +144,24 @@ class Issue {
     if (json['assignee'] != null) {
       assignee = User.fromJson(json['assignee']);
     }
+    double? esHour;
+    if (json['estimateHours'] != null) {
+      if (json['estimateHours'] is int) {
+        int t = json['estimateHours'];
+        esHour = t.toDouble();
+      } else {
+        esHour = json['estimateHours'];
+      }
+    }
+    double? acHours;
+    if (json['actualHours'] != null) {
+      if (json['actualHours'] is int) {
+        int t = json['actualHours'];
+        esHour = t.toDouble();
+      } else {
+        esHour = json['actualHours'];
+      }
+    }
     return Issue(
       id: json['id'],
       projectId: json['projectId'],
@@ -157,8 +175,8 @@ class Issue {
       assignee: assignee,
       startDate: json['startDate'],
       dueDate: json['dueDate'],
-      estimatedHours: json['estimateHours'],
-      actualHours: json['actualHours'],
+      estimatedHours: esHour,
+      actualHours: acHours,
       createdUser: User.fromJson(json['createdUser']),
       updatedUser: User.fromJson(json['updatedUser']),
       created: json['created'],
