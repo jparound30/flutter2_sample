@@ -43,11 +43,6 @@ class IssueDetail extends StatelessWidget {
     var dateFormat = DateFormat('yyyy/MM/dd HH:mm', 'ja');
 
     var created = dateFormat.format(issue.created!);
-    var startDate = issue.startDate != null
-        ? dateFormatYmd.format(issue.startDate!)
-        : "未設定";
-    var dueDate =
-        issue.dueDate != null ? dateFormatYmd.format(issue.dueDate!) : "未設定";
 
     return Container(
       constraints: BoxConstraints.expand(),
@@ -72,14 +67,26 @@ class IssueDetail extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text("開始日"),
-                      Text(startDate), // TODO
+                      if (issue.startDate != null)
+                        Text(dateFormatYmd.format(issue.startDate!))
+                      else
+                        Text("未設定",
+                            style: TextStyle(
+                              color: Colors.grey.shade400,
+                            )),
                     ],
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text("期限日"),
-                      Text(dueDate), // TODO
+                      if (issue.dueDate != null)
+                        Text(dateFormatYmd.format(issue.dueDate!))
+                      else
+                        Text("未設定",
+                            style: TextStyle(
+                              color: Colors.grey.shade400,
+                            )),
                     ],
                   ),
                   Text(issue.status.name), // TODO カラーなど
