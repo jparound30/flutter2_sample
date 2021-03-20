@@ -93,47 +93,61 @@ class IssueDetail extends StatelessWidget {
               ),
               Container(
                 width: double.infinity,
-                child: Card(
-                  child: Text(this.issue.summary),
+                child: Text(
+                  this.issue.summary,
+                  style: Theme.of(context).textTheme.headline6,
                 ),
               ),
-              BacklogMarkdownRender(markdown: issue.description),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(child: Text(issue.priority.name)),
-                  Expanded(
-                      child: Text(
-                          issue.assignee != null ? issue.assignee!.name : ""))
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(child: Text("TODO カテゴリ213")), // TODO
-                  Expanded(child: Text("TODO マイルストーン")), // TODO
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(child: Text("TODO 発生バージョン")), // TODO
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(child: Text(issue.estimatedHours?.toString() ?? "")),
-                  // TODO
-                  Expanded(child: Text(issue.actualHours?.toString() ?? "")),
-                  // TODO
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(child: Text("TODO 完了理由")), // TODO
-                ],
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      BacklogMarkdownRender(markdown: issue.description),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(child: Text(issue.priority.name)),
+                          Expanded(
+                              child: Text(issue.assignee != null
+                                  ? issue.assignee!.name
+                                  : ""))
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(child: Text("TODO カテゴリ213")), // TODO
+                          Expanded(child: Text("TODO マイルストーン")), // TODO
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(child: Text("TODO 発生バージョン")), // TODO
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(
+                              child:
+                                  Text(issue.estimatedHours?.toString() ?? "")),
+                          // TODO
+                          Expanded(
+                              child: Text(issue.actualHours?.toString() ?? "")),
+                          // TODO
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(child: Text("TODO 完了理由")), // TODO
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
@@ -154,9 +168,7 @@ class BacklogMarkdownRender extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      child: Card(
-        child: Text(this.markdown),
-      ),
+      child: Text(this.markdown),
     );
   }
 }
