@@ -40,7 +40,9 @@ class IssueDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var dateFormatYmd = DateFormat('yyyy/MM/dd', 'ja');
+    var dateFormat = DateFormat('yyyy/MM/dd HH:mm', 'ja');
 
+    var created = dateFormat.format(issue.created!);
     var startDate = issue.startDate != null
         ? dateFormatYmd.format(issue.startDate!)
         : "未設定";
@@ -58,10 +60,28 @@ class IssueDetail extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  IssueTypeChip(issue.issueType), // TODO カラーなど
-                  Text(issue.createdUser.name), // TODO
-                  Text(startDate), // TODO
-                  Text(dueDate), // TODO
+                  IssueTypeChip(issue.issueType),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(issue.createdUser.name),
+                      Text(created + " 追加"),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("開始日"),
+                      Text(startDate), // TODO
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("期限日"),
+                      Text(dueDate), // TODO
+                    ],
+                  ),
                   Text(issue.status.name), // TODO カラーなど
                 ],
               ),
