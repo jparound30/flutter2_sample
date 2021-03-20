@@ -39,7 +39,7 @@ class IssueDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     var dateFormatYmd = DateFormat('yyyy/MM/dd', 'ja');
 
-    var startDate = dateFormatYmd.format(issue.startDate!);
+    var startDate = issue.startDate != null ? dateFormatYmd.format(issue.startDate!) : "未設定";
     var dueDate = issue.dueDate != null ? dateFormatYmd.format(issue.dueDate!) : "未設定";
 
     return Container(
