@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -53,11 +54,16 @@ class IssueDetail extends StatelessWidget {
           scrollDirection: Axis.vertical,
           child: Column(
             children: [
-              Text(issue.issueType.name), // TODO カラーなど
-              Text(issue.createdUser.name), // TODO
-              Text(startDate), // TODO
-              Text(dueDate), // TODO
-              Text(issue.status.name), // TODO カラーなど
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(issue.issueType.name), // TODO カラーなど
+                  Text(issue.createdUser.name), // TODO
+                  Text(startDate), // TODO
+                  Text(dueDate), // TODO
+                  Text(issue.status.name), // TODO カラーなど
+                ],
+              ),
               Container(
                 width: double.infinity,
                 child: Card(
@@ -90,8 +96,10 @@ class IssueDetail extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Expanded(child: Text(issue.estimatedHours.toString())), // TODO
-                  Expanded(child: Text(issue.actualHours.toString())), // TODO
+                  Expanded(child: Text(issue.estimatedHours?.toString() ?? "")),
+                  // TODO
+                  Expanded(child: Text(issue.actualHours?.toString() ?? "")),
+                  // TODO
                 ],
               ),
               Row(
