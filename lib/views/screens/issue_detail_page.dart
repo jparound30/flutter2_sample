@@ -1,10 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter2_sample/views/components/issue_type_chip.dart';
 import 'package:intl/intl.dart';
 
 import '../../models/issue.dart';
+import '../components/issue_type_chip.dart';
+import '../components/status_chip.dart';
 
 class IssueDetailPage extends StatelessWidget {
   IssueDetailPage({Key? key, required issue})
@@ -60,7 +59,7 @@ class IssueDetail extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(issue.createdUser.name),
-                      Text(created + " 追加"),
+                      Text(created + " 登録"),
                     ],
                   ),
                   Column(
@@ -89,7 +88,7 @@ class IssueDetail extends StatelessWidget {
                             )),
                     ],
                   ),
-                  Text(issue.status.name), // TODO カラーなど
+                  StatusChip(issue.status),
                 ],
               ),
               Container(
