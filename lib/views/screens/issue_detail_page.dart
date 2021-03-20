@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter2_sample/views/components/issue_type_chip.dart';
 import 'package:intl/intl.dart';
 
 import '../../models/issue.dart';
@@ -57,7 +58,7 @@ class IssueDetail extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(issue.issueType.name), // TODO カラーなど
+                  IssueTypeChip(issue.issueType), // TODO カラーなど
                   Text(issue.createdUser.name), // TODO
                   Text(startDate), // TODO
                   Text(dueDate), // TODO
@@ -83,7 +84,7 @@ class IssueDetail extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Expanded(child: Text("TODO カテゴリ")), // TODO
+                  Expanded(child: Text("TODO カテゴリ213")), // TODO
                   Expanded(child: Text("TODO マイルストーン")), // TODO
                 ],
               ),
