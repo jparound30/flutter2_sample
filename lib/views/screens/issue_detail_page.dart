@@ -117,14 +117,23 @@ class IssueDetail extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Expanded(child: Text("TODO カテゴリ213")), // TODO
                           Expanded(
-                            child: Text(issue.milestones != null
-                                ? issue.milestones!
-                                    .map((e) => e.name)
-                                    .toList()
-                                    .join(",")
-                                : ""),
+                            child: Text(
+                              issue.category
+                                      ?.map((e) => e.name)
+                                      .toList()
+                                      .join(",") ??
+                                  "",
+                            ),
+                          ), // TODO カテゴリ
+                          Expanded(
+                            child: Text(
+                              issue.milestones
+                                      ?.map((e) => e.name)
+                                      .toList()
+                                      .join(",") ??
+                                  "",
+                            ),
                           ), // TODO マイルストーン
                         ],
                       ),
@@ -132,12 +141,13 @@ class IssueDetail extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Expanded(
-                            child: Text(issue.versions != null
-                                ? issue.versions!
-                                    .map((e) => e.name)
-                                    .toList()
-                                    .join(",")
-                                : ""),
+                            child: Text(
+                              issue.versions
+                                      ?.map((e) => e.name)
+                                      .toList()
+                                      .join(",") ??
+                                  "",
+                            ),
                           ), // TODO 発生バージョン
                         ],
                       ),
