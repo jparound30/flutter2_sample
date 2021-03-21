@@ -142,6 +142,7 @@ class Issue {
   final User? assignee;
 
   final List<MilestoneVersion>? versions;
+  final List<MilestoneVersion>? milestones;
   final String? _startDateStr;
   final String? _dueDateStr;
 
@@ -200,6 +201,7 @@ class Issue {
     required this.status,
     this.assignee,
     this.versions,
+    this.milestones,
     String? startDate,
     String? dueDate,
     this.estimatedHours,
@@ -256,6 +258,13 @@ class Issue {
               .map<MilestoneVersion>(
                   (versions) => MilestoneVersion.fromJson(versions))
               .toList()
+          : null,
+      milestones: json['milestones'] != null
+          ? json['milestones']
+          .cast<Map<String, dynamic>>()
+          .map<MilestoneVersion>(
+              (versions) => MilestoneVersion.fromJson(versions))
+          .toList()
           : null,
       startDate: json['startDate'],
       dueDate: json['dueDate'],
