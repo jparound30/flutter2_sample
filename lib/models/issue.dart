@@ -242,8 +242,9 @@ class Issue {
       issueType: IssueType.fromJson(json['issueType']),
       summary: json['summary'],
       description: json['description'],
-      resolution:
-          json['resolution'] != null ? Resolution.fromJson(json['resolution']) : null,
+      resolution: json['resolution'] != null
+          ? Resolution.fromJson(json['resolution'])
+          : null,
       priority: Priority.fromJson(json['priority']),
       status: Status.fromJson(json['status']),
       assignee: assignee,
