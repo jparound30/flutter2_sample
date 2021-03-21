@@ -261,10 +261,10 @@ class Issue {
           : null,
       milestones: json['milestone'] != null
           ? json['milestone']
-          .cast<Map<String, dynamic>>()
-          .map<MilestoneVersion>(
-              (versions) => MilestoneVersion.fromJson(versions))
-          .toList()
+              .cast<Map<String, dynamic>>()
+              .map<MilestoneVersion>(
+                  (versions) => MilestoneVersion.fromJson(versions))
+              .toList()
           : null,
       startDate: json['startDate'],
       dueDate: json['dueDate'],
