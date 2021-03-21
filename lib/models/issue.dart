@@ -160,7 +160,7 @@ class Issue {
   final Priority priority;
   final Status status;
   final User? assignee;
-
+  final List<Category>? category;
   final List<MilestoneVersion>? versions;
   final List<MilestoneVersion>? milestones;
   final String? _startDateStr;
@@ -220,6 +220,7 @@ class Issue {
     required this.priority,
     required this.status,
     this.assignee,
+    this.category,
     this.versions,
     this.milestones,
     String? startDate,
@@ -272,6 +273,12 @@ class Issue {
       priority: Priority.fromJson(json['priority']),
       status: Status.fromJson(json['status']),
       assignee: assignee,
+      category: json['category'] != null
+          ? json['category']
+              .cast<Map<String, dynamic>>()
+              .map<Category>((category) => Category.fromJson(category))
+              .toList()
+          : null,
       versions: json['versions'] != null
           ? json['versions']
               .cast<Map<String, dynamic>>()
