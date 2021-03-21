@@ -142,7 +142,12 @@ class IssueDetail extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Expanded(child: Text("TODO 完了理由")), // TODO
+                          Expanded(child: Row(
+                            children: [
+                              Text("完了理由"),
+                              Text(issue.resolution?.name ?? "未設定")
+                            ],
+                          )), // TODO
                         ],
                       ),
                     ],

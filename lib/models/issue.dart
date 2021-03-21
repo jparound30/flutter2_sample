@@ -1,5 +1,22 @@
 import 'user.dart';
 
+class Resolution {
+  final int id;
+  final String name;
+
+  Resolution({
+    required this.id,
+    required this.name,
+  });
+
+  factory Resolution.fromJson(Map<String, dynamic> json) {
+    return Resolution(
+      id: json['id'],
+      name: json['name'],
+    );
+  }
+}
+
 class Priority {
   final int id;
   final String name;
@@ -66,6 +83,8 @@ class Issue {
   final String summary;
   final String description;
 
+  final Resolution? resolution;
+
   final Priority priority;
   final Status status;
   final User? assignee;
@@ -123,6 +142,7 @@ class Issue {
     required this.issueType,
     required this.summary,
     required this.description,
+    this.resolution,
     required this.priority,
     required this.status,
     this.assignee,
@@ -170,6 +190,8 @@ class Issue {
       issueType: IssueType.fromJson(json['issueType']),
       summary: json['summary'],
       description: json['description'],
+      resolution:
+          json['resolution'] != null ? Resolution.fromJson(json['resolution']) : null,
       priority: Priority.fromJson(json['priority']),
       status: Status.fromJson(json['status']),
       assignee: assignee,
