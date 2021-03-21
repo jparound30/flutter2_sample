@@ -565,10 +565,7 @@ class IssueTableSource extends DataTableSource {
           ),
           DataCell(
             Center(
-              child: Text(
-                issue.status.name,
-                style: textStyleInCells,
-              ),
+              child: StatusChip(issue.status),
             ),
           ),
           DataCell(
