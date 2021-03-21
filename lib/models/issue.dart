@@ -259,8 +259,8 @@ class Issue {
                   (versions) => MilestoneVersion.fromJson(versions))
               .toList()
           : null,
-      milestones: json['milestones'] != null
-          ? json['milestones']
+      milestones: json['milestone'] != null
+          ? json['milestone']
           .cast<Map<String, dynamic>>()
           .map<MilestoneVersion>(
               (versions) => MilestoneVersion.fromJson(versions))
