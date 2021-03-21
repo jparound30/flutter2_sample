@@ -118,13 +118,27 @@ class IssueDetail extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Expanded(child: Text("TODO カテゴリ213")), // TODO
-                          Expanded(child: Text("TODO マイルストーン")), // TODO
+                          Expanded(
+                            child: Text(issue.milestones != null
+                                ? issue.milestones!
+                                    .map((e) => e.name)
+                                    .toList()
+                                    .join(",")
+                                : ""),
+                          ), // TODO マイルストーン
                         ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Expanded(child: Text("TODO 発生バージョン")), // TODO
+                          Expanded(
+                            child: Text(issue.versions != null
+                                ? issue.versions!
+                                    .map((e) => e.name)
+                                    .toList()
+                                    .join(",")
+                                : ""),
+                          ), // TODO 発生バージョン
                         ],
                       ),
                       Row(
@@ -142,12 +156,14 @@ class IssueDetail extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Expanded(child: Row(
-                            children: [
-                              Text("完了理由"),
-                              Text(issue.resolution?.name ?? "未設定")
-                            ],
-                          )), // TODO
+                          Expanded(
+                            child: Row(
+                              children: [
+                                Text("完了理由"),
+                                Text(issue.resolution?.name ?? "未設定"),
+                              ],
+                            ),
+                          ), // TODO
                         ],
                       ),
                     ],
