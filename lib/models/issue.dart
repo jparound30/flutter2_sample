@@ -4,7 +4,7 @@ class MilestoneVersion {
   final int id;
   final int projectId;
   final String name;
-  final String description;
+  final String? description;
   final String? _startDateStr;
   final String? _releaseDueDateStr;
   final bool archived;
@@ -30,7 +30,7 @@ class MilestoneVersion {
     required this.id,
     required this.projectId,
     required this.name,
-    required this.description,
+    this.description,
     String? startDate,
     String? releaseDueDate,
     required this.archived,
@@ -141,6 +141,7 @@ class Issue {
   final Status status;
   final User? assignee;
 
+  final List<MilestoneVersion>? versions;
   final String? _startDateStr;
   final String? _dueDateStr;
 
@@ -198,6 +199,7 @@ class Issue {
     required this.priority,
     required this.status,
     this.assignee,
+    this.versions,
     String? startDate,
     String? dueDate,
     this.estimatedHours,
@@ -248,6 +250,13 @@ class Issue {
       priority: Priority.fromJson(json['priority']),
       status: Status.fromJson(json['status']),
       assignee: assignee,
+      versions: json['versions'] != null
+          ? json['versions']
+              .cast<Map<String, dynamic>>()
+              .map<MilestoneVersion>(
+                  (versions) => MilestoneVersion.fromJson(versions))
+              .toList()
+          : null,
       startDate: json['startDate'],
       dueDate: json['dueDate'],
       estimatedHours: esHour,
