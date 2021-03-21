@@ -6,11 +6,13 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import 'backlog_api.dart';
-import 'views/screens/issue_detail_page.dart';
 import 'models/issue.dart';
 import 'models/project.dart';
 import 'providers/credential_info.dart';
 import 'providers/selected_project.dart';
+import 'views/components/issue_type_chip.dart';
+import 'views/components/status_chip.dart';
+import 'views/screens/issue_detail_page.dart';
 
 /// 課題のフィールド列挙型（ソートキー用）
 enum IssueField {
@@ -520,24 +522,7 @@ class IssueTableSource extends DataTableSource {
         cells: [
           DataCell(
             Center(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                decoration: ShapeDecoration(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                  ),
-                  color: Color.fromARGB(
-                    255,
-                    int.parse(issue.issueType.color.substring(1, 3), radix: 16),
-                    int.parse(issue.issueType.color.substring(3, 5), radix: 16),
-                    int.parse(issue.issueType.color.substring(5), radix: 16),
-                  ),
-                ),
-                child: Text(
-                  issue.issueType.name,
-                  style: textStyleInCellsWhile,
-                ),
-              ),
+              child: IssueTypeChip(issue.issueType),
             ),
           ),
           DataCell(
