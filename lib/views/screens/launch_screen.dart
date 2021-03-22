@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../backlog_api.dart';
-import 'home_page.dart';
-import '../../login.dart';
 import '../../models/space.dart';
 import '../../providers/credential_info.dart';
+import 'home_page.dart';
+import 'login.dart';
 
 class LaunchScreen extends StatefulWidget {
   @override

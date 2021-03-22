@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'backlog_api.dart';
-import 'env_vars.dart';
-import 'providers/credential_info.dart';
-import 'views/screens/home_page.dart';
+import '../../backlog_api.dart';
+import '../../env_vars.dart';
+import '../../providers/credential_info.dart';
+import 'home_page.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({Key? key}) : super(key: key);
