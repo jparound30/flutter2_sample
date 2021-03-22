@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../color_converter.dart';
 import '../../models/issue.dart';
+import '../../utils/color_converter.dart';
 
 class StatusChip extends StatelessWidget {
   final Status status;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../color_converter.dart';
 import '../../models/issue.dart';
+import '../../utils/color_converter.dart';
 
 class IssueTypeChip extends StatelessWidget {
   final IssueType issueType;
