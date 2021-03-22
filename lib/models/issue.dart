@@ -1,5 +1,119 @@
 import 'user.dart';
 
+/// 課題のフィールド列挙型（ソートキー用）
+enum IssueField {
+  /// 種類
+  issueType,
+
+  /// ID
+  id,
+
+  /// カテゴリー
+  category,
+
+  /// 発生バージョン
+  version,
+
+  /// マイルストーン
+  milestone,
+
+  /// 要約
+  summary,
+
+  /// 状態
+  status,
+
+  /// 優先度
+  priority,
+
+  /// 添付ファイル
+  attachment,
+
+  /// 共有ファイル
+  sharedFile,
+
+  /// 作成日時
+  created,
+
+  /// 作成者
+  createdUser,
+
+  /// 更新日時
+  updated,
+
+  /// 更新者
+  updatedUser,
+
+  /// 担当者
+  assignee,
+
+  /// 開始日
+  startDate,
+
+  /// 期限日
+  dueDate,
+
+  /// 予定時間
+  estimatedHours,
+
+  /// 実績時間
+  actualHours,
+
+  /// 子課題
+  childIssue,
+  // customField_${id},
+}
+
+abstract class EnumHelper<T> {
+  List<T> values();
+
+  Map<T, String> maps();
+
+  T valueOf(String value) {
+    return values().firstWhere((e) => name(e) == value,
+        orElse: () => throw new Exception("INVALID ENUM"));
+  }
+
+  String name(T value) {
+    return value.toString().split('.').last;
+  }
+
+  String description(T value) {
+    return maps()[value]!;
+  }
+}
+
+class IssueFieldEnumHelper extends EnumHelper<IssueField> {
+  @override
+  List<IssueField> values() => IssueField.values;
+
+  @override
+  Map<IssueField, String> maps() {
+    final ret = Map<IssueField, String>();
+    ret[IssueField.issueType] = "種類";
+    ret[IssueField.id] = "キー";
+    ret[IssueField.category] = "カテゴリー";
+    ret[IssueField.version] = "発生バージョン";
+    ret[IssueField.milestone] = "マイルストーン";
+    ret[IssueField.summary] = "要約";
+    ret[IssueField.status] = "状態";
+    ret[IssueField.priority] = "優先度";
+    ret[IssueField.attachment] = "添付ファイル";
+    ret[IssueField.sharedFile] = "共有ファイル";
+    ret[IssueField.created] = "作成日時";
+    ret[IssueField.createdUser] = "作成者";
+    ret[IssueField.updated] = "更新日時";
+    ret[IssueField.updatedUser] = "更新者";
+    ret[IssueField.assignee] = "担当者";
+    ret[IssueField.startDate] = "開始日";
+    ret[IssueField.dueDate] = "期限日";
+    ret[IssueField.estimatedHours] = "予定時間";
+    ret[IssueField.actualHours] = "実績時間";
+    ret[IssueField.childIssue] = "子課題";
+    return ret;
+  }
+}
+
 class Category {
   final int id;
   final String name;
