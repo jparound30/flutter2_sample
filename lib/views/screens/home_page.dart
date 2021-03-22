@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'issuesList.dart';
-import 'providers/selected_project.dart';
-import 'recent_activity_component.dart';
-import 'select_project_component.dart';
+import '../../issuesList.dart';
+import '../../providers/selected_project.dart';
+import '../../recent_activity_component.dart';
+import '../../select_project_component.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key, required this.title}) : super(key: key);
