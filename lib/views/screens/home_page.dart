@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../issuesList.dart';
 import '../../providers/selected_project.dart';
+import '../components/issuesList.dart';
 import '../components/recent_activity_component.dart';
 import '../components/select_project_component.dart';
 

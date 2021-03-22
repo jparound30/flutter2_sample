@@ -5,14 +5,14 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import 'backlog_api.dart';
-import 'models/issue.dart';
-import 'models/project.dart';
-import 'providers/credential_info.dart';
-import 'providers/selected_project.dart';
-import 'views/components/issue_type_chip.dart';
-import 'views/components/status_chip.dart';
-import 'views/screens/issue_detail_page.dart';
+import '../../backlog_api.dart';
+import '../../models/issue.dart';
+import '../../models/project.dart';
+import '../../providers/credential_info.dart';
+import '../../providers/selected_project.dart';
+import '../screens/issue_detail_page.dart';
+import 'issue_type_chip.dart';
+import 'status_chip.dart';
 
 /// 課題のフィールド列挙型（ソートキー用）
 enum IssueField {

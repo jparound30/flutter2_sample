@@ -4,13 +4,13 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import 'const.dart';
-import 'issuesList.dart';
 import 'log.dart';
 import 'models/activity.dart';
 import 'models/issue.dart';
 import 'models/project.dart';
 import 'models/space.dart';
 import 'providers/credential_info.dart';
+import 'views/components/issuesList.dart';  // TODO refactor
 
 const int HTTP_STATUS_OK = 200;
 
