@@ -104,6 +104,7 @@ class IssueDetail extends StatelessWidget {
                   child: Column(
                     children: [
                       BacklogMarkdownRender(markdown: issue.description),
+                      Divider(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -114,6 +115,7 @@ class IssueDetail extends StatelessWidget {
                                   : ""))
                         ],
                       ),
+                      Divider(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -137,6 +139,7 @@ class IssueDetail extends StatelessWidget {
                           ), // TODO マイルストーン
                         ],
                       ),
+                      Divider(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -151,6 +154,7 @@ class IssueDetail extends StatelessWidget {
                           ), // TODO 発生バージョン
                         ],
                       ),
+                      Divider(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -163,13 +167,14 @@ class IssueDetail extends StatelessWidget {
                           // TODO
                         ],
                       ),
+                      Divider(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Expanded(
                             child: Row(
                               children: [
-                                Text("完了理由"),
+                                Text("完了理由："),
                                 Text(issue.resolution?.name ?? "未設定"),
                               ],
                             ),
