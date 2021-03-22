@@ -10,7 +10,7 @@ import 'models/issue.dart';
 import 'models/project.dart';
 import 'models/space.dart';
 import 'providers/credential_info.dart';
-import 'views/components/issuesList.dart';  // TODO refactor
+import 'views/components/issue_list.dart';  // TODO refactor
 
 const int HTTP_STATUS_OK = 200;
 
