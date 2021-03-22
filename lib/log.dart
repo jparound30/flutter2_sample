@@ -1,6 +1,6 @@
 class Log {
   static bool showHttpRequestUrl = true;
-  static bool showHttpResponseBody = true;
+  static bool showHttpResponseBody = false;
 
   static void httpRequest(String msg) {
     if (showHttpRequestUrl) {
