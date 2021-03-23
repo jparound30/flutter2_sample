@@ -34,6 +34,14 @@ class IssueDetailPage extends StatelessWidget {
 class IssueDetail extends StatelessWidget {
   final Issue issue;
 
+  /// 未設定
+  final _notSetText = Text(
+    "未設定",
+    style: TextStyle(
+      color: Colors.grey.shade400,
+    ),
+  );
+
   IssueDetail({required this.issue});
 
   @override
@@ -73,10 +81,7 @@ class IssueDetail extends StatelessWidget {
                       if (issue.startDate != null)
                         Text(dateFormatYmd.format(issue.startDate!))
                       else
-                        Text("未設定",
-                            style: TextStyle(
-                              color: Colors.grey.shade400,
-                            )),
+                        _notSetText,
                     ],
                   ),
                   Column(
@@ -86,10 +91,7 @@ class IssueDetail extends StatelessWidget {
                       if (issue.dueDate != null)
                         Text(dateFormatYmd.format(issue.dueDate!))
                       else
-                        Text("未設定",
-                            style: TextStyle(
-                              color: Colors.grey.shade400,
-                            )),
+                        _notSetText,
                     ],
                   ),
                   StatusChip(issue.status),
@@ -130,9 +132,10 @@ class IssueDetail extends StatelessWidget {
                                   width: 120,
                                   child: Text("担当者"),
                                 ),
-                                Text(issue.assignee != null
-                                    ? issue.assignee!.name
-                                    : "未設定"),
+                                if (issue.assignee != null)
+                                  Text(issue.assignee!.name)
+                                else
+                                  _notSetText,
                               ],
                             ),
                           )
@@ -149,11 +152,10 @@ class IssueDetail extends StatelessWidget {
                                   width: 120,
                                   child: Text("カテゴリ"),
                                 ),
-                                Text(
-                                  category != null && category.length != 0
-                                      ? category
-                                      : "未設定",
-                                ),
+                                if (category != null && category.length != 0)
+                                  Text(category)
+                                else
+                                  _notSetText,
                               ],
                             ),
                           ),
@@ -164,11 +166,10 @@ class IssueDetail extends StatelessWidget {
                                   width: 120,
                                   child: Text("マイルストーン"),
                                 ),
-                                Text(
-                                  milestone != null && milestone.length != 0
-                                      ? milestone
-                                      : "未設定",
-                                ),
+                                if (milestone != null && milestone.length != 0)
+                                  Text(milestone)
+                                else
+                                  _notSetText,
                               ],
                             ),
                           ),
@@ -185,11 +186,10 @@ class IssueDetail extends StatelessWidget {
                                   width: 120,
                                   child: Text("発生バージョン"),
                                 ),
-                                Text(
-                                  version != null && version.length != 0
-                                      ? version
-                                      : "未設定",
-                                ),
+                                if (version != null && version.length != 0)
+                                  Text(version)
+                                else
+                                  _notSetText,
                               ],
                             ),
                           ),
@@ -206,7 +206,10 @@ class IssueDetail extends StatelessWidget {
                                   width: 120,
                                   child: Text("予定時間"),
                                 ),
-                                Text(issue.estimatedHours?.toString() ?? "未設定"),
+                                if (issue.estimatedHours != null)
+                                  Text(issue.estimatedHours.toString())
+                                else
+                                  _notSetText,
                               ],
                             ),
                           ),
@@ -217,7 +220,10 @@ class IssueDetail extends StatelessWidget {
                                   width: 120,
                                   child: Text("実績時間"),
                                 ),
-                                Text(issue.actualHours?.toString() ?? "未設定"),
+                                if (issue.actualHours != null)
+                                  Text(issue.actualHours.toString())
+                                else
+                                  _notSetText,
                               ],
                             ),
                           ),
@@ -234,7 +240,10 @@ class IssueDetail extends StatelessWidget {
                                   width: 120,
                                   child: Text("完了理由"),
                                 ),
-                                Text(issue.resolution?.name ?? "未設定"),
+                                if (issue.resolution != null)
+                                  Text(issue.resolution!.name)
+                                else
+                                  _notSetText,
                               ],
                             ),
                           ),
