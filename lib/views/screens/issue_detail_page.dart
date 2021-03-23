@@ -42,6 +42,14 @@ class IssueDetail extends StatelessWidget {
     var dateFormat = DateFormat('yyyy/MM/dd HH:mm', 'ja');
 
     var created = dateFormat.format(issue.created!);
+    final spacer = SizedBox(
+      width: 48,
+    );
+
+    // TODO Expanded( Row( sizedBox ( 項目名 ) , 項目値 ) ) のほうがいいかも？
+    final category = issue.category?.map((e) => e.name).toList().join(",");
+    final milestone = issue.milestones?.map((e) => e.name).toList().join(",");
+    final version = issue.versions?.map((e) => e.name).toList().join(",");
 
     return Container(
       constraints: BoxConstraints.expand(),
@@ -108,63 +116,24 @@ class IssueDetail extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Expanded(child: Text(issue.priority.name)),
                           Expanded(
-                              child: Text(issue.assignee != null
+                              child: Row(
+                            children: [
+                              Text("優先度"),
+                              spacer,
+                              Text(issue.priority.name),
+                            ],
+                          )),
+                          Expanded(
+                              child: Row(
+                            children: [
+                              Text("担当者"),
+                              spacer,
+                              Text(issue.assignee != null
                                   ? issue.assignee!.name
-                                  : ""))
-                        ],
-                      ),
-                      Divider(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              issue.category
-                                      ?.map((e) => e.name)
-                                      .toList()
-                                      .join(",") ??
-                                  "",
-                            ),
-                          ), // TODO カテゴリ
-                          Expanded(
-                            child: Text(
-                              issue.milestones
-                                      ?.map((e) => e.name)
-                                      .toList()
-                                      .join(",") ??
-                                  "",
-                            ),
-                          ), // TODO マイルストーン
-                        ],
-                      ),
-                      Divider(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              issue.versions
-                                      ?.map((e) => e.name)
-                                      .toList()
-                                      .join(",") ??
-                                  "",
-                            ),
-                          ), // TODO 発生バージョン
-                        ],
-                      ),
-                      Divider(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                              child:
-                                  Text(issue.estimatedHours?.toString() ?? "")),
-                          // TODO
-                          Expanded(
-                              child: Text(issue.actualHours?.toString() ?? "")),
-                          // TODO
+                                  : "未設定"),
+                            ],
+                          ))
                         ],
                       ),
                       Divider(),
@@ -174,11 +143,79 @@ class IssueDetail extends StatelessWidget {
                           Expanded(
                             child: Row(
                               children: [
-                                Text("完了理由："),
+                                Text("カテゴリ"),
+                                spacer,
+                                Text(
+                                  category != null && category.length != 0 ? category : "未設定",
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Row(
+                              children: [
+                                Text("マイルストーン"),
+                                spacer,
+                                Text(
+                                  milestone != null && milestone.length != 0 ? milestone : "未設定",
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Divider(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(
+                            child: Row(
+                              children: [
+                                Text("発生バージョン"),
+                                spacer,
+                                Text(
+                                  version != null && version.length != 0 ? version : "未設定",
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Divider(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(
+                              child: Row(
+                            children: [
+                              Text("予定時間"),
+                              spacer,
+                              Text(issue.estimatedHours?.toString() ?? "未設定"),
+                            ],
+                          )),
+                          Expanded(
+                              child: Row(
+                            children: [
+                              Text("実績時間"),
+                              spacer,
+                              Text(issue.actualHours?.toString() ?? "未設定"),
+                            ],
+                          )),
+                        ],
+                      ),
+                      Divider(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(
+                            child: Row(
+                              children: [
+                                Text("完了理由"),
+                                spacer,
                                 Text(issue.resolution?.name ?? "未設定"),
                               ],
                             ),
-                          ), // TODO
+                          ),
                         ],
                       ),
                     ],
