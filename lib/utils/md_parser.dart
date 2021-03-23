@@ -22,6 +22,19 @@ class MdUnorderedList extends MdElement {
   });
 }
 
+/// 番号付き箇条書き
+class MdOrderedList extends MdElement {
+  final int level;
+  final String content;
+  final int order;
+
+  MdOrderedList({
+    required this.level,
+    required this.content,
+    required this.order,
+  });
+}
+
 class MdParser {
   static List<MdElement> parse(String content) {
     List<MdElement> result = List<MdElement>.empty(growable: true);
@@ -48,6 +61,25 @@ class MdParser {
         level++, s = s.substring(1)) {}
         if (s.startsWith(' ')) {
           result.add(MdUnorderedList(level: level, content: s.substring(1)));
+        }
+        return;
+      }
+      // 番号付き箇条書き
+      if (line.startsWith('+')) {
+        var level = 1;
+        var s = "";
+        for (s = line.substring(level);
+        s.startsWith('+');
+        level++, s = s.substring(1)) {}
+        if (s.startsWith(' ')) {
+          var order = 1;
+          if (result.isNotEmpty && result.last is MdOrderedList) {
+            final ol = result.last as MdOrderedList;
+            if (ol.level == level) {
+              order = (result.last as MdOrderedList).order + 1;
+            }
+          }
+          result.add(MdOrderedList(level: level, content: s.substring(1), order: order));
         }
         return;
       }

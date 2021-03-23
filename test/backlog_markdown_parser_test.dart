@@ -32,7 +32,7 @@ void main() {
 --- 箇条書き2-1-1
 ''';
   test(
-    '見出し',
+    '箇条書き',
         () {
       var ret = MdParser.parse(unorderedList);
       expect(ret.length, 4);
@@ -48,6 +48,41 @@ void main() {
       expect((ret[2] as MdUnorderedList).content, "箇条書き2-1");
       expect((ret[3] as MdUnorderedList).level, 3);
       expect((ret[3] as MdUnorderedList).content, "箇条書き2-1-1");
+    },
+  );
+
+  final orderedList = '''
++ 箇条書き1
++ 箇条書き2
++ 箇条書き3
+++ 箇条書き3-1
+++ 箇条書き3-2
+''';
+  test(
+    '番号付き箇条書き',
+        () {
+      var ret = MdParser.parse(orderedList);
+      expect(ret.length, 5);
+      expect(ret[0] is MdOrderedList, true);
+      expect(ret[1] is MdOrderedList, true);
+      expect(ret[2] is MdOrderedList, true);
+      expect(ret[3] is MdOrderedList, true);
+      expect(ret[4] is MdOrderedList, true);
+      expect((ret[0] as MdOrderedList).level, 1);
+      expect((ret[0] as MdOrderedList).content, "箇条書き1");
+      expect((ret[0] as MdOrderedList).order, 1);
+      expect((ret[1] as MdOrderedList).level, 1);
+      expect((ret[1] as MdOrderedList).content, "箇条書き2");
+      expect((ret[1] as MdOrderedList).order, 2);
+      expect((ret[2] as MdOrderedList).level, 1);
+      expect((ret[2] as MdOrderedList).content, "箇条書き3");
+      expect((ret[2] as MdOrderedList).order, 3);
+      expect((ret[3] as MdOrderedList).level, 2);
+      expect((ret[3] as MdOrderedList).content, "箇条書き3-1");
+      expect((ret[3] as MdOrderedList).order, 1);
+      expect((ret[4] as MdOrderedList).level, 2);
+      expect((ret[4] as MdOrderedList).content, "箇条書き3-2");
+      expect((ret[4] as MdOrderedList).order, 2);
     },
   );
 
