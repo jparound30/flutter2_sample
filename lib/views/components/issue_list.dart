@@ -12,6 +12,7 @@ import '../../providers/credential_info.dart';
 import '../../providers/selected_project.dart';
 import '../screens/issue_detail_page.dart';
 import 'issue_type_chip.dart';
+import 'priority_icon.dart';
 import 'status_chip.dart';
 
 class IssueList extends StatelessWidget {
@@ -456,10 +457,7 @@ class IssueTableSource extends DataTableSource {
           ),
           DataCell(
             Center(
-              child: Text(
-                issue.priority.name,
-                style: textStyleInCells,
-              ),
+              child: PriorityIcon(priority: issue.priority),
             ),
           ),
           DataCell(
