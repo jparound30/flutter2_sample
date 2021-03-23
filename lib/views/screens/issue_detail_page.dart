@@ -42,11 +42,7 @@ class IssueDetail extends StatelessWidget {
     var dateFormat = DateFormat('yyyy/MM/dd HH:mm', 'ja');
 
     var created = dateFormat.format(issue.created!);
-    final spacer = SizedBox(
-      width: 48,
-    );
 
-    // TODO Expanded( Row( sizedBox ( 項目名 ) , 項目値 ) ) のほうがいいかも？
     final category = issue.category?.map((e) => e.name).toList().join(",");
     final milestone = issue.milestones?.map((e) => e.name).toList().join(",");
     final version = issue.versions?.map((e) => e.name).toList().join(",");
@@ -117,23 +113,29 @@ class IssueDetail extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Expanded(
-                              child: Row(
-                            children: [
-                              Text("優先度"),
-                              spacer,
-                              Text(issue.priority.name),
-                            ],
-                          )),
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 120,
+                                  child: Text("優先度"),
+                                ),
+                                Text(issue.priority.name),
+                              ],
+                            ),
+                          ),
                           Expanded(
-                              child: Row(
-                            children: [
-                              Text("担当者"),
-                              spacer,
-                              Text(issue.assignee != null
-                                  ? issue.assignee!.name
-                                  : "未設定"),
-                            ],
-                          ))
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 120,
+                                  child: Text("担当者"),
+                                ),
+                                Text(issue.assignee != null
+                                    ? issue.assignee!.name
+                                    : "未設定"),
+                              ],
+                            ),
+                          )
                         ],
                       ),
                       Divider(),
@@ -143,10 +145,14 @@ class IssueDetail extends StatelessWidget {
                           Expanded(
                             child: Row(
                               children: [
-                                Text("カテゴリ"),
-                                spacer,
+                                SizedBox(
+                                  width: 120,
+                                  child: Text("カテゴリ"),
+                                ),
                                 Text(
-                                  category != null && category.length != 0 ? category : "未設定",
+                                  category != null && category.length != 0
+                                      ? category
+                                      : "未設定",
                                 ),
                               ],
                             ),
@@ -154,10 +160,14 @@ class IssueDetail extends StatelessWidget {
                           Expanded(
                             child: Row(
                               children: [
-                                Text("マイルストーン"),
-                                spacer,
+                                SizedBox(
+                                  width: 120,
+                                  child: Text("マイルストーン"),
+                                ),
                                 Text(
-                                  milestone != null && milestone.length != 0 ? milestone : "未設定",
+                                  milestone != null && milestone.length != 0
+                                      ? milestone
+                                      : "未設定",
                                 ),
                               ],
                             ),
@@ -171,10 +181,14 @@ class IssueDetail extends StatelessWidget {
                           Expanded(
                             child: Row(
                               children: [
-                                Text("発生バージョン"),
-                                spacer,
+                                SizedBox(
+                                  width: 120,
+                                  child: Text("発生バージョン"),
+                                ),
                                 Text(
-                                  version != null && version.length != 0 ? version : "未設定",
+                                  version != null && version.length != 0
+                                      ? version
+                                      : "未設定",
                                 ),
                               ],
                             ),
@@ -186,21 +200,27 @@ class IssueDetail extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Expanded(
-                              child: Row(
-                            children: [
-                              Text("予定時間"),
-                              spacer,
-                              Text(issue.estimatedHours?.toString() ?? "未設定"),
-                            ],
-                          )),
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 120,
+                                  child: Text("予定時間"),
+                                ),
+                                Text(issue.estimatedHours?.toString() ?? "未設定"),
+                              ],
+                            ),
+                          ),
                           Expanded(
-                              child: Row(
-                            children: [
-                              Text("実績時間"),
-                              spacer,
-                              Text(issue.actualHours?.toString() ?? "未設定"),
-                            ],
-                          )),
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 120,
+                                  child: Text("実績時間"),
+                                ),
+                                Text(issue.actualHours?.toString() ?? "未設定"),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                       Divider(),
@@ -210,8 +230,10 @@ class IssueDetail extends StatelessWidget {
                           Expanded(
                             child: Row(
                               children: [
-                                Text("完了理由"),
-                                spacer,
+                                SizedBox(
+                                  width: 120,
+                                  child: Text("完了理由"),
+                                ),
                                 Text(issue.resolution?.name ?? "未設定"),
                               ],
                             ),
