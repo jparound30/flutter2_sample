@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter2_sample/models/issue.dart';
+import 'package:flutter2_sample/models/milestone_version.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
