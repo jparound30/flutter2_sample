@@ -1,5 +1,6 @@
 import 'category.dart';
 import 'milestone_version.dart';
+import 'resolution.dart';
 import 'user.dart';
 
 /// 課題のフィールド列挙型（ソートキー用）
@@ -113,23 +114,6 @@ class IssueFieldEnumHelper extends EnumHelper<IssueField> {
     ret[IssueField.actualHours] = "実績時間";
     ret[IssueField.childIssue] = "子課題";
     return ret;
-  }
-}
-
-class Resolution {
-  final int id;
-  final String name;
-
-  Resolution({
-    required this.id,
-    required this.name,
-  });
-
-  factory Resolution.fromJson(Map<String, dynamic> json) {
-    return Resolution(
-      id: json['id'],
-      name: json['name'],
-    );
   }
 }
 
