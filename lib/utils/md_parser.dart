@@ -145,6 +145,7 @@ class MdParser {
       BuildContext context, List<MdElement> elements) {
     List<Widget> children = List<Widget>.empty(growable: true);
     elements.forEach((element) {
+      // TODO 共通のmarginを生成するコンポーネントを全てに噛ませたほうがいいかも？
       final normalText = Theme.of(context).textTheme.bodyText2!;
       final normalFontSize = normalText.fontSize ?? 12.0;
       // 見出し
@@ -225,8 +226,24 @@ class MdParser {
           );
           children.add(pad);
         } else {
-          children.add(text);
+          final e = Container(
+            margin: EdgeInsets.symmetric(vertical: 4),
+            child: text,
+          );
+          children.add(e);
         }
+        return;
+      }
+      //
+      if (element is MdElement) {
+        children.add(Container(
+          margin: EdgeInsets.symmetric(vertical: 4),
+          child: Text(
+            element.content,
+            style: normalText,
+          ),
+        ));
+        return;
       }
     });
     return Column(
