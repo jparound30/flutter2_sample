@@ -77,10 +77,11 @@ class MdParser {
         for (s = line.substring(level);
             s.startsWith('*');
             level++, s = s.substring(1)) {}
-        if (level <= MAX_LEVEL && s.startsWith(' ')) {
-          result.add(MdTitle(level: level, content: s.substring(1)));
-        } else {
+        if (level > MAX_LEVEL) {
           result.add(MdElement(content: line));
+        } else {
+          var c = s.trimLeft();
+          result.add(MdTitle(level: level, content: c));
         }
         return;
       }
