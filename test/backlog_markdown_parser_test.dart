@@ -29,13 +29,15 @@ void main() {
 - 箇条書き1
 - 箇条書き2
 -- 箇条書き2-1
---- 箇条書き2-1-1
+---箇条書き2-1-1
+----箇条書き4
+-------箇条書き7
 ''';
   test(
     '箇条書き',
         () {
       var ret = MdParser.parse(unorderedList);
-      expect(ret.length, 4);
+      expect(ret.length, 6);
       expect(ret[0] is MdUnorderedList, true);
       expect(ret[1] is MdUnorderedList, true);
       expect(ret[2] is MdUnorderedList, true);
@@ -48,19 +50,10 @@ void main() {
       expect((ret[2] as MdUnorderedList).content, "箇条書き2-1");
       expect((ret[3] as MdUnorderedList).level, 3);
       expect((ret[3] as MdUnorderedList).content, "箇条書き2-1-1");
-    },
-  );
-
-  final unorderedListNoSpace = '''
----箇条書き2-1-1
-''';
-  test(
-    '箇条書き 空白区切りなし',
-        () {
-      var ret = MdParser.parse(unorderedListNoSpace);
-      expect(ret.length, 1);
-      expect(ret[0] is MdElement, true);
-      expect((ret[0]).content, "---箇条書き2-1-1");
+      expect((ret[4] as MdUnorderedList).level, 4);
+      expect((ret[4] as MdUnorderedList).content, "箇条書き4");
+      expect((ret[5] as MdUnorderedList).level, 7);
+      expect((ret[5] as MdUnorderedList).content, "箇条書き7");
     },
   );
 
