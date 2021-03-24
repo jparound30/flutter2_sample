@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+const MAX_LEVEL = 6;
+
 class MdElement {
   final String content;
 
@@ -75,7 +77,7 @@ class MdParser {
         for (s = line.substring(level);
             s.startsWith('*');
             level++, s = s.substring(1)) {}
-        if (level <= 6 && s.startsWith(' ')) {
+        if (level <= MAX_LEVEL && s.startsWith(' ')) {
           result.add(MdTitle(level: level, content: s.substring(1)));
         } else {
           result.add(MdElement(content: line));
