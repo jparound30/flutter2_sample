@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter2_sample/utils/md_parser.dart';
 import 'package:intl/intl.dart';
 
 import '../../models/issue.dart';
@@ -270,9 +271,11 @@ class BacklogMarkdownRender extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final list = MdParser.parse(this.markdown);
+    final child = MdParser.buildFromMdElements(context, list);
     return Container(
       width: double.infinity,
-      child: Text(this.markdown),
+      child: child,
     );
   }
 }
