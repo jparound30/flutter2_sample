@@ -63,6 +63,19 @@ void main() {
     },
   );
 
+  final unorderedListNoSpace = '''
+---箇条書き2-1-1
+''';
+  test(
+    '箇条書き 空白区切りなし',
+        () {
+      var ret = MdParser.parse(unorderedListNoSpace);
+      expect(ret.length, 1);
+      expect(ret[0] is MdElement, true);
+      expect((ret[0]).content, "---箇条書き2-1-1");
+    },
+  );
+
   final orderedList = '''
 + 箇条書き1
 + 箇条書き2

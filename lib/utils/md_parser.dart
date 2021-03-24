@@ -91,7 +91,9 @@ class MdParser {
         for (s = line.substring(level);
             s.startsWith('-');
             level++, s = s.substring(1)) {}
-        if (s.startsWith(' [x] ')) {
+        if (level > MAX_LEVEL) {
+          result.add(MdElement(content: line));
+        } else if (s.startsWith(' [x] ')) {
           // チェックリスト（チェックつき）
           result.add(MdUnorderedCheckList(
               level: level, content: s.substring(5), checked: true));
@@ -102,6 +104,8 @@ class MdParser {
         } else if (s.startsWith(' ')) {
           // 箇条書き
           result.add(MdUnorderedList(level: level, content: s.substring(1)));
+        } else {
+          result.add(MdElement(content: line));
         }
         return;
       }
