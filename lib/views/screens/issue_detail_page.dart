@@ -275,6 +275,7 @@ class BacklogMarkdownRender extends StatelessWidget {
     final child = MdParser.buildFromMdElements(context, list);
     return Container(
       width: double.infinity,
+      padding: EdgeInsets.all(4.0),
       child: child,
     );
   }
