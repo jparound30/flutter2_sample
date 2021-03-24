@@ -86,4 +86,34 @@ void main() {
     },
   );
 
+  final checkList = '''
+- [ ] Item-A
+- [x] Item-B
+-- [ ] Item-B-1
+--- [ ] Item-B-2-a
+''';
+  test(
+    'チェックリスト',
+        () {
+      var ret = MdParser.parse(checkList);
+      expect(ret.length, 4);
+      expect(ret[0] is MdUnorderedCheckList, true);
+      expect(ret[1] is MdUnorderedCheckList, true);
+      expect(ret[2] is MdUnorderedCheckList, true);
+      expect(ret[3] is MdUnorderedCheckList, true);
+      expect((ret[0] as MdUnorderedCheckList).level, 1);
+      expect((ret[0] as MdUnorderedCheckList).content, "Item-A");
+      expect((ret[0] as MdUnorderedCheckList).checked, false);
+      expect((ret[1] as MdUnorderedCheckList).level, 1);
+      expect((ret[1] as MdUnorderedCheckList).content, "Item-B");
+      expect((ret[1] as MdUnorderedCheckList).checked, true);
+      expect((ret[2] as MdUnorderedCheckList).level, 2);
+      expect((ret[2] as MdUnorderedCheckList).content, "Item-B-1");
+      expect((ret[2] as MdUnorderedCheckList).checked, false);
+      expect((ret[3] as MdUnorderedCheckList).level, 3);
+      expect((ret[3] as MdUnorderedCheckList).content, "Item-B-2-a");
+      expect((ret[3] as MdUnorderedCheckList).checked, false);
+    },
+  );
+
 }

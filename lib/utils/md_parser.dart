@@ -22,6 +22,17 @@ class MdUnorderedList extends MdElement {
   });
 }
 
+/// 箇条書き チェックリスト
+class MdUnorderedCheckList extends MdUnorderedList {
+  final bool checked;
+
+  MdUnorderedCheckList({
+    required int level,
+    required String content,
+    required this.checked,
+  }) : super(level: level, content: content);
+}
+
 /// 番号付き箇条書き
 class MdOrderedList extends MdElement {
   final int level;
@@ -45,8 +56,8 @@ class MdParser {
         var level = 1;
         var s = "";
         for (s = line.substring(level);
-        s.startsWith('*');
-        level++, s = s.substring(1)) {}
+            s.startsWith('*');
+            level++, s = s.substring(1)) {}
         if (s.startsWith(' ')) {
           result.add(MdTitle(level: level, content: s.substring(1)));
         }
@@ -57,9 +68,18 @@ class MdParser {
         var level = 1;
         var s = "";
         for (s = line.substring(level);
-        s.startsWith('-');
-        level++, s = s.substring(1)) {}
-        if (s.startsWith(' ')) {
+            s.startsWith('-');
+            level++, s = s.substring(1)) {}
+        if (s.startsWith(' [x] ')) {
+          // チェックリスト（チェックつき）
+          result.add(MdUnorderedCheckList(
+              level: level, content: s.substring(5), checked: true));
+        } else if (s.startsWith(' [ ] ')) {
+          // チェックリスト（チェックなし）
+          result.add(MdUnorderedCheckList(
+              level: level, content: s.substring(5), checked: false));
+        } else if (s.startsWith(' ')) {
+          // 箇条書き
           result.add(MdUnorderedList(level: level, content: s.substring(1)));
         }
         return;
@@ -69,8 +89,8 @@ class MdParser {
         var level = 1;
         var s = "";
         for (s = line.substring(level);
-        s.startsWith('+');
-        level++, s = s.substring(1)) {}
+            s.startsWith('+');
+            level++, s = s.substring(1)) {}
         if (s.startsWith(' ')) {
           var order = 1;
           if (result.isNotEmpty && result.last is MdOrderedList) {
@@ -79,7 +99,8 @@ class MdParser {
               order = (result.last as MdOrderedList).order + 1;
             }
           }
-          result.add(MdOrderedList(level: level, content: s.substring(1), order: order));
+          result.add(MdOrderedList(
+              level: level, content: s.substring(1), order: order));
         }
         return;
       }
