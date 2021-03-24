@@ -238,6 +238,58 @@ class MdParser {
         }
         return;
       }
+
+      // 箇条書き
+      if (element is MdUnorderedList) {
+        final indent = (element.level - 1) * 16;
+        final Widget widget;
+        switch (element.level) {
+          case 1:
+            widget = Container(
+              margin: EdgeInsets.symmetric(vertical: 4),
+              padding: EdgeInsets.only(left: indent.toDouble()),
+              child: Row(
+                children: [
+                  Icon(Icons.circle, size: 8,),
+                  SizedBox(width: 8,),
+                  Text(element.content),
+                ],
+              ),
+            );
+            children.add(widget);
+            break;
+          case 2:
+            widget = Container(
+              margin: EdgeInsets.symmetric(vertical: 4),
+              padding: EdgeInsets.only(left: indent.toDouble()),
+              child: Row(
+                children: [
+                  Icon(Icons.radio_button_unchecked, size: 10,),
+                  SizedBox(width: 8,),
+                  Text(element.content),
+                ],
+              ),
+            );
+            children.add(widget);
+            break;
+          case 3:
+          default:
+          widget = Container(
+            margin: EdgeInsets.symmetric(vertical: 4),
+            padding: EdgeInsets.only(left: indent.toDouble()),
+            child: Row(
+              children: [
+                Icon(Icons.stop, size: 12,),
+                SizedBox(width: 8,),
+                Text(element.content),
+              ],
+            ),
+          );
+          children.add(widget);
+            break;
+        }
+        return;
+      }
       //
       if (element is MdElement) {
         children.add(Container(
