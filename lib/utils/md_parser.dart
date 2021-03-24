@@ -225,6 +225,7 @@ class MdParser {
       }
     });
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: children,
     );
   }
