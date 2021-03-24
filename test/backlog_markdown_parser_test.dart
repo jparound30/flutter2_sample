@@ -116,4 +116,38 @@ void main() {
     },
   );
 
+  final orderedCheckList = '''
++ [ ] Item-A
++ [x] Item-B
+++ [ ] Item-B-1
++++ [ ] Item-B-2-a
+''';
+  test(
+    'チェックリスト',
+        () {
+      var ret = MdParser.parse(orderedCheckList);
+      expect(ret.length, 4);
+      expect(ret[0] is MdOrderedCheckList, true);
+      expect(ret[1] is MdOrderedCheckList, true);
+      expect(ret[2] is MdOrderedCheckList, true);
+      expect(ret[3] is MdOrderedCheckList, true);
+      expect((ret[0] as MdOrderedCheckList).level, 1);
+      expect((ret[0] as MdOrderedCheckList).content, "Item-A");
+      expect((ret[0] as MdOrderedCheckList).order, 1);
+      expect((ret[0] as MdOrderedCheckList).checked, false);
+      expect((ret[1] as MdOrderedCheckList).level, 1);
+      expect((ret[1] as MdOrderedCheckList).content, "Item-B");
+      expect((ret[1] as MdOrderedCheckList).order, 2);
+      expect((ret[1] as MdOrderedCheckList).checked, true);
+      expect((ret[2] as MdOrderedCheckList).level, 2);
+      expect((ret[2] as MdOrderedCheckList).content, "Item-B-1");
+      expect((ret[2] as MdOrderedCheckList).order, 1);
+      expect((ret[2] as MdOrderedCheckList).checked, false);
+      expect((ret[3] as MdOrderedCheckList).level, 3);
+      expect((ret[3] as MdOrderedCheckList).content, "Item-B-2-a");
+      expect((ret[3] as MdOrderedCheckList).order, 1);
+      expect((ret[3] as MdOrderedCheckList).checked, false);
+    },
+  );
+
 }

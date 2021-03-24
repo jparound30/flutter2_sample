@@ -46,6 +46,18 @@ class MdOrderedList extends MdElement {
   });
 }
 
+/// 番号付き箇条書き
+class MdOrderedCheckList extends MdOrderedList {
+  final bool checked;
+
+  MdOrderedCheckList({
+    required int level,
+    required String content,
+    required int order,
+    required this.checked,
+  }) : super(level: level, content: content, order: order);
+}
+
 class MdParser {
   static List<MdElement> parse(String content) {
     List<MdElement> result = List<MdElement>.empty(growable: true);
@@ -91,14 +103,28 @@ class MdParser {
         for (s = line.substring(level);
             s.startsWith('+');
             level++, s = s.substring(1)) {}
-        if (s.startsWith(' ')) {
-          var order = 1;
-          if (result.isNotEmpty && result.last is MdOrderedList) {
-            final ol = result.last as MdOrderedList;
-            if (ol.level == level) {
-              order = (result.last as MdOrderedList).order + 1;
-            }
+        var order = 1;
+        if (result.isNotEmpty && result.last is MdOrderedList) {
+          final ol = result.last as MdOrderedList;
+          if (ol.level == level) {
+            order = (result.last as MdOrderedList).order + 1;
           }
+        }
+        if (s.startsWith(' [x] ')) {
+          // チェックリスト（チェックつき）
+          result.add(MdOrderedCheckList(
+              level: level,
+              content: s.substring(5),
+              checked: true,
+              order: order));
+        } else if (s.startsWith(' [ ] ')) {
+          // チェックリスト（チェックなし）
+          result.add(MdOrderedCheckList(
+              level: level,
+              content: s.substring(5),
+              checked: false,
+              order: order));
+        } else if (s.startsWith(' ')) {
           result.add(MdOrderedList(
               level: level, content: s.substring(1), order: order));
         }
