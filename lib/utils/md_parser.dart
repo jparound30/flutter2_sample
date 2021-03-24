@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class MdElement {}
 
 /// 見出し
@@ -132,5 +134,98 @@ class MdParser {
       }
     });
     return result;
+  }
+
+  static Widget buildFromMdElements(
+      BuildContext context, List<MdElement> elements) {
+    List<Widget> children = List<Widget>.empty(growable: true);
+    elements.forEach((element) {
+      final normalText = Theme.of(context).textTheme.bodyText2!;
+      final normalFontSize = normalText.fontSize ?? 12.0;
+      // 見出し
+      if (element is MdTitle) {
+        final TextStyle textStyle;
+        switch (element.level) {
+          case 1:
+            textStyle = normalText.copyWith(
+              fontSize: normalFontSize * 2.4,
+              fontWeight: FontWeight.w900,
+            );
+            break;
+          case 2:
+            textStyle = normalText.copyWith(
+              fontSize: normalFontSize * 2.0,
+              fontWeight: FontWeight.w800,
+            );
+            break;
+          case 3:
+            textStyle = normalText.copyWith(
+              fontSize: normalFontSize * 1.6,
+              fontWeight: FontWeight.w800,
+            );
+            break;
+          case 4:
+            textStyle = normalText.copyWith(
+              fontSize: normalFontSize * 1.4,
+              fontWeight: FontWeight.w700,
+            );
+            break;
+          case 5:
+            textStyle = normalText.copyWith(
+              fontSize: normalFontSize * 1.2,
+              fontWeight: FontWeight.w700,
+            );
+            break;
+          case 6:
+            textStyle = normalText.copyWith(
+              fontSize: normalFontSize * 1.0,
+              fontWeight: FontWeight.w600,
+            );
+            break;
+          default:
+            textStyle = normalText;
+        }
+        final text = Text(
+          element.content,
+          style: textStyle,
+        );
+        if (element.level == 1) {
+          final pad = Container(
+            padding: EdgeInsets.symmetric(vertical: 4),
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: Colors.green,
+                  width: 3.0,
+                ),
+              ),
+            ),
+            margin: EdgeInsets.symmetric(vertical: 16),
+            child: text,
+          );
+          children.add(pad);
+        } else if (element.level == 2) {
+          final pad = Container(
+            padding: EdgeInsets.symmetric(vertical: 4),
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: Colors.green,
+                  width: 1.0,
+                ),
+              ),
+            ),
+            margin: EdgeInsets.symmetric(vertical: 8),
+            child: text,
+          );
+          children.add(pad);
+        } else {
+          children.add(text);
+        }
+      }
+    });
+    return Column(
+      children: children,
+    );
   }
 }
