@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
 
-class MdElement {}
+class MdElement {
+  final String content;
+
+  MdElement({
+    required this.content,
+  });
+}
 
 /// 見出し
 class MdTitle extends MdElement {
   final int level;
-  final String content;
 
   MdTitle({
     required this.level,
-    required this.content,
-  });
+    required String content,
+  }) : super(content: content);
 }
 
 /// 箇条書き
 class MdUnorderedList extends MdElement {
   final int level;
-  final String content;
 
   MdUnorderedList({
     required this.level,
-    required this.content,
-  });
+    required String content,
+  }) : super(content: content);
 }
 
 /// 箇条書き チェックリスト
@@ -38,14 +42,13 @@ class MdUnorderedCheckList extends MdUnorderedList {
 /// 番号付き箇条書き
 class MdOrderedList extends MdElement {
   final int level;
-  final String content;
   final int order;
 
   MdOrderedList({
     required this.level,
-    required this.content,
+    required String content,
     required this.order,
-  });
+  }) : super(content: content);
 }
 
 /// 番号付き箇条書き
@@ -72,8 +75,10 @@ class MdParser {
         for (s = line.substring(level);
             s.startsWith('*');
             level++, s = s.substring(1)) {}
-        if (s.startsWith(' ')) {
+        if (level <= 6 && s.startsWith(' ')) {
           result.add(MdTitle(level: level, content: s.substring(1)));
+        } else {
+          result.add(MdElement(content: line));
         }
         return;
       }

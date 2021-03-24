@@ -24,6 +24,18 @@ void main() {
       expect((ret[2] as MdTitle).content, "見出し3");
     },
   );
+  final titleNoSpace = '''
+**見出し2
+''';
+  test(
+    '見出し 空白区切りなし',
+        () {
+      var ret = MdParser.parse(titleNoSpace);
+      expect(ret.length, 1);
+      expect(ret[0] is MdElement, true);
+      expect((ret[0]).content, "**見出し2");
+    },
+  );
 
   final unorderedList = '''
 - 箇条書き1
