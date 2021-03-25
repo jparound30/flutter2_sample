@@ -77,16 +77,37 @@ class MdParser {
     List<MdElement> result = List<MdElement>.empty(growable: true);
     var lines = content.split('\n');
     final quoteLines = List<String>.empty(growable: true);
+    final quoteLinesWithTag = List<String>.empty(growable: true);
     lines.forEach((line) {
       // 引用文
-      if (line.startsWith('>')) {
-        quoteLines.add(line.substring(1));
-        return;
-      } else if (quoteLines.isNotEmpty){
-        var mdQuoteBlock = MdQuoteBlock(content: quoteLines.join("\n"));
-        result.add(mdQuoteBlock);
-        quoteLines.clear();
+      if (quoteLinesWithTag.isEmpty) {
+        if (line.startsWith('>')) {
+          quoteLines.add(line.substring(1));
+          return;
+        } else if (quoteLines.isNotEmpty){
+          var mdQuoteBlock = MdQuoteBlock(content: quoteLines.join("\n"));
+          result.add(mdQuoteBlock);
+          quoteLines.clear();
+        }
       }
+      if (quoteLinesWithTag.isEmpty && line == "{quote}") {
+        quoteLinesWithTag.add("");
+        return;
+      } else if (quoteLinesWithTag.isNotEmpty && line == "{/quote}") {
+        var mdQuoteBlock;
+        if (quoteLinesWithTag.length == 1) {
+          mdQuoteBlock = MdQuoteBlock(content: "");
+        } else {
+          mdQuoteBlock = MdQuoteBlock(content: quoteLinesWithTag.getRange(1, quoteLinesWithTag.length).join("\n"));
+        }
+        result.add(mdQuoteBlock);
+        quoteLinesWithTag.clear();
+        return;
+      } else if (quoteLinesWithTag.isNotEmpty) {
+        quoteLinesWithTag.add(line);
+        return;
+      }
+
       // 見出し
       if (line.startsWith('*')) {
         var level = 1;

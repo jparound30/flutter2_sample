@@ -175,4 +175,54 @@ void main() {
     },
   );
 
+  final quote2 = '''
+
+>引用した内容です。
+>引用した内容です。
+引用じゃない内容です。
+{quote}
+>引用した内容です。
+>引用した内容です。
+{/quote}
+''';
+  test(
+    '引用文({quote}{/quote}) 入れ子1',
+        () {
+      var ret = MdParser.parse(quote2);
+      expect(ret.length, 5);
+      expect(ret[1] is MdQuoteBlock, true);
+      expect(ret[3] is MdQuoteBlock, true);
+      expect(ret[0].content, "");
+      expect((ret[1] as MdQuoteBlock).content, "引用した内容です。\n引用した内容です。");
+      expect(ret[2].content, "引用じゃない内容です。");
+      expect(ret[3] is MdQuoteBlock, true);
+      expect((ret[3] as MdQuoteBlock).content, ">引用した内容です。\n>引用した内容です。");
+    },
+  );
+
+  final quote3 = '''
+
+>引用した内容です。
+{quote}
+>引用した内容です。
+引用じゃない内容です。
+>引用した内容です。
+{/quote}
+>引用した内容です。
+''';
+  test(
+    '引用文({quote}{/quote}) 入れ子2',
+        () {
+      var ret = MdParser.parse(quote3);
+      expect(ret.length, 5);
+      expect(ret[1] is MdQuoteBlock, true);
+      expect(ret[2] is MdQuoteBlock, true);
+      expect(ret[3] is MdQuoteBlock, true);
+      expect(ret[0].content, "");
+      expect((ret[1] as MdQuoteBlock).content, "引用した内容です。");
+      expect((ret[2] as MdQuoteBlock).content, ">引用した内容です。\n引用じゃない内容です。\n>引用した内容です。");
+      expect((ret[3] as MdQuoteBlock).content, "引用した内容です。");
+    },
+  );
+
 }
