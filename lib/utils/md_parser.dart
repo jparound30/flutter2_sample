@@ -141,6 +141,7 @@ class MdParser {
         }
         return;
       }
+      result.add(MdElement(content: line));
     });
     return result;
   }
