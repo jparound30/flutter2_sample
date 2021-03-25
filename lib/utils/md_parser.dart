@@ -65,11 +65,28 @@ class MdOrderedCheckList extends MdOrderedList {
   }) : super(level: level, content: content, order: order);
 }
 
+/// 引用文
+class MdQuoteBlock extends MdElement {
+  MdQuoteBlock({
+    required String content,
+  }) : super(content: content);
+}
+
 class MdParser {
   static List<MdElement> parse(String content) {
     List<MdElement> result = List<MdElement>.empty(growable: true);
     var lines = content.split('\n');
+    final quoteLines = List<String>.empty(growable: true);
     lines.forEach((line) {
+      // 引用文
+      if (line.startsWith('>')) {
+        quoteLines.add(line.substring(1));
+        return;
+      } else if (quoteLines.isNotEmpty){
+        var mdQuoteBlock = MdQuoteBlock(content: quoteLines.join("\n"));
+        result.add(mdQuoteBlock);
+        quoteLines.clear();
+      }
       // 見出し
       if (line.startsWith('*')) {
         var level = 1;

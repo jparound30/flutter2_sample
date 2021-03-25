@@ -156,4 +156,23 @@ void main() {
     },
   );
 
+  final quote1 = '''
+
+>引用した内容です。
+>引用した内容です。
+引用じゃない内容です。
+''';
+  test(
+    '引用文',
+        () {
+      var ret = MdParser.parse(quote1);
+      expect(ret.length, 4);
+      expect(ret[1] is MdQuoteBlock, true);
+      expect(ret[0].content, "");
+      expect((ret[1] as MdQuoteBlock).content, "引用した内容です。\n引用した内容です。");
+      expect(ret[2].content, "引用じゃない内容です。");
+      expect(ret[3].content, "");
+    },
+  );
+
 }
