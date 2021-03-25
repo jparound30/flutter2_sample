@@ -291,6 +291,26 @@ class MdParser {
         }
         return;
       }
+
+      // 番号付き箇条書き
+      if (element is MdOrderedList) {
+        final indent = (element.level - 1) * 16;
+        final Widget widget;
+        widget = Container(
+          margin: EdgeInsets.symmetric(vertical: 4),
+          padding: EdgeInsets.only(left: indent.toDouble()),
+          child: Row(
+            children: [
+              Text(element.order.toString() + "."),
+              SizedBox(width: 8,),
+              Text(element.content),
+            ],
+          ),
+        );
+        children.add(widget);
+        return;
+      }
+
       //
       if (element is MdElement) {
         children.add(Container(
