@@ -12,7 +12,7 @@ void main() {
     '見出し',
     () {
       var ret = MdParser.parse(title);
-      expect(ret.length, 3);
+      expect(ret.length, 4);
       expect(ret[0] is MdTitle, true);
       expect(ret[1] is MdTitle, true);
       expect(ret[2] is MdTitle, true);
@@ -37,7 +37,7 @@ void main() {
     '箇条書き',
         () {
       var ret = MdParser.parse(unorderedList);
-      expect(ret.length, 6);
+      expect(ret.length, 7);
       expect(ret[0] is MdUnorderedList, true);
       expect(ret[1] is MdUnorderedList, true);
       expect(ret[2] is MdUnorderedList, true);
@@ -68,7 +68,7 @@ void main() {
     '番号付き箇条書き',
         () {
       var ret = MdParser.parse(orderedList);
-      expect(ret.length, 5);
+      expect(ret.length, 6);
       expect(ret[0] is MdOrderedList, true);
       expect(ret[1] is MdOrderedList, true);
       expect(ret[2] is MdOrderedList, true);
@@ -102,7 +102,7 @@ void main() {
     'チェックリスト',
         () {
       var ret = MdParser.parse(checkList);
-      expect(ret.length, 4);
+      expect(ret.length, 5);
       expect(ret[0] is MdUnorderedCheckList, true);
       expect(ret[1] is MdUnorderedCheckList, true);
       expect(ret[2] is MdUnorderedCheckList, true);
@@ -132,7 +132,7 @@ void main() {
     'チェックリスト',
         () {
       var ret = MdParser.parse(orderedCheckList);
-      expect(ret.length, 4);
+      expect(ret.length, 5);
       expect(ret[0] is MdOrderedCheckList, true);
       expect(ret[1] is MdOrderedCheckList, true);
       expect(ret[2] is MdOrderedCheckList, true);
