@@ -203,6 +203,7 @@ class MdParser {
         if (element.level == 1) {
           final pad = Container(
             padding: EdgeInsets.symmetric(vertical: 4),
+            width: double.infinity,
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
@@ -218,6 +219,7 @@ class MdParser {
         } else if (element.level == 2) {
           final pad = Container(
             padding: EdgeInsets.symmetric(vertical: 4),
+            width: double.infinity,
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
