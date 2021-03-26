@@ -396,6 +396,9 @@ class MdParser {
       if (element is MdOrderedList) {
         final indent = (element.level - 1) * 16;
         final Widget widget;
+        final isCheckList = element is MdOrderedCheckList;
+        final checkedIcon = Icon(Icons.check_box, color: Colors.blue);
+        final uncheckedIcon = Icon(Icons.check_box_outline_blank);
         final margin = SizedBox(width: 8);
         widget = Container(
           margin: EdgeInsets.symmetric(vertical: 4),
@@ -404,6 +407,12 @@ class MdParser {
             children: [
               Text(element.order.toString() + "."),
               margin,
+              if (isCheckList && (element as MdOrderedCheckList).checked)
+                checkedIcon
+              else if (isCheckList && !((element as MdOrderedCheckList).checked))
+                uncheckedIcon,
+              if (isCheckList)
+                margin,
               Text(element.content),
             ],
           ),
