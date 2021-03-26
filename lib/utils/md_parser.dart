@@ -84,7 +84,7 @@ class MdParser {
         if (line.startsWith('>')) {
           quoteLines.add(line.substring(1));
           return;
-        } else if (quoteLines.isNotEmpty){
+        } else if (quoteLines.isNotEmpty) {
           var mdQuoteBlock = MdQuoteBlock(content: quoteLines.join("\n"));
           result.add(mdQuoteBlock);
           quoteLines.clear();
@@ -98,7 +98,10 @@ class MdParser {
         if (quoteLinesWithTag.length == 1) {
           mdQuoteBlock = MdQuoteBlock(content: "");
         } else {
-          mdQuoteBlock = MdQuoteBlock(content: quoteLinesWithTag.getRange(1, quoteLinesWithTag.length).join("\n"));
+          mdQuoteBlock = MdQuoteBlock(
+              content: quoteLinesWithTag
+                  .getRange(1, quoteLinesWithTag.length)
+                  .join("\n"));
         }
         result.add(mdQuoteBlock);
         quoteLinesWithTag.clear();
@@ -291,8 +294,13 @@ class MdParser {
               padding: EdgeInsets.only(left: indent.toDouble()),
               child: Row(
                 children: [
-                  Icon(Icons.circle, size: 8,),
-                  SizedBox(width: 8,),
+                  Icon(
+                    Icons.circle,
+                    size: 8,
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
                   Text(element.content),
                 ],
               ),
@@ -305,8 +313,13 @@ class MdParser {
               padding: EdgeInsets.only(left: indent.toDouble()),
               child: Row(
                 children: [
-                  Icon(Icons.radio_button_unchecked, size: 10,),
-                  SizedBox(width: 8,),
+                  Icon(
+                    Icons.radio_button_unchecked,
+                    size: 10,
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
                   Text(element.content),
                 ],
               ),
@@ -315,18 +328,23 @@ class MdParser {
             break;
           case 3:
           default:
-          widget = Container(
-            margin: EdgeInsets.symmetric(vertical: 4),
-            padding: EdgeInsets.only(left: indent.toDouble()),
-            child: Row(
-              children: [
-                Icon(Icons.stop, size: 12,),
-                SizedBox(width: 8,),
-                Text(element.content),
-              ],
-            ),
-          );
-          children.add(widget);
+            widget = Container(
+              margin: EdgeInsets.symmetric(vertical: 4),
+              padding: EdgeInsets.only(left: indent.toDouble()),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.stop,
+                    size: 12,
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Text(element.content),
+                ],
+              ),
+            );
+            children.add(widget);
             break;
         }
         return;
@@ -342,7 +360,9 @@ class MdParser {
           child: Row(
             children: [
               Text(element.order.toString() + "."),
-              SizedBox(width: 8,),
+              SizedBox(
+                width: 8,
+              ),
               Text(element.content),
             ],
           ),
@@ -351,6 +371,27 @@ class MdParser {
         return;
       }
 
+      if (element is MdQuoteBlock) {
+        final pad = Container(
+          padding: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            border: Border(
+              left: BorderSide(
+                color: Colors.grey.shade400,
+                width: 3.0,
+              ),
+            ),
+          ),
+          margin: EdgeInsets.symmetric(vertical: 16),
+          child: Text(
+            element.content,
+            style: normalText.copyWith(color: Colors.grey.shade600),
+          ),
+        );
+        children.add(pad);
+        return;
+      }
       //
       if (element is MdElement) {
         children.add(Container(
