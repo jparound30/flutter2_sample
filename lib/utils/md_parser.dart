@@ -133,9 +133,7 @@ class MdParser {
           mdCodeBlock = MdCodeBlock(content: "");
         } else {
           mdCodeBlock = MdCodeBlock(
-              content: codeLines
-                  .getRange(1, codeLines.length)
-                  .join("\n"));
+              content: codeLines.getRange(1, codeLines.length).join("\n"));
         }
         result.add(mdCodeBlock);
         codeLines.clear();
@@ -427,6 +425,29 @@ class MdParser {
         children.add(pad);
         return;
       }
+
+      // コードブロック
+      if (element is MdCodeBlock) {
+        final block = Container(
+          padding: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey.shade300,
+              width: 1.0,
+            ),
+            color: Colors.grey.shade100,
+          ),
+          margin: EdgeInsets.symmetric(vertical: 8),
+          child: Text(
+            element.content,
+            style: normalText,
+          ),
+        );
+        children.add(block);
+        return;
+      }
+
       //
       if (element is MdElement) {
         children.add(Container(
