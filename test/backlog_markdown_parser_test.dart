@@ -225,4 +225,38 @@ void main() {
     },
   );
 
+  final codeBlock = '''
+AAAAAA
+{code:java}
+    package helloworld;
+    public class Hello {
+        public String sayHello {
+            return "Hello";
+        }
+    }
+{/code}
+CCCCCC
+''';
+  test(
+    'コードブロック1',
+        () {
+
+      final code = '''
+    package helloworld;
+    public class Hello {
+        public String sayHello {
+            return "Hello";
+        }
+    }''';
+
+      var ret = MdParser.parse(codeBlock);
+      expect(ret.length, 4);
+      expect(ret[0] is MdElement, true);
+      expect(ret[1] is MdCodeBlock, true);
+      expect(ret[2] is MdElement, true);
+      expect(ret[0].content, "AAAAAA");
+      expect((ret[1] as MdCodeBlock).content, code);
+      expect(ret[2].content, "CCCCCC");
+    },
+  );
 }

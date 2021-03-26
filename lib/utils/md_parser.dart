@@ -72,12 +72,24 @@ class MdQuoteBlock extends MdElement {
   }) : super(content: content);
 }
 
+/// コードブロック
+class MdCodeBlock extends MdElement {
+  MdCodeBlock({
+    required String content,
+  }) : super(content: content);
+}
+
 class MdParser {
+  static final openCodeBlockRegExp = RegExp("^{code.*}\$");
+  static final closeCodeBlockRegExp = RegExp("^{/code.*}");
+
   static List<MdElement> parse(String content) {
     List<MdElement> result = List<MdElement>.empty(growable: true);
     var lines = content.split('\n');
     final quoteLines = List<String>.empty(growable: true);
     final quoteLinesWithTag = List<String>.empty(growable: true);
+    final codeLines = List<String>.empty(growable: true);
+
     lines.forEach((line) {
       // 引用文
       if (quoteLinesWithTag.isEmpty) {
@@ -108,6 +120,28 @@ class MdParser {
         return;
       } else if (quoteLinesWithTag.isNotEmpty) {
         quoteLinesWithTag.add(line);
+        return;
+      }
+
+      // コードブロック
+      if (codeLines.isEmpty && openCodeBlockRegExp.hasMatch(line)) {
+        codeLines.add("");
+        return;
+      } else if (codeLines.isNotEmpty && closeCodeBlockRegExp.hasMatch(line)) {
+        var mdCodeBlock;
+        if (codeLines.length == 1) {
+          mdCodeBlock = MdCodeBlock(content: "");
+        } else {
+          mdCodeBlock = MdCodeBlock(
+              content: codeLines
+                  .getRange(1, codeLines.length)
+                  .join("\n"));
+        }
+        result.add(mdCodeBlock);
+        codeLines.clear();
+        return;
+      } else if (codeLines.isNotEmpty) {
+        codeLines.add(line);
         return;
       }
 
