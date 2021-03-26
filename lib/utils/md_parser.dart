@@ -319,6 +319,10 @@ class MdParser {
       if (element is MdUnorderedList) {
         final indent = (element.level - 1) * 16;
         final Widget widget;
+        final isCheckList = element is MdUnorderedCheckList;
+        final checkedIcon = Icon(Icons.check_box, color: Colors.blue);
+        final uncheckedIcon = Icon(Icons.check_box_outline_blank);
+        final margin = SizedBox(width: 8);
         switch (element.level) {
           case 1:
             widget = Container(
@@ -326,13 +330,15 @@ class MdParser {
               padding: EdgeInsets.only(left: indent.toDouble()),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.circle,
-                    size: 8,
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
+                  margin,
+                  if (isCheckList && (element as MdUnorderedCheckList).checked)
+                    checkedIcon
+                  else if (isCheckList &&
+                      !((element as MdUnorderedCheckList).checked))
+                    uncheckedIcon
+                  else
+                    Icon(Icons.circle, size: 8),
+                  margin,
                   Text(element.content),
                 ],
               ),
@@ -345,13 +351,15 @@ class MdParser {
               padding: EdgeInsets.only(left: indent.toDouble()),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.radio_button_unchecked,
-                    size: 10,
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
+                  margin,
+                  if (isCheckList && (element as MdUnorderedCheckList).checked)
+                    checkedIcon
+                  else if (isCheckList &&
+                      !((element as MdUnorderedCheckList).checked))
+                    uncheckedIcon
+                  else
+                    Icon(Icons.radio_button_unchecked, size: 10),
+                  margin,
                   Text(element.content),
                 ],
               ),
@@ -365,13 +373,15 @@ class MdParser {
               padding: EdgeInsets.only(left: indent.toDouble()),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.stop,
-                    size: 12,
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
+                  margin,
+                  if (isCheckList && (element as MdUnorderedCheckList).checked)
+                    checkedIcon
+                  else if (isCheckList &&
+                      !((element as MdUnorderedCheckList).checked))
+                    uncheckedIcon
+                  else
+                    Icon(Icons.stop, size: 12),
+                  margin,
                   Text(element.content),
                 ],
               ),
