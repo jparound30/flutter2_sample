@@ -396,15 +396,14 @@ class MdParser {
       if (element is MdOrderedList) {
         final indent = (element.level - 1) * 16;
         final Widget widget;
+        final margin = SizedBox(width: 8);
         widget = Container(
           margin: EdgeInsets.symmetric(vertical: 4),
           padding: EdgeInsets.only(left: indent.toDouble()),
           child: Row(
             children: [
               Text(element.order.toString() + "."),
-              SizedBox(
-                width: 8,
-              ),
+              margin,
               Text(element.content),
             ],
           ),
