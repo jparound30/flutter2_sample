@@ -400,6 +400,10 @@ class MdParser {
         final checkedIcon = Icon(Icons.check_box, color: Colors.blue);
         final uncheckedIcon = Icon(Icons.check_box_outline_blank);
         final margin = SizedBox(width: 8);
+        final lineThrough = normalText.copyWith(
+          color: Colors.grey.shade400,
+          decoration: TextDecoration.lineThrough,
+        );
         widget = Container(
           margin: EdgeInsets.symmetric(vertical: 4),
           padding: EdgeInsets.only(left: indent.toDouble()),
@@ -409,11 +413,14 @@ class MdParser {
               margin,
               if (isCheckList && (element as MdOrderedCheckList).checked)
                 checkedIcon
-              else if (isCheckList && !((element as MdOrderedCheckList).checked))
+              else if (isCheckList &&
+                  !((element as MdOrderedCheckList).checked))
                 uncheckedIcon,
-              if (isCheckList)
-                margin,
-              Text(element.content),
+              if (isCheckList) margin,
+              if (isCheckList && (element as MdOrderedCheckList).checked)
+                Text(element.content, style: lineThrough)
+              else
+                Text(element.content),
             ],
           ),
         );
