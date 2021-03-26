@@ -443,6 +443,7 @@ class MdParser {
 
       // 引用文
       if (element is MdQuoteBlock) {
+        final textStyle = normalText.copyWith(color: Colors.grey.shade600);
         final pad = Container(
           padding: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
           width: double.infinity,
@@ -455,10 +456,7 @@ class MdParser {
             ),
           ),
           margin: EdgeInsets.symmetric(vertical: 16),
-          child: Text(
-            element.content,
-            style: normalText.copyWith(color: Colors.grey.shade600),
-          ),
+          child: Text(element.content, style: textStyle),
         );
         children.add(pad);
         return;
@@ -470,17 +468,11 @@ class MdParser {
           padding: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
           width: double.infinity,
           decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.grey.shade300,
-              width: 1.0,
-            ),
+            border: Border.all(color: Colors.grey.shade300, width: 1.0),
             color: Colors.grey.shade100,
           ),
           margin: EdgeInsets.symmetric(vertical: 8),
-          child: Text(
-            element.content,
-            style: normalText,
-          ),
+          child: Text(element.content, style: normalText),
         );
         children.add(block);
         return;
@@ -490,10 +482,7 @@ class MdParser {
       if (element is MdElement) {
         children.add(Container(
           margin: EdgeInsets.symmetric(vertical: 4),
-          child: Text(
-            element.content,
-            style: normalText,
-          ),
+          child: Text(element.content, style: normalText),
         ));
         return;
       }
