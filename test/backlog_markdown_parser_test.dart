@@ -282,23 +282,55 @@ CCCCCC
     );
   }
 
-  final textStyle1 = """
-AAAAAA
-これは''太字''です。
-これは'''斜体文字'''です。
-これは%%打ち消し%%です。
-これは&color(red) { 赤 }です。
-これは&color(#ffffff, #8abe00) { 背景色 }です。
-""";
+//   final textStyle1 = """
+// AAAAAA
+// これは''太字''です。
+// これは'''斜体文字'''です。
+// これは%%打ち消し%%です。
+// これは&color(red) { 赤 }です。
+// これは&color(#ffffff, #8abe00) { 背景色 }です。
+// """;
+//   testWidgets(
+//     '文字装飾',
+//     (WidgetTester tester) async {
+//       await tester.pumpWidget(_buildAppWith(MdParser.toRichText, textStyle1));
+//
+//       var finder = find.byType(RichText);
+//       final richText = tester.widget<RichText>(finder);
+//
+//       expect((richText.text as TextSpan).text, null);
+//     },
+//   );
+//
+  final bold1 = """
+これは''太字''です。""";
   testWidgets(
     '文字装飾',
     (WidgetTester tester) async {
-      await tester.pumpWidget(_buildAppWith(MdParser.toRichText, textStyle1));
+      await tester.pumpWidget(_buildAppWith(MdParser.toRichText, bold1));
 
       var finder = find.byType(RichText);
       final richText = tester.widget<RichText>(finder);
 
-      expect((richText.text as TextSpan).text, textStyle1);
+      expect((richText.text as TextSpan).text, null);
+      expect(
+          richText.text
+              .getSpanForPosition(TextPosition(offset: 0))!
+              .toPlainText(
+                  includeSemanticsLabels: false, includePlaceholders: false),
+          "これは");
+      expect(
+          richText.text
+              .getSpanForPosition(TextPosition(offset: 3))!
+              .toPlainText(
+              includeSemanticsLabels: false, includePlaceholders: false),
+          "太字");
+      expect(
+          richText.text
+              .getSpanForPosition(TextPosition(offset: 5))!
+              .toPlainText(
+              includeSemanticsLabels: false, includePlaceholders: false),
+          "です。");
     },
   );
 }
