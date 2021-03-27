@@ -226,7 +226,7 @@ class MdParser {
   static final int sBoldItalic2 = 0x00000101;
   static final int sBold = 0x00000200;
   static final int sBoldExit1 = 0x00000201;
-  static final int sItalic1 = 0x00000300;
+  static final int sItalic = 0x00000300;
   static final int sItalicExit1 = 0x00000301;
   static final int sItalicExit2 = 0x00000302;
 
@@ -260,7 +260,9 @@ class MdParser {
         }
       } else if (state == sBoldItalic2) {
         if ("'" == e) {
-          state = sItalic1;
+          state = sItalic;
+          inlineSpans.add(TextSpan(text: span.toString()));
+          span.clear();
         } else {
           state = sBold;
           inlineSpans.add(TextSpan(text: span.toString()));
@@ -282,6 +284,29 @@ class MdParser {
         } else {
           state = sBold;
           span.write("'" + e);
+        }
+      } else if (state == sItalic) {
+        if ("'" == e) {
+          state = sItalicExit1;
+        } else {
+          state = sItalic;
+          span.write(e);
+        }
+      } else if (state == sItalicExit1) {
+        if ("'" == e) {
+          state = sItalicExit2;
+        } else {
+          state = sItalic;
+          span.write("'" + e);
+        }
+      } else if (state == sItalicExit2) {
+        if ("'" == e) {
+          state = sNone;
+          inlineSpans.add(TextSpan(style: italicText, text: span.toString()));
+          span.clear();
+        } else {
+          state = sItalic;
+          span.write("''" + e);
         }
       }
     });
