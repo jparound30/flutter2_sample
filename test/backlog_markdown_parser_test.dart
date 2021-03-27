@@ -1,4 +1,4 @@
-
+import 'package:flutter/material.dart';
 import 'package:flutter2_sample/utils/md_parser.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -35,7 +35,7 @@ void main() {
 ''';
   test(
     '箇条書き',
-        () {
+    () {
       var ret = MdParser.parse(unorderedList);
       expect(ret.length, 7);
       expect(ret[0] is MdUnorderedList, true);
@@ -66,7 +66,7 @@ void main() {
 ''';
   test(
     '番号付き箇条書き',
-        () {
+    () {
       var ret = MdParser.parse(orderedList);
       expect(ret.length, 6);
       expect(ret[0] is MdOrderedList, true);
@@ -100,7 +100,7 @@ void main() {
 ''';
   test(
     'チェックリスト',
-        () {
+    () {
       var ret = MdParser.parse(checkList);
       expect(ret.length, 5);
       expect(ret[0] is MdUnorderedCheckList, true);
@@ -130,7 +130,7 @@ void main() {
 ''';
   test(
     'チェックリスト',
-        () {
+    () {
       var ret = MdParser.parse(orderedCheckList);
       expect(ret.length, 5);
       expect(ret[0] is MdOrderedCheckList, true);
@@ -164,7 +164,7 @@ void main() {
 ''';
   test(
     '引用文',
-        () {
+    () {
       var ret = MdParser.parse(quote1);
       expect(ret.length, 4);
       expect(ret[1] is MdQuoteBlock, true);
@@ -187,7 +187,7 @@ void main() {
 ''';
   test(
     '引用文({quote}{/quote}) 入れ子1',
-        () {
+    () {
       var ret = MdParser.parse(quote2);
       expect(ret.length, 5);
       expect(ret[1] is MdQuoteBlock, true);
@@ -212,7 +212,7 @@ void main() {
 ''';
   test(
     '引用文({quote}{/quote}) 入れ子2',
-        () {
+    () {
       var ret = MdParser.parse(quote3);
       expect(ret.length, 5);
       expect(ret[1] is MdQuoteBlock, true);
@@ -220,7 +220,8 @@ void main() {
       expect(ret[3] is MdQuoteBlock, true);
       expect(ret[0].content, "");
       expect((ret[1] as MdQuoteBlock).content, "引用した内容です。");
-      expect((ret[2] as MdQuoteBlock).content, ">引用した内容です。\n引用じゃない内容です。\n>引用した内容です。");
+      expect((ret[2] as MdQuoteBlock).content,
+          ">引用した内容です。\n引用じゃない内容です。\n>引用した内容です。");
       expect((ret[3] as MdQuoteBlock).content, "引用した内容です。");
     },
   );
@@ -239,8 +240,7 @@ CCCCCC
 ''';
   test(
     'コードブロック1',
-        () {
-
+    () {
       final code = '''
     package helloworld;
     public class Hello {
@@ -257,6 +257,45 @@ CCCCCC
       expect(ret[0].content, "AAAAAA");
       expect((ret[1] as MdCodeBlock).content, code);
       expect(ret[2].content, "CCCCCC");
+    },
+  );
+
+  MaterialApp _buildAppWith(
+      RichText func(BuildContext context, MdElement el), String content,
+      {ThemeData? theme, double textScaleFactor = 1.0}) {
+    return MaterialApp(
+      theme: theme,
+      home: Material(
+        child: Builder(
+          builder: (BuildContext context) {
+            return MediaQuery(
+              data: MediaQuery.of(context)
+                  .copyWith(textScaleFactor: textScaleFactor),
+              child: func(context, MdElement(content: content)),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  final textStyle1 = """
+AAAAAA
+これは''太字''です。
+これは'''斜体文字'''です。
+これは%%打ち消し%%です。
+これは&color(red) { 赤 }です。
+これは&color(#ffffff, #8abe00) { 背景色 }です。
+""";
+  testWidgets(
+    '文字装飾',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(_buildAppWith(MdParser.toRichText, textStyle1));
+
+      var finder = find.byType(RichText);
+      final richText = tester.widget<RichText>(finder);
+
+      expect((richText.text as TextSpan).text, textStyle1);
     },
   );
 }

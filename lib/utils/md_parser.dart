@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 const MAX_LEVEL = 6;
@@ -217,6 +219,14 @@ class MdParser {
       result.add(MdElement(content: line));
     });
     return result;
+  }
+
+  static RichText toRichText(BuildContext context, MdElement el) {
+    RichText ret = RichText(
+      textScaleFactor: MediaQuery.of(context).textScaleFactor,
+      text: TextSpan(text: el.content),
+    );
+    return ret;
   }
 
   static Widget buildFromMdElements(
