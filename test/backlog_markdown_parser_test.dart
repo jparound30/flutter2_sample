@@ -261,17 +261,20 @@ CCCCCC
   );
 
   MaterialApp _buildAppWith(
-      RichText func(BuildContext context, MdElement el), String content,
-      {ThemeData? theme, double textScaleFactor = 1.0}) {
+      RichText func(BuildContext context, TextStyle baseStyle, MdElement el),
+      String content,
+      {ThemeData? theme,
+      double textScaleFactor = 1.0}) {
     return MaterialApp(
       theme: theme,
       home: Material(
         child: Builder(
           builder: (BuildContext context) {
+            final baseStyle = Theme.of(context).textTheme.bodyText2!;
             return MediaQuery(
               data: MediaQuery.of(context)
                   .copyWith(textScaleFactor: textScaleFactor),
-              child: func(context, MdElement(content: content)),
+              child: func(context, baseStyle, MdElement(content: content)),
             );
           },
         ),

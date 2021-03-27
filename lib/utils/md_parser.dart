@@ -221,11 +221,79 @@ class MdParser {
     return result;
   }
 
-  static RichText toRichText(BuildContext context, MdElement el) {
+  static final int sNone = 0x00000000;
+  static final int sBoldItalic1 = 0x00000100;
+  static final int sBoldItalic2 = 0x00000101;
+  static final int sBold = 0x00000200;
+  static final int sBoldExit1 = 0x00000201;
+  static final int sItalic1 = 0x00000300;
+  static final int sItalicExit1 = 0x00000301;
+  static final int sItalicExit2 = 0x00000302;
+
+  // TODO リファクタ必須
+  static RichText toRichText(
+      BuildContext context, TextStyle baseStyle, MdElement el) {
+    List<InlineSpan> inlineSpans = List<InlineSpan>.empty(growable: true);
+    final normalText = baseStyle;
+    final boldText = normalText.copyWith(fontWeight: FontWeight.bold);
+    final italicText = normalText.copyWith(fontStyle: FontStyle.italic);
+
+    // '' 太字
+    var text = el.content;
+    int? start;
+    int state = sNone;
+    var characters = text.characters;
+    var span = StringBuffer();
+    characters.forEach((e) {
+      if (state == sNone) {
+        if ("'" == e) {
+          state = sBoldItalic1;
+          return;
+        } else {
+          span.write(e);
+        }
+      } else if (state == sBoldItalic1) {
+        if ("'" == e) {
+          state = sBoldItalic2;
+        } else {
+          span.write("'" + e);
+        }
+      } else if (state == sBoldItalic2) {
+        if ("'" == e) {
+          state = sItalic1;
+        } else {
+          state = sBold;
+          inlineSpans.add(TextSpan(text: span.toString()));
+          span.clear();
+          span.write(e);
+        }
+      } else if (state == sBold) {
+        if ("'" == e) {
+          state = sBoldExit1;
+        } else {
+          state = sBold;
+          span.write(e);
+        }
+      } else if (state == sBoldExit1) {
+        if ("'" == e) {
+          state = sNone;
+          inlineSpans.add(TextSpan(style: boldText, text: span.toString()));
+          span.clear();
+        } else {
+          state = sBold;
+          span.write("'" + e);
+        }
+      }
+    });
+    if (span.isNotEmpty) {
+      inlineSpans.add(TextSpan(text: span.toString()));
+    }
+
     RichText ret = RichText(
       textScaleFactor: MediaQuery.of(context).textScaleFactor,
-      text: TextSpan(text: el.content),
+      text: TextSpan(children: inlineSpans, style: baseStyle),
     );
+
     return ret;
   }
 
@@ -279,10 +347,12 @@ class MdParser {
           default:
             textStyle = normalText;
         }
-        final text = Text(
-          element.content,
-          style: textStyle,
-        );
+        // TODO 削除
+        // final text = Text(
+        //   element.content,
+        //   style: textStyle,
+        // );
+        final text = MdParser.toRichText(context, textStyle, element);
         if (element.level == 1) {
           final pad = Container(
             padding: EdgeInsets.symmetric(vertical: 4),
@@ -492,7 +562,7 @@ class MdParser {
       if (element is MdElement) {
         children.add(Container(
           margin: EdgeInsets.symmetric(vertical: 4),
-          child: Text(element.content, style: normalText),
+          child: MdParser.toRichText(context, normalText, element),
         ));
         return;
       }
