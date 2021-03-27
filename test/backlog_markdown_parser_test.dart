@@ -305,7 +305,7 @@ CCCCCC
   final bold1 = """
 これは''太字''です。""";
   testWidgets(
-    '文字装飾',
+    '太字',
     (WidgetTester tester) async {
       await tester.pumpWidget(_buildAppWith(MdParser.toRichText, bold1));
 
@@ -333,4 +333,37 @@ CCCCCC
           "です。");
     },
   );
+
+  final italic1 = """
+これは'''斜体文字'''です。""";
+  testWidgets(
+    '斜体文字',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(_buildAppWith(MdParser.toRichText, italic1));
+
+      var finder = find.byType(RichText);
+      final richText = tester.widget<RichText>(finder);
+
+      expect((richText.text as TextSpan).text, null);
+      expect(
+          richText.text
+              .getSpanForPosition(TextPosition(offset: 0))!
+              .toPlainText(
+              includeSemanticsLabels: false, includePlaceholders: false),
+          "これは");
+      expect(
+          richText.text
+              .getSpanForPosition(TextPosition(offset: 3))!
+              .toPlainText(
+              includeSemanticsLabels: false, includePlaceholders: false),
+          "斜体文字");
+      expect(
+          richText.text
+              .getSpanForPosition(TextPosition(offset: 5))!
+              .toPlainText(
+              includeSemanticsLabels: false, includePlaceholders: false),
+          "です。");
+    },
+  );
+
 }
