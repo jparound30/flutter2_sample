@@ -359,7 +359,103 @@ CCCCCC
           "斜体文字");
       expect(
           richText.text
-              .getSpanForPosition(TextPosition(offset: 5))!
+              .getSpanForPosition(TextPosition(offset: 7))!
+              .toPlainText(
+              includeSemanticsLabels: false, includePlaceholders: false),
+          "です。");
+    },
+  );
+
+  final lineThrough = """
+これは%%打ち消し%%です。""";
+  testWidgets(
+    '打ち消し',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(_buildAppWith(MdParser.toRichText, lineThrough));
+
+      var finder = find.byType(RichText);
+      final richText = tester.widget<RichText>(finder);
+
+      expect((richText.text as TextSpan).text, null);
+      expect(
+          richText.text
+              .getSpanForPosition(TextPosition(offset: 0))!
+              .toPlainText(
+              includeSemanticsLabels: false, includePlaceholders: false),
+          "これは");
+      expect(
+          richText.text
+              .getSpanForPosition(TextPosition(offset: 3))!
+              .toPlainText(
+              includeSemanticsLabels: false, includePlaceholders: false),
+          "打ち消し");
+      expect(
+          richText.text
+              .getSpanForPosition(TextPosition(offset: 7))!
+              .toPlainText(
+              includeSemanticsLabels: false, includePlaceholders: false),
+          "です。");
+    },
+  );
+
+  final color1 = """
+これは&color(red) { 赤 }です。""";
+  testWidgets(
+    '色',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(_buildAppWith(MdParser.toRichText, color1));
+
+      var finder = find.byType(RichText);
+      final richText = tester.widget<RichText>(finder);
+
+      expect((richText.text as TextSpan).text, null);
+      expect(
+          richText.text
+              .getSpanForPosition(TextPosition(offset: 0))!
+              .toPlainText(
+              includeSemanticsLabels: false, includePlaceholders: false),
+          "これは");
+      expect(
+          richText.text
+              .getSpanForPosition(TextPosition(offset: 3))!
+              .toPlainText(
+              includeSemanticsLabels: false, includePlaceholders: false),
+          "赤");
+      expect(
+          richText.text
+              .getSpanForPosition(TextPosition(offset: 4))!
+              .toPlainText(
+              includeSemanticsLabels: false, includePlaceholders: false),
+          "です。");
+    },
+  );
+
+  final bgColor1 = """
+これは&color(#ffffff, #8abe00) { 背景色 }です。""";
+  testWidgets(
+    '背景色',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(_buildAppWith(MdParser.toRichText, bgColor1));
+
+      var finder = find.byType(RichText);
+      final richText = tester.widget<RichText>(finder);
+
+      expect((richText.text as TextSpan).text, null);
+      expect(
+          richText.text
+              .getSpanForPosition(TextPosition(offset: 0))!
+              .toPlainText(
+              includeSemanticsLabels: false, includePlaceholders: false),
+          "これは");
+      expect(
+          richText.text
+              .getSpanForPosition(TextPosition(offset: 3))!
+              .toPlainText(
+              includeSemanticsLabels: false, includePlaceholders: false),
+          "背景色");
+      expect(
+          richText.text
+              .getSpanForPosition(TextPosition(offset: 6))!
               .toPlainText(
               includeSemanticsLabels: false, includePlaceholders: false),
           "です。");
