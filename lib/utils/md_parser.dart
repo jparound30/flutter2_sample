@@ -228,7 +228,10 @@ class MdParser {
   static final int sBoldExit1 = 0x00000201;
   static final int sItalic = 0x00000300;
   static final int sItalicExit1 = 0x00000301;
-  static final int sItalicExit2 = 0x00000302;
+  static final int sItalicExit2 =  0x00000302;
+  static final int sLineThrough1 = 0x00000400;
+  static final int sLineThrough = 0x00000500;
+  static final int sLineThroughExit1 = 0x00000501;
 
   // TODO リファクタ必須
   static RichText toRichText(
@@ -237,6 +240,7 @@ class MdParser {
     final normalText = baseStyle;
     final boldText = normalText.copyWith(fontWeight: FontWeight.bold);
     final italicText = normalText.copyWith(fontStyle: FontStyle.italic);
+    final lineThrough = normalText.copyWith(decoration: TextDecoration.lineThrough);
 
     // '' 太字
     var text = el.content;
@@ -248,7 +252,8 @@ class MdParser {
       if (state == sNone) {
         if ("'" == e) {
           state = sBoldItalic1;
-          return;
+        } else if ("%" == e) {
+          state = sLineThrough1;
         } else {
           span.write(e);
         }
@@ -256,6 +261,7 @@ class MdParser {
         if ("'" == e) {
           state = sBoldItalic2;
         } else {
+          state = sNone;
           span.write("'" + e);
         }
       } else if (state == sBoldItalic2) {
@@ -307,6 +313,31 @@ class MdParser {
         } else {
           state = sItalic;
           span.write("''" + e);
+        }
+      } else if (state == sLineThrough1) {
+        if ("%" == e) {
+          state = sLineThrough;
+          inlineSpans.add(TextSpan(text: span.toString()));
+          span.clear();
+        } else {
+          state = sNone;
+          span.write("%" + e);
+        }
+      } else if (state == sLineThrough) {
+        if ("%" == e) {
+          state = sLineThroughExit1;
+        } else {
+          state = sLineThrough;
+          span.write(e);
+        }
+      } else if (state == sLineThroughExit1) {
+        if ("%" == e) {
+          state = sNone;
+          inlineSpans.add(TextSpan(style: lineThrough, text: span.toString()));
+          span.clear();
+        } else {
+          state = sLineThrough;
+          span.write("%" + e);
         }
       }
     });
