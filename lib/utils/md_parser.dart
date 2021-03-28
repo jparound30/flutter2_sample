@@ -255,7 +255,6 @@ class MdParser {
     List<InlineSpan> inlineSpans = List<InlineSpan>.empty(growable: true);
     final normalText = baseStyle;
 
-    // '' 太字
     var text = el.content;
     int state = sNone;
 
