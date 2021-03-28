@@ -254,10 +254,6 @@ class MdParser {
       BuildContext context, TextStyle baseStyle, MdElement el) {
     List<InlineSpan> inlineSpans = List<InlineSpan>.empty(growable: true);
     final normalText = baseStyle;
-    final boldText = normalText.copyWith(fontWeight: FontWeight.bold);
-    final italicText = normalText.copyWith(fontStyle: FontStyle.italic);
-    final lineThroughText =
-        normalText.copyWith(decoration: TextDecoration.lineThrough);
 
     // '' 太字
     var text = el.content;
