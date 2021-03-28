@@ -43,4 +43,42 @@ void main() {
     },
   );
 
+  final boldStart = '''
+これは''太字''です。 これは''太'字''です。
+''';
+  test(
+    '太字 開始',
+        () {
+      final boldStartExp = RegExp(r"''(?<content>.*?)''");
+
+      expect(boldStartExp.hasMatch(boldStart), true);
+      var allMatches = boldStartExp.allMatches(boldStart);
+      allMatches.forEach((element) {
+        print("start:" + element.start.toString());
+        print("end  :" + element.end.toString());
+        print(element.groupCount);
+        print(element.group(0)); // 全部
+        print(element.namedGroup("content"));
+      });
+    },
+  );
+
+  final boldEnd = '''
+これは''太字''です。 これは''太字''です。
+''';
+  test(
+    '太字　終了',
+        () {
+      final boldEndExp = RegExp(r"''");
+
+      expect(boldEndExp.hasMatch(boldEnd), true);
+      var allMatches = boldEndExp.allMatches(boldEnd);
+      allMatches.forEach((element) {
+        print("start:" + element.start.toString());
+        print("end  :" + element.end.toString());
+        print(element.groupCount);
+        print(element.group(0)); // 全部
+      });
+    },
+  );
 }
