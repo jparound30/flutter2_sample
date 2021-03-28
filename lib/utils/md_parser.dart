@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter2_sample/utils/color_converter.dart';
 
 const MAX_LEVEL = 6;
 
@@ -235,6 +236,8 @@ class MdParser {
 
   static final colorStartExp = RegExp(
       r"\&color\( *(?<text>#[a-zA-Z0-9]{6,6}){1,1}? *[, ]*(?<bgcolor>#[a-zA-Z0-9]{6,6}){0,1}? *\) *\{(?<content>[^}]*?)\}");
+  static final colorStartExp2 = RegExp(
+      r"\&color\( *(?<text>#[a-zA-Z0-9]{6,6}){1,1}? *[, ]*(?<bgcolor>#[a-zA-Z0-9]{6,6}){0,1}? *\) *\{");
   static final colorEndExp = RegExp(r"\}");
   static final boldStartExp = RegExp(r"''(?<content>.*?)''");
   static final boldStartExp2 = RegExp(r"''");
@@ -264,15 +267,23 @@ class MdParser {
 
     int type = 0; // 0 none, 1 bold, 2 italic, 3 line through, 4 color
     int nextType = 0;
+
+    final defaultFontColor = normalText.color ?? Colors.black;
+    final defaultBgColor = normalText.backgroundColor ?? Colors.white;
+    Color fontColor = defaultFontColor;
+    Color bgColor = defaultBgColor;
+    Color nextFontColor = fontColor;
+    Color nextBgColor = bgColor;
     while (true) {
       int minStart = -1;
       int end = -1;
+
       if (state == sNone) {
         Iterable<RegExpMatch> boldStart = boldStartExp.allMatches(text);
         Iterable<RegExpMatch> italicStart = italicStartExp.allMatches(text);
         Iterable<RegExpMatch> lineThroughStart =
-        lineThroughStartExp.allMatches(text);
-        Iterable<RegExpMatch> colorStart = colorStartExp.allMatches(text);
+            lineThroughStartExp.allMatches(text);
+        var colorStart = colorStartExp.allMatches(text);
 
         if (italicStart.isNotEmpty) {
           italicStart = italicStartExp2.allMatches(text);
@@ -298,7 +309,20 @@ class MdParser {
             nextType = sBold;
           }
         }
-        // TODO COLOR
+        if (colorStart.isNotEmpty) {
+          colorStart = colorStartExp2.allMatches(text);
+          if (minStart == -1 || colorStart.first.start < minStart) {
+            minStart = colorStart.first.start;
+            end = colorStart.first.end;
+            nextType = sColor;
+            final colorStr = colorStart.first.namedGroup("text")!;
+            final bgColorStr = colorStart.first.namedGroup("bgcolor");
+            nextFontColor = ColorConverter.fromString(colorStr);
+            if (bgColorStr != null) {
+              nextBgColor = ColorConverter.fromString(bgColorStr);
+            }
+          }
+        }
       } else {
         Iterable<RegExpMatch> boldStart = List<RegExpMatch>.empty();
         Iterable<RegExpMatch> italicStart = List<RegExpMatch>.empty();
@@ -326,6 +350,12 @@ class MdParser {
         }
         if (state & sLineThrough == 0) {
           italicStart = italicStartExp.allMatches(text);
+        }
+        if (state & sColor == sColor) {
+          colorEnd = colorEndExp.allMatches(text);
+        }
+        if (state & sColor == 0) {
+          colorStart = colorStartExp.allMatches(text);
         }
 
         if (italicStart.isNotEmpty) {
@@ -373,29 +403,52 @@ class MdParser {
             nextType = ~sLineThrough;
           }
         }
-        // TODO COLOR
+        if (colorStart.isNotEmpty) {
+          colorStart = colorStartExp2.allMatches(text);
+          if (minStart == -1 || colorStart.first.start < minStart) {
+            minStart = colorStart.first.start;
+            end = colorStart.first.end;
+            nextType = sColor;
+            final colorStr = colorStart.first.namedGroup("text")!;
+            final bgColorStr = colorStart.first.namedGroup("bgcolor");
+            nextFontColor = ColorConverter.fromString(colorStr);
+            if (bgColorStr != null) {
+              nextBgColor = ColorConverter.fromString(bgColorStr);
+            }
+          }
+        }
+        if (colorEnd.isNotEmpty) {
+          minStart = colorEnd.first.start;
+          end = colorEnd.first.end;
+          nextType = ~sColor;
+          nextFontColor = defaultFontColor;
+          nextBgColor = defaultBgColor;
+        }
       }
+
       TextStyle textStyle = normalText;
-      // TODO bit 演算しないとだめ
-      if (type & sBold == sBold) {
+      if (state & sBold == sBold) {
         textStyle = textStyle.copyWith(fontWeight: FontWeight.bold);
       }
-      if (type & sItalic == sItalic) {
+      if (state & sItalic == sItalic) {
         textStyle = textStyle.copyWith(fontStyle: FontStyle.italic);
       }
-      if (type & sLineThrough == sLineThrough) {
+      if (state & sLineThrough == sLineThrough) {
         textStyle = textStyle.copyWith(decoration: TextDecoration.lineThrough);
       }
-      if (type & sColor == sColor) {
-
+      if (state & sColor == sColor) {
+        textStyle =
+            textStyle.copyWith(color: fontColor, backgroundColor: bgColor);
       }
+
+      fontColor = nextFontColor;
+      bgColor = nextBgColor;
 
       if (minStart != -1) {
         inlineSpans
             .add(TextSpan(text: text.substring(0, minStart), style: textStyle));
       } else {
-        inlineSpans
-            .add(TextSpan(text: text, style: textStyle));
+        inlineSpans.add(TextSpan(text: text, style: textStyle));
         break;
       }
 
