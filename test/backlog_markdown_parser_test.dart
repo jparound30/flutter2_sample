@@ -279,26 +279,6 @@ CCCCCC''';
     );
   }
 
-//   final textStyle1 = """
-// AAAAAA
-// これは''太字''です。
-// これは'''斜体文字'''です。
-// これは%%打ち消し%%です。
-// これは&color(red) { 赤 }です。
-// これは&color(#ffffff, #8abe00) { 背景色 }です。
-// """;
-//   testWidgets(
-//     '文字装飾',
-//     (WidgetTester tester) async {
-//       await tester.pumpWidget(_buildAppWith(MdParser.toRichText, textStyle1));
-//
-//       var finder = find.byType(RichText);
-//       final richText = tester.widget<RichText>(finder);
-//
-//       expect((richText.text as TextSpan).text, null);
-//     },
-//   );
-//
   final bold1 = """
 これは''太字''です。""";
   testWidgets(
