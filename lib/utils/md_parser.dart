@@ -232,12 +232,25 @@ class MdParser {
   static final int sBoldItalic2 = 0x00000101;
   static final int sBold = 0x00000200;
   static final int sBoldExit1 = 0x00000201;
-  static final int sItalic = 0x00000300;
-  static final int sItalicExit1 = 0x00000301;
-  static final int sItalicExit2 =  0x00000302;
-  static final int sLineThrough1 = 0x00000400;
-  static final int sLineThrough = 0x00000500;
-  static final int sLineThroughExit1 = 0x00000501;
+  static final int sItalic = 0x00000400;
+  static final int sItalicExit1 = 0x00000401;
+  static final int sItalicExit2 = 0x00000402;
+  static final int sLineThrough1 = 0x00000800;
+  static final int sLineThrough = 0x00001000;
+  static final int sLineThroughExit1 = 0x00001001;
+
+  static final colorStartExp = RegExp(
+      r"\&color\( *(?<text>#[a-zA-Z0-9]{6,6}){1,1}? *[, ]*(?<bgcolor>#[a-zA-Z0-9]{6,6}){0,1}? *\) *\{(?<content>[^}]*?)\}");
+  static final colorEndExp = RegExp(r"\}");
+  static final boldStartExp = RegExp(r"''(?<content>.*?)''");
+  static final boldStartExp2 = RegExp(r"''");
+  static final boldEndExp = RegExp(r"''");
+  static final italicStartExp = RegExp(r"'''(?<content>.*?)'''");
+  static final italicStartExp2 = RegExp(r"'''");
+  static final italicEndExp = RegExp(r"'''");
+  static final lineThroughStartExp = RegExp(r"%%(?<content>.*?)%%");
+  static final lineThroughStartExp2 = RegExp(r"%%");
+  static final lineThroughEndExp = RegExp(r"%%");
 
   // TODO リファクタ必須
   static RichText toRichText(
@@ -246,110 +259,256 @@ class MdParser {
     final normalText = baseStyle;
     final boldText = normalText.copyWith(fontWeight: FontWeight.bold);
     final italicText = normalText.copyWith(fontStyle: FontStyle.italic);
-    final lineThrough = normalText.copyWith(decoration: TextDecoration.lineThrough);
+    final lineThroughText =
+        normalText.copyWith(decoration: TextDecoration.lineThrough);
 
     // '' 太字
     var text = el.content;
     int? start;
     int state = sNone;
     var characters = text.characters;
-    var span = StringBuffer();
-    characters.forEach((e) {
+
+    int type = 0; // 0 none, 1 bold, 2 italic, 3 line through, 4 color
+    int nextType = 0;
+    while (true) {
+      int minStart = -1;
+      int end = -1;
       if (state == sNone) {
-        if ("'" == e) {
-          state = sBoldItalic1;
-        } else if ("%" == e) {
-          state = sLineThrough1;
-        } else {
-          span.write(e);
+        Iterable<RegExpMatch> boldStart = boldStartExp.allMatches(text);
+        Iterable<RegExpMatch> italicStart = italicStartExp.allMatches(text);
+        Iterable<RegExpMatch> lineThroughStart =
+        lineThroughStartExp.allMatches(text);
+        Iterable<RegExpMatch> colorStart = colorStartExp.allMatches(text);
+
+        if (italicStart.isNotEmpty) {
+          italicStart = italicStartExp2.allMatches(text);
+          if (minStart == -1 || italicStart.first.start < minStart) {
+            minStart = italicStart.first.start;
+            end = italicStart.first.end;
+            nextType = sItalic;
+          }
         }
-      } else if (state == sBoldItalic1) {
-        if ("'" == e) {
-          state = sBoldItalic2;
-        } else {
-          state = sNone;
-          span.write("'" + e);
+        if (lineThroughStart.isNotEmpty) {
+          lineThroughStart = lineThroughStartExp2.allMatches(text);
+          if (minStart == -1 || lineThroughStart.first.start < minStart) {
+            minStart = lineThroughStart.first.start;
+            end = lineThroughStart.first.end;
+            nextType = sLineThrough;
+          }
         }
-      } else if (state == sBoldItalic2) {
-        if ("'" == e) {
-          state = sItalic;
-          inlineSpans.add(TextSpan(text: span.toString()));
-          span.clear();
-        } else {
-          state = sBold;
-          inlineSpans.add(TextSpan(text: span.toString()));
-          span.clear();
-          span.write(e);
+        if (boldStart.isNotEmpty) {
+          boldStart = boldStartExp2.allMatches(text);
+          if (minStart == -1 || boldStart.first.start < minStart) {
+            minStart = boldStart.first.start;
+            end = boldStart.first.end;
+            nextType = sBold;
+          }
         }
-      } else if (state == sBold) {
-        if ("'" == e) {
-          state = sBoldExit1;
-        } else {
-          state = sBold;
-          span.write(e);
+        // TODO COLOR
+      } else {
+        Iterable<RegExpMatch> boldStart = List<RegExpMatch>.empty();
+        Iterable<RegExpMatch> italicStart = List<RegExpMatch>.empty();
+        Iterable<RegExpMatch> lineThroughStart = List<RegExpMatch>.empty();
+        Iterable<RegExpMatch> colorStart = List<RegExpMatch>.empty();
+        Iterable<RegExpMatch> boldEnd = List<RegExpMatch>.empty();
+        Iterable<RegExpMatch> italicEnd = List<RegExpMatch>.empty();
+        Iterable<RegExpMatch> lineThroughEnd = List<RegExpMatch>.empty();
+        Iterable<RegExpMatch> colorEnd = List<RegExpMatch>.empty();
+
+        if (state & sBold == sBold) {
+          boldEnd = boldEndExp.allMatches(text);
         }
-      } else if (state == sBoldExit1) {
-        if ("'" == e) {
-          state = sNone;
-          inlineSpans.add(TextSpan(style: boldText, text: span.toString()));
-          span.clear();
-        } else {
-          state = sBold;
-          span.write("'" + e);
+        if (state & sBold == 0) {
+          boldStart = boldStartExp.allMatches(text);
         }
-      } else if (state == sItalic) {
-        if ("'" == e) {
-          state = sItalicExit1;
-        } else {
-          state = sItalic;
-          span.write(e);
+        if (state & sItalic == sItalic) {
+          italicEnd = italicEndExp.allMatches(text);
         }
-      } else if (state == sItalicExit1) {
-        if ("'" == e) {
-          state = sItalicExit2;
-        } else {
-          state = sItalic;
-          span.write("'" + e);
+        if (state & sItalic == 0) {
+          italicStart = italicStartExp.allMatches(text);
         }
-      } else if (state == sItalicExit2) {
-        if ("'" == e) {
-          state = sNone;
-          inlineSpans.add(TextSpan(style: italicText, text: span.toString()));
-          span.clear();
-        } else {
-          state = sItalic;
-          span.write("''" + e);
+        if (state & sLineThrough == sLineThrough) {
+          lineThroughEnd = lineThroughEndExp.allMatches(text);
         }
-      } else if (state == sLineThrough1) {
-        if ("%" == e) {
-          state = sLineThrough;
-          inlineSpans.add(TextSpan(text: span.toString()));
-          span.clear();
-        } else {
-          state = sNone;
-          span.write("%" + e);
+        if (state & sLineThrough == 0) {
+          italicStart = italicStartExp.allMatches(text);
         }
-      } else if (state == sLineThrough) {
-        if ("%" == e) {
-          state = sLineThroughExit1;
-        } else {
-          state = sLineThrough;
-          span.write(e);
+
+        if (italicStart.isNotEmpty) {
+          italicStart = italicStartExp2.allMatches(text);
+          if (minStart == -1 || italicStart.first.start < minStart) {
+            minStart = italicStart.first.start;
+            end = italicStart.first.end;
+            nextType = sItalic;
+          }
         }
-      } else if (state == sLineThroughExit1) {
-        if ("%" == e) {
-          state = sNone;
-          inlineSpans.add(TextSpan(style: lineThrough, text: span.toString()));
-          span.clear();
+        if (italicEnd.isNotEmpty) {
+          if (minStart == -1 || italicEnd.first.start < minStart) {
+            minStart = italicEnd.first.start;
+            end = italicEnd.first.end;
+            nextType = ~sItalic;
+          }
+        }
+        if (boldStart.isNotEmpty) {
+          boldStart = boldStartExp2.allMatches(text);
+          if (minStart == -1 || boldStart.first.start < minStart) {
+            minStart = boldStart.first.start;
+            end = boldStart.first.end;
+            nextType = sBold;
+          }
+        }
+        if (boldEnd.isNotEmpty) {
+          if (minStart == -1 || boldEnd.first.start < minStart) {
+            minStart = boldEnd.first.start;
+            end = boldEnd.first.end;
+            nextType = ~sBold;
+          }
+        }
+        if (lineThroughStart.isNotEmpty) {
+          lineThroughStart = lineThroughStartExp2.allMatches(text);
+          if (minStart == -1 || lineThroughStart.first.start < minStart) {
+            minStart = lineThroughStart.first.start;
+            end = lineThroughStart.first.end;
+            nextType = sLineThrough;
+          }
+        }
+        if (lineThroughEnd.isNotEmpty) {
+          if (minStart == -1 || lineThroughEnd.first.start < minStart) {
+            minStart = lineThroughEnd.first.start;
+            end = lineThroughEnd.first.end;
+            nextType = ~sLineThrough;
+          }
+        }
+        // TODO COLOR
+      }
+      TextStyle textStyle = normalText;
+      // TODO bit 演算しないとだめ
+      if (type == 0) {
+        textStyle = normalText;
+      } else if (type == 1) {
+        textStyle = boldText;
+      } else if (type == 2) {
+        textStyle = italicText;
+      } else if (type == 3) {
+        textStyle = lineThroughText;
+      }
+      if (minStart != -1) {
+        inlineSpans
+            .add(TextSpan(text: text.substring(0, minStart), style: textStyle));
+      } else {
+        inlineSpans
+            .add(TextSpan(text: text, style: textStyle));
+        break;
+      }
+
+      if (nextType != 0) {
+        if (nextType & 0x1 == 0x01) {
+          state &= nextType;
         } else {
-          state = sLineThrough;
-          span.write("%" + e);
+          state |= nextType;
         }
       }
-    });
-    if (span.isNotEmpty) {
-      inlineSpans.add(TextSpan(text: span.toString()));
+      text = text.substring(end);
     }
+
+    // var span = StringBuffer();
+    // characters.forEach((e) {
+    //   if (state == sNone) {
+    //     if ("'" == e) {
+    //       state = sBoldItalic1;
+    //     } else if ("%" == e) {
+    //       state = sLineThrough1;
+    //     } else {
+    //       span.write(e);
+    //     }
+    //   } else if (state == sBoldItalic1) {
+    //     if ("'" == e) {
+    //       state = sBoldItalic2;
+    //     } else {
+    //       state = sNone;
+    //       span.write("'" + e);
+    //     }
+    //   } else if (state == sBoldItalic2) {
+    //     if ("'" == e) {
+    //       state = sItalic;
+    //       inlineSpans.add(TextSpan(text: span.toString()));
+    //       span.clear();
+    //     } else {
+    //       state = sBold;
+    //       inlineSpans.add(TextSpan(text: span.toString()));
+    //       span.clear();
+    //       span.write(e);
+    //     }
+    //   } else if (state == sBold) {
+    //     if ("'" == e) {
+    //       state = sBoldExit1;
+    //     } else {
+    //       state = sBold;
+    //       span.write(e);
+    //     }
+    //   } else if (state == sBoldExit1) {
+    //     if ("'" == e) {
+    //       state = sNone;
+    //       inlineSpans.add(TextSpan(style: boldText, text: span.toString()));
+    //       span.clear();
+    //     } else {
+    //       state = sBold;
+    //       span.write("'" + e);
+    //     }
+    //   } else if (state == sItalic) {
+    //     if ("'" == e) {
+    //       state = sItalicExit1;
+    //     } else {
+    //       state = sItalic;
+    //       span.write(e);
+    //     }
+    //   } else if (state == sItalicExit1) {
+    //     if ("'" == e) {
+    //       state = sItalicExit2;
+    //     } else {
+    //       state = sItalic;
+    //       span.write("'" + e);
+    //     }
+    //   } else if (state == sItalicExit2) {
+    //     if ("'" == e) {
+    //       state = sNone;
+    //       inlineSpans.add(TextSpan(style: italicText, text: span.toString()));
+    //       span.clear();
+    //     } else {
+    //       state = sItalic;
+    //       span.write("''" + e);
+    //     }
+    //   } else if (state == sLineThrough1) {
+    //     if ("%" == e) {
+    //       state = sLineThrough;
+    //       inlineSpans.add(TextSpan(text: span.toString()));
+    //       span.clear();
+    //     } else {
+    //       state = sNone;
+    //       span.write("%" + e);
+    //     }
+    //   } else if (state == sLineThrough) {
+    //     if ("%" == e) {
+    //       state = sLineThroughExit1;
+    //     } else {
+    //       state = sLineThrough;
+    //       span.write(e);
+    //     }
+    //   } else if (state == sLineThroughExit1) {
+    //     if ("%" == e) {
+    //       state = sNone;
+    //       inlineSpans
+    //           .add(TextSpan(style: lineThroughText, text: span.toString()));
+    //       span.clear();
+    //     } else {
+    //       state = sLineThrough;
+    //       span.write("%" + e);
+    //     }
+    //   }
+    // });
+    // if (span.isNotEmpty) {
+    //   inlineSpans.add(TextSpan(text: span.toString()));
+    // }
 
     RichText ret = RichText(
       textScaleFactor: MediaQuery.of(context).textScaleFactor,
