@@ -48,7 +48,7 @@ void main() {
 ''';
   test(
     '太字 開始',
-        () {
+    () {
       final boldStartExp = RegExp(r"''(?<content>.*?)''");
 
       expect(boldStartExp.hasMatch(boldStart), true);
@@ -68,7 +68,7 @@ void main() {
 ''';
   test(
     '太字　終了',
-        () {
+    () {
       final boldEndExp = RegExp(r"''");
 
       expect(boldEndExp.hasMatch(boldEnd), true);
@@ -86,7 +86,7 @@ void main() {
 """;
   test(
     '斜体文字 開始',
-        () {
+    () {
       final italicStartExp = RegExp(r"'''(?<content>.*?)'''");
 
       expect(italicStartExp.hasMatch(italicStart), true);
@@ -106,11 +106,50 @@ void main() {
 """;
   test(
     '斜体文字 終了',
-        () {
+    () {
       final italicEndExp = RegExp(r"'''");
 
       expect(italicEndExp.hasMatch(italicEnd), true);
       var allMatches = italicEndExp.allMatches(italicEnd);
+      allMatches.forEach((element) {
+        print("start:" + element.start.toString());
+        print("end  :" + element.end.toString());
+        print(element.groupCount);
+        print(element.group(0)); // 全部
+      });
+    },
+  );
+
+  final lineThroughStart = '''
+これは%%取り消し%%です。 これは%%取り消し%%です。
+''';
+  test(
+    '取り消し 開始',
+    () {
+      final lineThroughStartExp = RegExp(r"%%(?<content>.*?)%%");
+
+      expect(lineThroughStartExp.hasMatch(lineThroughStart), true);
+      var allMatches = lineThroughStartExp.allMatches(lineThroughStart);
+      allMatches.forEach((element) {
+        print("start:" + element.start.toString());
+        print("end  :" + element.end.toString());
+        print(element.groupCount);
+        print(element.group(0)); // 全部
+        print(element.namedGroup("content"));
+      });
+    },
+  );
+
+  final lineThroughEnd = '''
+これは%%取り消し%%です。 これは%%取り消し%%です。
+''';
+  test(
+    '取り消し 終了',
+    () {
+      final lineThroughEndExp = RegExp(r"%%");
+
+      expect(lineThroughEndExp.hasMatch(lineThroughEnd), true);
+      var allMatches = lineThroughEndExp.allMatches(lineThroughEnd);
       allMatches.forEach((element) {
         print("start:" + element.start.toString());
         print("end  :" + element.end.toString());
