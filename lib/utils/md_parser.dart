@@ -257,11 +257,8 @@ class MdParser {
 
     // '' 太字
     var text = el.content;
-    int? start;
     int state = sNone;
-    var characters = text.characters;
 
-    int type = 0; // 0 none, 1 bold, 2 italic, 3 line through, 4 color
     int nextType = 0;
 
     final defaultFontColor = normalText.color ?? Colors.black;
