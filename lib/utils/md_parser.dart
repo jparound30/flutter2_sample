@@ -228,16 +228,10 @@ class MdParser {
   }
 
   static final int sNone = 0x00000000;
-  static final int sBoldItalic1 = 0x00000100;
-  static final int sBoldItalic2 = 0x00000101;
   static final int sBold = 0x00000200;
-  static final int sBoldExit1 = 0x00000201;
   static final int sItalic = 0x00000400;
-  static final int sItalicExit1 = 0x00000401;
-  static final int sItalicExit2 = 0x00000402;
-  static final int sLineThrough1 = 0x00000800;
   static final int sLineThrough = 0x00001000;
-  static final int sLineThroughExit1 = 0x00001001;
+  static final int sColor = 0x00002000;
 
   static final colorStartExp = RegExp(
       r"\&color\( *(?<text>#[a-zA-Z0-9]{6,6}){1,1}? *[, ]*(?<bgcolor>#[a-zA-Z0-9]{6,6}){0,1}? *\) *\{(?<content>[^}]*?)\}");
@@ -383,15 +377,19 @@ class MdParser {
       }
       TextStyle textStyle = normalText;
       // TODO bit 演算しないとだめ
-      if (type == 0) {
-        textStyle = normalText;
-      } else if (type == 1) {
-        textStyle = boldText;
-      } else if (type == 2) {
-        textStyle = italicText;
-      } else if (type == 3) {
-        textStyle = lineThroughText;
+      if (type & sBold == sBold) {
+        textStyle = textStyle.copyWith(fontWeight: FontWeight.bold);
       }
+      if (type & sItalic == sItalic) {
+        textStyle = textStyle.copyWith(fontStyle: FontStyle.italic);
+      }
+      if (type & sLineThrough == sLineThrough) {
+        textStyle = textStyle.copyWith(decoration: TextDecoration.lineThrough);
+      }
+      if (type & sColor == sColor) {
+
+      }
+
       if (minStart != -1) {
         inlineSpans
             .add(TextSpan(text: text.substring(0, minStart), style: textStyle));
