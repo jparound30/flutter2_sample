@@ -463,7 +463,9 @@ class MdParser {
   }
 
   static Widget buildFromMdElements(
-      BuildContext context, List<MdElement> elements) {
+    BuildContext context,
+    List<MdElement> elements,
+  ) {
     List<Widget> children = List<Widget>.empty(growable: true);
     elements.forEach((element) {
       // TODO 共通のmarginを生成するコンポーネントを全てに噛ませたほうがいいかも？
@@ -512,11 +514,6 @@ class MdParser {
           default:
             textStyle = normalText;
         }
-        // TODO 削除
-        // final text = Text(
-        //   element.content,
-        //   style: textStyle,
-        // );
         final text = MdParser.toRichText(context, textStyle, element);
         if (element.level == 1) {
           final pad = Container(
@@ -572,6 +569,7 @@ class MdParser {
           color: Colors.grey.shade400,
           decoration: TextDecoration.lineThrough,
         );
+
         switch (element.level) {
           case 1:
             widget = Container(
@@ -589,9 +587,9 @@ class MdParser {
                     Icon(Icons.circle, size: 8),
                   margin,
                   if (isCheckList && (element as MdUnorderedCheckList).checked)
-                    Text(element.content, style: lineThrough)
+                    MdParser.toRichText(context, lineThrough, element)
                   else
-                    Text(element.content),
+                    MdParser.toRichText(context, normalText, element),
                 ],
               ),
             );
@@ -613,9 +611,9 @@ class MdParser {
                     Icon(Icons.radio_button_unchecked, size: 10),
                   margin,
                   if (isCheckList && (element as MdUnorderedCheckList).checked)
-                    Text(element.content, style: lineThrough)
+                    MdParser.toRichText(context, lineThrough, element)
                   else
-                    Text(element.content),
+                    MdParser.toRichText(context, normalText, element),
                 ],
               ),
             );
@@ -638,9 +636,9 @@ class MdParser {
                     Icon(Icons.stop, size: 12),
                   margin,
                   if (isCheckList && (element as MdUnorderedCheckList).checked)
-                    Text(element.content, style: lineThrough)
+                    MdParser.toRichText(context, lineThrough, element)
                   else
-                    Text(element.content),
+                    MdParser.toRichText(context, normalText, element),
                 ],
               ),
             );
@@ -676,9 +674,9 @@ class MdParser {
                 uncheckedIcon,
               if (isCheckList) margin,
               if (isCheckList && (element as MdOrderedCheckList).checked)
-                Text(element.content, style: lineThrough)
+                MdParser.toRichText(context, lineThrough, element)
               else
-                Text(element.content),
+                MdParser.toRichText(context, normalText, element),
             ],
           ),
         );
