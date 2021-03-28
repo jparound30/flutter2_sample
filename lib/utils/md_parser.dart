@@ -216,7 +216,13 @@ class MdParser {
         }
         return;
       }
-      result.add(MdElement(content: line));
+      if (result.isNotEmpty && result.last.runtimeType == MdElement) {
+        var newLine = result.last.content + "\n" + line;
+        result.removeLast();
+        result.add(MdElement(content: newLine));
+      } else {
+        result.add(MdElement(content: line));
+      }
     });
     return result;
   }
