@@ -81,4 +81,42 @@ void main() {
       });
     },
   );
+  final italicStart = """
+これは''太字''です。 これは''太字''です。 これは'''斜体文字'''です。 これは'''斜体文字'''です。
+""";
+  test(
+    '斜体文字 開始',
+        () {
+      final italicStartExp = RegExp(r"'''(?<content>.*?)'''");
+
+      expect(italicStartExp.hasMatch(italicStart), true);
+      var allMatches = italicStartExp.allMatches(italicStart);
+      allMatches.forEach((element) {
+        print("start:" + element.start.toString());
+        print("end  :" + element.end.toString());
+        print(element.groupCount);
+        print(element.group(0)); // 全部
+        print(element.namedGroup("content"));
+      });
+    },
+  );
+
+  final italicEnd = """
+これは''太字''です。 これは''太字''です。 これは'''斜体文字'''です。 これは'''斜体文字'''です。
+""";
+  test(
+    '斜体文字 終了',
+        () {
+      final italicEndExp = RegExp(r"'''");
+
+      expect(italicEndExp.hasMatch(italicEnd), true);
+      var allMatches = italicEndExp.allMatches(italicEnd);
+      allMatches.forEach((element) {
+        print("start:" + element.start.toString());
+        print("end  :" + element.end.toString());
+        print(element.groupCount);
+        print(element.group(0)); // 全部
+      });
+    },
+  );
 }
