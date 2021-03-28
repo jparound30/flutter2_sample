@@ -396,7 +396,7 @@ CCCCCC''';
   );
 
   final color1 = """
-これは&color(red) { 赤 }です。""";
+これは&color(#FF0000) { 赤 }です。""";
   testWidgets(
     '色',
         (WidgetTester tester) async {
@@ -417,10 +417,10 @@ CCCCCC''';
               .getSpanForPosition(TextPosition(offset: 3))!
               .toPlainText(
               includeSemanticsLabels: false, includePlaceholders: false),
-          "赤");
+          " 赤 ");
       expect(
           richText.text
-              .getSpanForPosition(TextPosition(offset: 4))!
+              .getSpanForPosition(TextPosition(offset: 6))!
               .toPlainText(
               includeSemanticsLabels: false, includePlaceholders: false),
           "です。");
@@ -449,10 +449,10 @@ CCCCCC''';
               .getSpanForPosition(TextPosition(offset: 3))!
               .toPlainText(
               includeSemanticsLabels: false, includePlaceholders: false),
-          "背景色");
+          " 背景色 ");
       expect(
           richText.text
-              .getSpanForPosition(TextPosition(offset: 6))!
+              .getSpanForPosition(TextPosition(offset: 8))!
               .toPlainText(
               includeSemanticsLabels: false, includePlaceholders: false),
           "です。");
