@@ -82,6 +82,27 @@ class MdCodeBlock extends MdElement {
   }) : super(content: content);
 }
 
+// 表セル
+class MdCell extends MdElement {
+  bool columnHeader;
+  bool rowHeader;
+
+  MdCell({
+    required String content,
+    this.columnHeader = false,
+    this.rowHeader = false,
+  }) : super(content: content);
+}
+
+// 表
+class MdTable extends MdElement {
+  late List<List<MdCell>> cellLists;
+
+  MdTable() : super(content: "") {
+    cellLists = List<List<MdCell>>.empty(growable: true);
+  }
+}
+
 class MdParser {
   static final openCodeBlockRegExp = RegExp("^{code.*}\$");
   static final closeCodeBlockRegExp = RegExp("^{/code.*}");
