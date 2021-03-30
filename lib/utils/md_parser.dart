@@ -238,6 +238,11 @@ class MdParser {
         }
         return;
       }
+
+      final tableRowExp = new RegExp(r'^\|.*\|h?');
+      if (tableRowExp.hasMatch(line)) {
+        // TODO
+      }
       if (result.isNotEmpty && result.last.runtimeType == MdElement) {
         var newLine = result.last.content + "\n" + line;
         result.removeLast();
