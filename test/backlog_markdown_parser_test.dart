@@ -300,13 +300,13 @@ CCCCCC''';
           richText.text
               .getSpanForPosition(TextPosition(offset: 3))!
               .toPlainText(
-              includeSemanticsLabels: false, includePlaceholders: false),
+                  includeSemanticsLabels: false, includePlaceholders: false),
           "太字");
       expect(
           richText.text
               .getSpanForPosition(TextPosition(offset: 5))!
               .toPlainText(
-              includeSemanticsLabels: false, includePlaceholders: false),
+                  includeSemanticsLabels: false, includePlaceholders: false),
           "です。");
     },
   );
@@ -315,7 +315,7 @@ CCCCCC''';
 これは'''斜体文字'''です。""";
   testWidgets(
     '斜体文字',
-        (WidgetTester tester) async {
+    (WidgetTester tester) async {
       await tester.pumpWidget(_buildAppWith(MdParser.toRichText, italic1));
 
       var finder = find.byType(RichText);
@@ -326,19 +326,19 @@ CCCCCC''';
           richText.text
               .getSpanForPosition(TextPosition(offset: 0))!
               .toPlainText(
-              includeSemanticsLabels: false, includePlaceholders: false),
+                  includeSemanticsLabels: false, includePlaceholders: false),
           "これは");
       expect(
           richText.text
               .getSpanForPosition(TextPosition(offset: 3))!
               .toPlainText(
-              includeSemanticsLabels: false, includePlaceholders: false),
+                  includeSemanticsLabels: false, includePlaceholders: false),
           "斜体文字");
       expect(
           richText.text
               .getSpanForPosition(TextPosition(offset: 7))!
               .toPlainText(
-              includeSemanticsLabels: false, includePlaceholders: false),
+                  includeSemanticsLabels: false, includePlaceholders: false),
           "です。");
     },
   );
@@ -347,7 +347,7 @@ CCCCCC''';
 これは%%打ち消し%%です。""";
   testWidgets(
     '打ち消し',
-        (WidgetTester tester) async {
+    (WidgetTester tester) async {
       await tester.pumpWidget(_buildAppWith(MdParser.toRichText, lineThrough));
 
       var finder = find.byType(RichText);
@@ -358,19 +358,19 @@ CCCCCC''';
           richText.text
               .getSpanForPosition(TextPosition(offset: 0))!
               .toPlainText(
-              includeSemanticsLabels: false, includePlaceholders: false),
+                  includeSemanticsLabels: false, includePlaceholders: false),
           "これは");
       expect(
           richText.text
               .getSpanForPosition(TextPosition(offset: 3))!
               .toPlainText(
-              includeSemanticsLabels: false, includePlaceholders: false),
+                  includeSemanticsLabels: false, includePlaceholders: false),
           "打ち消し");
       expect(
           richText.text
               .getSpanForPosition(TextPosition(offset: 7))!
               .toPlainText(
-              includeSemanticsLabels: false, includePlaceholders: false),
+                  includeSemanticsLabels: false, includePlaceholders: false),
           "です。");
     },
   );
@@ -379,7 +379,7 @@ CCCCCC''';
 これは&color(#FF0000) { 赤 }です。""";
   testWidgets(
     '色',
-        (WidgetTester tester) async {
+    (WidgetTester tester) async {
       await tester.pumpWidget(_buildAppWith(MdParser.toRichText, color1));
 
       var finder = find.byType(RichText);
@@ -390,19 +390,19 @@ CCCCCC''';
           richText.text
               .getSpanForPosition(TextPosition(offset: 0))!
               .toPlainText(
-              includeSemanticsLabels: false, includePlaceholders: false),
+                  includeSemanticsLabels: false, includePlaceholders: false),
           "これは");
       expect(
           richText.text
               .getSpanForPosition(TextPosition(offset: 3))!
               .toPlainText(
-              includeSemanticsLabels: false, includePlaceholders: false),
+                  includeSemanticsLabels: false, includePlaceholders: false),
           " 赤 ");
       expect(
           richText.text
               .getSpanForPosition(TextPosition(offset: 6))!
               .toPlainText(
-              includeSemanticsLabels: false, includePlaceholders: false),
+                  includeSemanticsLabels: false, includePlaceholders: false),
           "です。");
     },
   );
@@ -411,7 +411,7 @@ CCCCCC''';
 これは&color(#ffffff, #8abe00) { 背景色 }です。""";
   testWidgets(
     '背景色',
-        (WidgetTester tester) async {
+    (WidgetTester tester) async {
       await tester.pumpWidget(_buildAppWith(MdParser.toRichText, bgColor1));
 
       var finder = find.byType(RichText);
@@ -422,21 +422,71 @@ CCCCCC''';
           richText.text
               .getSpanForPosition(TextPosition(offset: 0))!
               .toPlainText(
-              includeSemanticsLabels: false, includePlaceholders: false),
+                  includeSemanticsLabels: false, includePlaceholders: false),
           "これは");
       expect(
           richText.text
               .getSpanForPosition(TextPosition(offset: 3))!
               .toPlainText(
-              includeSemanticsLabels: false, includePlaceholders: false),
+                  includeSemanticsLabels: false, includePlaceholders: false),
           " 背景色 ");
       expect(
           richText.text
               .getSpanForPosition(TextPosition(offset: 8))!
               .toPlainText(
-              includeSemanticsLabels: false, includePlaceholders: false),
+                  includeSemanticsLabels: false, includePlaceholders: false),
           "です。");
     },
   );
 
+  final table1 = '''
+| ホスト名 | IPアドレス   |     備考      |h
+|~sun        | 192.168.100.1   |                  |
+|~earth     | 192.168.100.2   |                  |
+''';
+  test(
+    '表',
+    () {
+      var ret = MdParser.parse(table1);
+      expect(ret.length, 2);
+      expect(ret[0] is MdTable, true);
+      expect(ret[1] is MdElement, true);
+      var table = (ret[0] as MdTable);
+      expect(table.cellLists[0][0].columnHeader, true);
+      expect(table.cellLists[0][0].content, "ホスト名");
+      expect(table.cellLists[0][0].rowHeader, false);
+
+      expect(table.cellLists[0][1].columnHeader, true);
+      expect(table.cellLists[0][1].content, "IPアドレス");
+      expect(table.cellLists[0][1].rowHeader, false);
+
+      expect(table.cellLists[0][2].columnHeader, true);
+      expect(table.cellLists[0][2].content, "備考");
+      expect(table.cellLists[0][2].rowHeader, false);
+
+      expect(table.cellLists[1][0].columnHeader, false);
+      expect(table.cellLists[1][0].content, "sun");
+      expect(table.cellLists[1][0].rowHeader, true);
+
+      expect(table.cellLists[1][1].columnHeader, false);
+      expect(table.cellLists[1][1].content, "192.168.100.1");
+      expect(table.cellLists[1][1].rowHeader, false);
+
+      expect(table.cellLists[1][2].columnHeader, false);
+      expect(table.cellLists[1][2].content, "");
+      expect(table.cellLists[1][2].rowHeader, false);
+
+      expect(table.cellLists[2][0].columnHeader, false);
+      expect(table.cellLists[2][0].content, "earth");
+      expect(table.cellLists[2][0].rowHeader, true);
+
+      expect(table.cellLists[2][1].columnHeader, false);
+      expect(table.cellLists[2][1].content, "192.168.100.2");
+      expect(table.cellLists[2][1].rowHeader, false);
+
+      expect(table.cellLists[2][2].columnHeader, false);
+      expect(table.cellLists[2][2].content, "");
+      expect(table.cellLists[2][2].rowHeader, false);
+    },
+  );
 }
