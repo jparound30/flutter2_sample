@@ -106,6 +106,7 @@ class MdTable extends MdElement {
 class MdParser {
   static final openCodeBlockRegExp = RegExp("^{code.*}\$");
   static final closeCodeBlockRegExp = RegExp("^{/code.*}");
+  static final tableRowExp = RegExp(r'^\|.*\|(h?)');
 
   static List<MdElement> parse(String content) {
     List<MdElement> result = List<MdElement>.empty(growable: true);
@@ -113,8 +114,14 @@ class MdParser {
     final quoteLines = List<String>.empty(growable: true);
     final quoteLinesWithTag = List<String>.empty(growable: true);
     final codeLines = List<String>.empty(growable: true);
+    MdTable? table;
 
     lines.forEach((line) {
+      final isTableRow = tableRowExp.hasMatch(line);
+      if (!isTableRow && table != null) {
+        result.add(table!);
+      }
+
       // 引用文
       if (quoteLinesWithTag.isEmpty) {
         if (line.startsWith('>')) {
@@ -239,9 +246,32 @@ class MdParser {
         return;
       }
 
-      final tableRowExp = new RegExp(r'^\|.*\|h?');
-      if (tableRowExp.hasMatch(line)) {
-        // TODO
+      if (isTableRow) {
+        var row = List<MdCell>.empty(growable: true);
+        if (table == null) {
+          table = MdTable();
+        }
+        var isHeaderLine = line.endsWith("h");
+        var cellContents = line.split(r"|");
+        cellContents.skip(1).take(cellContents.length - 2).forEach((e) {
+          var cell;
+          final contentStr = e.trim();
+          if (contentStr.startsWith("~")) {
+            cell = MdCell(
+              columnHeader: isHeaderLine,
+              content: contentStr.substring(1),
+              rowHeader: true,
+            );
+          } else {
+            cell = MdCell(
+              columnHeader: isHeaderLine,
+              content: contentStr,
+            );
+          }
+          row.add(cell);
+        });
+        table!.cellLists.add(row);
+        return;
       }
       if (result.isNotEmpty && result.last.runtimeType == MdElement) {
         var newLine = result.last.content + "\n" + line;
