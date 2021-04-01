@@ -120,6 +120,7 @@ class MdParser {
       final isTableRow = tableRowExp.hasMatch(line);
       if (!isTableRow && table != null) {
         result.add(table!);
+        table = null;
       }
 
       // 引用文
