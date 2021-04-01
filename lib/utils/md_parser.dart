@@ -787,7 +787,17 @@ class MdParser {
             maxColumnCount = row.length;
           }
           final List<Widget> rowWidgets = row.map<Widget>((e) {
-            return MdParser.toRichText(context, normalText, e);
+            var bgColor;
+            if (e.columnHeader || e.rowHeader) {
+              bgColor = Theme.of(context)
+                  .dataTableTheme
+                  .headingRowColor
+                  ?.resolve(Set<MaterialState>.identity());
+            }
+            return Container(
+              child: MdParser.toRichText(context, normalText, e),
+              color: bgColor,
+            );
           }).toList(growable: true);
           return TableRow(children: rowWidgets);
         }).toList();
