@@ -260,7 +260,7 @@ class MdParser {
           if (contentStr.startsWith("~")) {
             cell = MdCell(
               columnHeader: isHeaderLine,
-              content: contentStr.substring(1),
+              content: contentStr.substring(1).trim(),
               rowHeader: true,
             );
           } else {
