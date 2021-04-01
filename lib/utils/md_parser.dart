@@ -778,6 +778,44 @@ class MdParser {
         return;
       }
 
+      // 表
+      // TODO styling
+      if (element is MdTable) {
+        var maxColumnCount = 0;
+        final List<TableRow> tableCells = element.cellLists.map((row) {
+          if (maxColumnCount < row.length) {
+            maxColumnCount = row.length;
+          }
+          final List<Widget> rowWidgets = row.map<Widget>((e) {
+            return MdParser.toRichText(context, normalText, e);
+          }).toList(growable: true);
+          return TableRow(children: rowWidgets);
+        }).toList();
+        // must be equal each column count of each rows.
+        tableCells.forEach((element) {
+          for (; element.children!.length < maxColumnCount;) {
+            element.children!.add(Text(""));
+          }
+        });
+
+        final table = Table(
+          defaultColumnWidth: IntrinsicColumnWidth(),
+          children: tableCells,
+        );
+        final block = Container(
+          padding: EdgeInsets.symmetric(vertical: 4),
+          margin: EdgeInsets.symmetric(vertical: 8),
+          child: Scrollbar(
+            child: SingleChildScrollView(
+              child: table,
+              scrollDirection: Axis.horizontal,
+            ),
+          ),
+        );
+        children.add(block);
+        return;
+      }
+
       //
       if (element is MdElement) {
         children.add(Container(
