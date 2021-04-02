@@ -82,15 +82,19 @@ class MdCodeBlock extends MdElement {
   }) : super(content: content);
 }
 
-// 表セル
+/// 表セル
 class MdCell extends MdElement {
   bool columnHeader;
   bool rowHeader;
+  bool firstRow;
+  bool firstColumn;
 
   MdCell({
     required String content,
     this.columnHeader = false,
     this.rowHeader = false,
+    this.firstRow = false,
+    this.firstColumn = false,
   }) : super(content: content);
 }
 
