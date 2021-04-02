@@ -253,11 +253,15 @@ class MdParser {
 
       if (isTableRow) {
         var row = List<MdCell>.empty(growable: true);
+        var isFirstRow = false;
+        var isFirstColumn = true;
         if (table == null) {
           table = MdTable();
+          isFirstRow = true;
         }
         var isHeaderLine = line.endsWith("h");
         var cellContents = line.split(r"|");
+
         cellContents.skip(1).take(cellContents.length - 2).forEach((e) {
           var cell;
           final contentStr = e.trim();
@@ -266,14 +270,19 @@ class MdParser {
               columnHeader: isHeaderLine,
               content: contentStr.substring(1).trim(),
               rowHeader: true,
+              firstRow: isFirstRow,
+              firstColumn: isFirstColumn,
             );
           } else {
             cell = MdCell(
               columnHeader: isHeaderLine,
               content: contentStr,
+              firstRow: isFirstRow,
+              firstColumn: isFirstColumn,
             );
           }
           row.add(cell);
+          isFirstColumn = false;
         });
         table!.cellLists.add(row);
         return;
