@@ -821,7 +821,7 @@ class MdParser {
         // must be equal each column count of each rows.
         tableCells.forEach((element) {
           for (; element.children!.length < maxColumnCount;) {
-            element.children!.add(Text(""));
+            element.children!.add(SizedBox());
           }
         });
 
