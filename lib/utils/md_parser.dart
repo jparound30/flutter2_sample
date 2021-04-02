@@ -798,6 +798,7 @@ class MdParser {
       // 表
       // TODO styling
       if (element is MdTable) {
+        const defaultBorder = BorderSide(); // TODO should be customizable?
         var maxColumnCount = 0;
         final List<TableRow> tableCells = element.cellLists.map((row) {
           if (maxColumnCount < row.length) {
@@ -811,9 +812,25 @@ class MdParser {
                   .headingRowColor
                   ?.resolve(Set<MaterialState>.identity());
             }
+            final BorderSide top;
+            final BorderSide left;
+            top = e.firstRow ? defaultBorder : BorderSide.none;
+            left = e.firstColumn ? defaultBorder : BorderSide.none;
             return Container(
               child: MdParser.toRichText(context, normalText, e),
-              color: bgColor,
+              decoration: BoxDecoration(
+                border: Border(
+                  top: top,
+                  left: left,
+                  bottom: defaultBorder,
+                  right: defaultBorder,
+                ),
+                color: bgColor,
+              ),
+              padding: EdgeInsets.symmetric(
+                vertical: 4,
+                horizontal: 8,
+              ),
             );
           }).toList(growable: true);
           return TableRow(children: rowWidgets);
