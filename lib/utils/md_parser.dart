@@ -531,6 +531,15 @@ class MdParser {
     RichText ret = RichText(
       textScaleFactor: MediaQuery.of(context).textScaleFactor,
       text: TextSpan(children: inlineSpans, style: baseStyle),
+      // asciiだけのセルとマルチバイト(CJKフォント？)が混在しているセルが
+      // 1行にある場合に、ボーダーのレンダリングがズレる
+      // strutStyleを設定しかつfontSizeをテキストに使うフォントサイズより大きくすると
+      // 回避できる
+      // TODO web/iosで再現する。engine or frameworkのコード確認してみる
+      strutStyle: StrutStyle.fromTextStyle(
+        normalText,
+        fontSize: normalText.fontSize! + 2.0,
+      ),
     );
 
     return ret;
