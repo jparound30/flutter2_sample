@@ -295,6 +295,10 @@ class MdParser {
         result.add(MdElement(content: line));
       }
     });
+    if (table != null) {
+      result.add(table!);
+    }
+
     return result;
   }
 
