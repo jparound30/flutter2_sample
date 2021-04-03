@@ -1,7 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter2_sample/providers/credential_info.dart';
 import 'package:flutter2_sample/utils/color_converter.dart';
+import 'package:provider/provider.dart';
 
 const MAX_LEVEL = 6;
 
@@ -322,12 +324,22 @@ class MdParser {
   static final lineThroughStartExp = RegExp(r"%%(?<content>.*?)%%");
   static final lineThroughStartExp2 = RegExp(r"%%");
   static final lineThroughEndExp = RegExp(r"%%");
+  static final imageStartExp = RegExp(r'#image\((?<name>[^()]+?)\)');
+  static final imageEndExp = RegExp(r'\)');
 
   // TODO リファクタ必須
   static RichText toRichText(
       BuildContext context, TextStyle baseStyle, MdElement el) {
     List<InlineSpan> inlineSpans = List<InlineSpan>.empty(growable: true);
     final normalText = baseStyle;
+
+    // TODO 動作確認用に決め打ち 要検討
+    final issueIdorKey = "APITEST-2";
+    final attachmentId = "6167186";
+    // TODO 外部から渡す、などに変えるべき
+    final credentialInfo = Provider.of<CredentialInfo>(context);
+    final space = credentialInfo.space!;
+    final apiKey = credentialInfo.apiKey!;
 
     var text = el.content;
     int state = sNone;
@@ -340,6 +352,8 @@ class MdParser {
     Color bgColor = defaultBgColor;
     Color nextFontColor = fontColor;
     Color nextBgColor = bgColor;
+    WidgetSpan? image; // 添付ファイル画像保持用
+
     while (true) {
       int minStart = -1;
       int end = -1;
@@ -350,6 +364,7 @@ class MdParser {
         Iterable<RegExpMatch> lineThroughStart =
             lineThroughStartExp.allMatches(text);
         var colorStart = colorStartExp.allMatches(text);
+        var imageStart = imageStartExp.allMatches(text);
 
         if (italicStart.isNotEmpty) {
           italicStart = italicStartExp2.allMatches(text);
@@ -387,6 +402,18 @@ class MdParser {
             if (bgColorStr != null) {
               nextBgColor = ColorConverter.fromString(bgColorStr);
             }
+          }
+        }
+        if (imageStart.isNotEmpty) {
+          if (minStart == -1 || imageStart.first.start < minStart) {
+            minStart = imageStart.first.start;
+            end = imageStart.first.end;
+            nextType = sColor;
+            // TODO nameから添付ファイルのidを割り出すように変更必要
+            final name = imageStart.first.namedGroup("name");
+            final url =
+                "https://$space/api/v2/issues/$issueIdorKey/attachments/$attachmentId?apiKey=$apiKey";
+            image = WidgetSpan(child: Image.network(url));
           }
         }
       } else {
@@ -513,6 +540,10 @@ class MdParser {
       if (minStart != -1) {
         inlineSpans
             .add(TextSpan(text: text.substring(0, minStart), style: textStyle));
+        if (image != null) {
+          inlineSpans.add(image);
+          image = null;
+        }
       } else {
         inlineSpans.add(TextSpan(text: text, style: textStyle));
         break;
