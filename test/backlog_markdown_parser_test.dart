@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter2_sample/providers/credential_info.dart';
 import 'package:flutter2_sample/utils/md_parser.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   final title = '''
@@ -265,15 +267,19 @@ CCCCCC''';
     return MaterialApp(
       theme: theme,
       home: Material(
-        child: Builder(
-          builder: (BuildContext context) {
-            final baseStyle = Theme.of(context).textTheme.bodyText2!;
-            return MediaQuery(
-              data: MediaQuery.of(context)
-                  .copyWith(textScaleFactor: textScaleFactor),
-              child: func(context, baseStyle, MdElement(content: content)),
-            );
-          },
+        child: ChangeNotifierProvider<CredentialInfo>(
+          create: (_) =>
+              CredentialInfo(space: "example.com", apiKey: "APIKEYYYYYY"),
+          child: Builder(
+            builder: (BuildContext context) {
+              final baseStyle = Theme.of(context).textTheme.bodyText2!;
+              return MediaQuery(
+                data: MediaQuery.of(context)
+                    .copyWith(textScaleFactor: textScaleFactor),
+                child: func(context, baseStyle, MdElement(content: content)),
+              );
+            },
+          ),
         ),
       ),
     );
