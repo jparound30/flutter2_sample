@@ -405,6 +405,7 @@ class MdParser {
           }
         }
         if (imageStart.isNotEmpty) {
+          // TODO ファイル画像表示widget生成の共通化
           if (minStart == -1 || imageStart.first.start < minStart) {
             minStart = imageStart.first.start;
             end = imageStart.first.end;
@@ -424,6 +425,8 @@ class MdParser {
         Iterable<RegExpMatch> italicEnd = List<RegExpMatch>.empty();
         Iterable<RegExpMatch> lineThroughEnd = List<RegExpMatch>.empty();
         Iterable<RegExpMatch> colorEnd = List<RegExpMatch>.empty();
+
+        Iterable<RegExpMatch> imageStart = imageStartExp.allMatches(text);
 
         if (state & sBold == sBold) {
           boldEnd = boldEndExp.allMatches(text);
@@ -515,6 +518,18 @@ class MdParser {
           nextType = ~sColor;
           nextFontColor = defaultFontColor;
           nextBgColor = defaultBgColor;
+        }
+        if (imageStart.isNotEmpty) {
+          // TODO ファイル画像表示widget生成の共通化
+          if (minStart == -1 || imageStart.first.start < minStart) {
+            minStart = imageStart.first.start;
+            end = imageStart.first.end;
+            // TODO nameから添付ファイルのidを割り出すように変更必要
+            final name = imageStart.first.namedGroup("name");
+            final url =
+                "https://$space/api/v2/issues/$issueIdorKey/attachments/$attachmentId?apiKey=$apiKey";
+            image = WidgetSpan(child: Image.network(url));
+          }
         }
       }
 
