@@ -408,7 +408,6 @@ class MdParser {
           if (minStart == -1 || imageStart.first.start < minStart) {
             minStart = imageStart.first.start;
             end = imageStart.first.end;
-            nextType = sColor;
             // TODO nameから添付ファイルのidを割り出すように変更必要
             final name = imageStart.first.namedGroup("name");
             final url =
