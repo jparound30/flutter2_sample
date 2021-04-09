@@ -210,4 +210,28 @@ void main() {
       }), findsNWidgets(2));
     }, createHttpClient: _createMockImageHttpClient);
   });
+
+  final image3 = '''
+#image(data1.png)
+
+あいだに ** #image(data2.png) ** 装飾
+''';
+  testWidgets('添付ファイル画像の表示　複数個 文字装飾中', (WidgetTester tester) async {
+    HttpOverrides.runZoned(() async {
+      await tester.pumpWidget(_buildAppWith(MdParser.toRichText, image3));
+      await tester.pumpAndSettle();
+
+      var finder = find.byType(RichText);
+      final richText = tester.firstWidget<RichText>(finder);
+      expect((richText.text as TextSpan).text, null);
+
+      expect(find.byWidgetPredicate((widget) {
+        if (widget is Image) {
+          return true;
+        } else {
+          return false;
+        }
+      }), findsNWidgets(2));
+    }, createHttpClient: _createMockImageHttpClient);
+  });
 }
