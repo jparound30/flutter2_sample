@@ -35,6 +35,7 @@ class Project {
         displayOrder: json['displayOrder'] as int?);
   }
 
+  @override
   bool operator ==(Object other) {
     return (other is Project) && (id == other.id);
   }

@@ -74,7 +74,7 @@ abstract class EnumHelper<T> {
 
   T valueOf(String value) {
     return values().firstWhere((e) => name(e) == value,
-        orElse: () => throw new Exception("INVALID ENUM"));
+        orElse: () => throw Exception("INVALID ENUM"));
   }
 
   String name(T value) {
@@ -92,7 +92,7 @@ class IssueFieldEnumHelper extends EnumHelper<IssueField> {
 
   @override
   Map<IssueField, String> maps() {
-    final ret = Map<IssueField, String>();
+    final ret = <IssueField, String>{};
     ret[IssueField.issueType] = "種類";
     ret[IssueField.id] = "キー";
     ret[IssueField.category] = "カテゴリー";

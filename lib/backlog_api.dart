@@ -24,7 +24,7 @@ class BacklogApiClient {
   Future<String> _get(Uri uri) async {
     final response = await _client.get(uri);
     final responseBody = utf8.decode(response.bodyBytes, allowMalformed: true);
-    Log.httpRequest("HTTP GET: " + uri.toString());
+    Log.httpRequest("HTTP GET: $uri");
     Log.httpResponse(responseBody);
     return responseBody;
   }
@@ -35,7 +35,7 @@ class BacklogApiClient {
     });
 
     final response = await _client.get(uri);
-    Log.httpRequest("HTTP GET: " + uri.toString());
+    Log.httpRequest("HTTP GET: $uri");
     final responseBody = utf8.decode(response.bodyBytes, allowMalformed: true);
     Log.httpResponse(responseBody);
 
@@ -93,7 +93,7 @@ class BacklogApiClient {
   }) async {
     final apiKey = credentialInfo.apiKey;
     final space = credentialInfo.space!;
-    final query = Map<String, dynamic>();
+    final query = <String, dynamic>{};
     query['apiKey'] = apiKey;
     query['count'] = ISSUES_COUNTS;
     if (project != null) {
@@ -126,7 +126,7 @@ class BacklogApiClient {
   }) async {
     final apiKey = credentialInfo.apiKey;
     final space = credentialInfo.space!;
-    final query = Map<String, dynamic>();
+    final query = <String, dynamic>{};
     // TODO fetchIssuesのリクエスト生成処理（クエリー）などを共通化
     query['apiKey'] = apiKey;
     if (project != null) {

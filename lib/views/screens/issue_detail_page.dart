@@ -7,7 +7,7 @@ import '../components/issue_type_chip.dart';
 import '../components/status_chip.dart';
 
 class IssueDetailPage extends StatelessWidget {
-  IssueDetailPage({Key? key, required issue})
+  const IssueDetailPage({Key? key, required issue})
       : _issue = issue,
         super(key: key);
 
@@ -22,7 +22,7 @@ class IssueDetailPage extends StatelessWidget {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
-        actions: [],
+        actions: const [],
         centerTitle: false,
       ),
       body: IssueDetail(
@@ -57,10 +57,10 @@ class IssueDetail extends StatelessWidget {
     final version = issue.versions?.map((e) => e.name).toList().join(",");
 
     return Container(
-      constraints: BoxConstraints.expand(),
+      constraints: const BoxConstraints.expand(),
       child: Scrollbar(
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8.0),
           scrollDirection: Axis.vertical,
           child: Column(
             children: [
@@ -72,13 +72,13 @@ class IssueDetail extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(issue.createdUser.name),
-                      Text(created + " 登録"),
+                      Text("$created 登録"),
                     ],
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("開始日"),
+                      const Text("開始日"),
                       if (issue.startDate != null)
                         Text(dateFormatYmd.format(issue.startDate!))
                       else
@@ -88,7 +88,7 @@ class IssueDetail extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("期限日"),
+                      const Text("期限日"),
                       if (issue.dueDate != null)
                         Text(dateFormatYmd.format(issue.dueDate!))
                       else
@@ -98,11 +98,11 @@ class IssueDetail extends StatelessWidget {
                   StatusChip(issue.status),
                 ],
               ),
-              Container(
+              SizedBox(
                 width: double.infinity,
                 child: Text(
-                  this.issue.summary,
-                  style: Theme.of(context).textTheme.headline6,
+                  issue.summary,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
               Card(
@@ -111,14 +111,14 @@ class IssueDetail extends StatelessWidget {
                   child: Column(
                     children: [
                       BacklogMarkdownRender(markdown: issue.description),
-                      Divider(),
+                      const Divider(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Expanded(
                             child: Row(
                               children: [
-                                SizedBox(
+                                const SizedBox(
                                   width: 120,
                                   child: Text("優先度"),
                                 ),
@@ -129,7 +129,7 @@ class IssueDetail extends StatelessWidget {
                           Expanded(
                             child: Row(
                               children: [
-                                SizedBox(
+                                const SizedBox(
                                   width: 120,
                                   child: Text("担当者"),
                                 ),
@@ -142,18 +142,18 @@ class IssueDetail extends StatelessWidget {
                           )
                         ],
                       ),
-                      Divider(),
+                      const Divider(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Expanded(
                             child: Row(
                               children: [
-                                SizedBox(
+                                const SizedBox(
                                   width: 120,
                                   child: Text("カテゴリ"),
                                 ),
-                                if (category != null && category.length != 0)
+                                if (category != null && category.isNotEmpty)
                                   Text(category)
                                 else
                                   _notSetText,
@@ -163,11 +163,11 @@ class IssueDetail extends StatelessWidget {
                           Expanded(
                             child: Row(
                               children: [
-                                SizedBox(
+                                const SizedBox(
                                   width: 120,
                                   child: Text("マイルストーン"),
                                 ),
-                                if (milestone != null && milestone.length != 0)
+                                if (milestone != null && milestone.isNotEmpty)
                                   Text(milestone)
                                 else
                                   _notSetText,
@@ -176,18 +176,18 @@ class IssueDetail extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Divider(),
+                      const Divider(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Expanded(
                             child: Row(
                               children: [
-                                SizedBox(
+                                const SizedBox(
                                   width: 120,
                                   child: Text("発生バージョン"),
                                 ),
-                                if (version != null && version.length != 0)
+                                if (version != null && version.isNotEmpty)
                                   Text(version)
                                 else
                                   _notSetText,
@@ -196,14 +196,14 @@ class IssueDetail extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Divider(),
+                      const Divider(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Expanded(
                             child: Row(
                               children: [
-                                SizedBox(
+                                const SizedBox(
                                   width: 120,
                                   child: Text("予定時間"),
                                 ),
@@ -217,7 +217,7 @@ class IssueDetail extends StatelessWidget {
                           Expanded(
                             child: Row(
                               children: [
-                                SizedBox(
+                                const SizedBox(
                                   width: 120,
                                   child: Text("実績時間"),
                                 ),
@@ -230,14 +230,14 @@ class IssueDetail extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Divider(),
+                      const Divider(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Expanded(
                             child: Row(
                               children: [
-                                SizedBox(
+                                const SizedBox(
                                   width: 120,
                                   child: Text("完了理由"),
                                 ),
@@ -265,17 +265,17 @@ class IssueDetail extends StatelessWidget {
 class BacklogMarkdownRender extends StatelessWidget {
   final String markdown;
 
-  BacklogMarkdownRender({
+  const BacklogMarkdownRender({
     required this.markdown,
   });
 
   @override
   Widget build(BuildContext context) {
-    final list = MdParser.parse(this.markdown);
+    final list = MdParser.parse(markdown);
     final child = MdParser.buildFromMdElements(context, list);
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(4.0),
+      padding: const EdgeInsets.all(4.0),
       child: child,
     );
   }

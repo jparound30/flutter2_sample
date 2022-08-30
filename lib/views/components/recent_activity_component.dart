@@ -9,7 +9,7 @@ import '../../providers/credential_info.dart';
 import '../../providers/selected_project.dart';
 
 class RecentActivityList extends StatelessWidget {
-  RecentActivityList({Key? key}) : super(key: key);
+  const RecentActivityList({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class RecentActivityList extends StatelessWidget {
 
         return snapshot.hasData
             ? ActivityList(activities: snapshot.data!)
-            : Center(child: CircularProgressIndicator());
+            : const Center(child: CircularProgressIndicator());
       },
     );
   }
@@ -31,7 +31,7 @@ class RecentActivityList extends StatelessWidget {
 class ActivityList extends StatelessWidget {
   final List<Activity> activities;
 
-  ActivityList({Key? key, required this.activities}) : super(key: key);
+  const ActivityList({Key? key, required this.activities}) : super(key: key);
 
   List<Activity> filteredByProject(Project? project) {
     if (project == null) {
@@ -56,7 +56,7 @@ class ActivityList extends StatelessWidget {
             return ActivitySimple(filtered[index]);
           },
           separatorBuilder: (context, index) {
-            return Divider();
+            return const Divider();
           },
         ),
       ),
@@ -67,7 +67,7 @@ class ActivityList extends StatelessWidget {
 class ActivitySimple extends StatelessWidget {
   final Activity _activity;
 
-  ActivitySimple(this._activity);
+  const ActivitySimple(this._activity);
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +76,7 @@ class ActivitySimple extends StatelessWidget {
     final space = credentialInfo.space!;
     Uri userIconUri = Uri.https(
         space,
-        "/api/v2/users/" + _activity.createdUser.id.toString() + "/icon",
+        "/api/v2/users/${_activity.createdUser.id}/icon",
         {'apiKey': apiKey});
     final String content;
     if (_activity.content!.summary != null) {

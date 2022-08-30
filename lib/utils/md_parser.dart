@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter2_sample/providers/credential_info.dart';
 import 'package:flutter2_sample/utils/color_converter.dart';
@@ -122,10 +120,10 @@ class MdParser {
     final codeLines = List<String>.empty(growable: true);
     MdTable? table;
 
-    lines.forEach((line) {
+    for (var line in lines) {
       final isTableRow = tableRowExp.hasMatch(line);
       if (!isTableRow && table != null) {
-        result.add(table!);
+        result.add(table);
         table = null;
       }
 
@@ -133,7 +131,7 @@ class MdParser {
       if (quoteLinesWithTag.isEmpty) {
         if (line.startsWith('>')) {
           quoteLines.add(line.substring(1));
-          return;
+          continue;
         } else if (quoteLines.isNotEmpty) {
           var mdQuoteBlock = MdQuoteBlock(content: quoteLines.join("\n"));
           result.add(mdQuoteBlock);
@@ -142,9 +140,9 @@ class MdParser {
       }
       if (quoteLinesWithTag.isEmpty && line == "{quote}") {
         quoteLinesWithTag.add("");
-        return;
+        continue;
       } else if (quoteLinesWithTag.isNotEmpty && line == "{/quote}") {
-        var mdQuoteBlock;
+        MdQuoteBlock mdQuoteBlock;
         if (quoteLinesWithTag.length == 1) {
           mdQuoteBlock = MdQuoteBlock(content: "");
         } else {
@@ -155,18 +153,18 @@ class MdParser {
         }
         result.add(mdQuoteBlock);
         quoteLinesWithTag.clear();
-        return;
+        continue;
       } else if (quoteLinesWithTag.isNotEmpty) {
         quoteLinesWithTag.add(line);
-        return;
+        continue;
       }
 
       // コードブロック
       if (codeLines.isEmpty && openCodeBlockRegExp.hasMatch(line)) {
         codeLines.add("");
-        return;
+        continue;
       } else if (codeLines.isNotEmpty && closeCodeBlockRegExp.hasMatch(line)) {
-        var mdCodeBlock;
+        MdCodeBlock mdCodeBlock;
         if (codeLines.length == 1) {
           mdCodeBlock = MdCodeBlock(content: "");
         } else {
@@ -175,10 +173,10 @@ class MdParser {
         }
         result.add(mdCodeBlock);
         codeLines.clear();
-        return;
+        continue;
       } else if (codeLines.isNotEmpty) {
         codeLines.add(line);
-        return;
+        continue;
       }
 
       // 見出し
@@ -194,7 +192,7 @@ class MdParser {
           var c = s.trimLeft();
           result.add(MdTitle(level: level, content: c));
         }
-        return;
+        continue;
       }
       // 箇条書き
       if (line.startsWith('-')) {
@@ -216,7 +214,7 @@ class MdParser {
           var c = s.trimLeft();
           result.add(MdUnorderedList(level: level, content: c));
         }
-        return;
+        continue;
       }
       // 番号付き箇条書き
       if (line.startsWith('+')) {
@@ -250,7 +248,7 @@ class MdParser {
           result.add(MdOrderedList(
               level: level, content: s.substring(1), order: order));
         }
-        return;
+        continue;
       }
 
       if (isTableRow) {
@@ -265,7 +263,7 @@ class MdParser {
         var cellContents = line.split(r"|");
 
         cellContents.skip(1).take(cellContents.length - 2).forEach((e) {
-          var cell;
+          MdCell cell;
           final contentStr = e.trim();
           if (contentStr.startsWith("~")) {
             cell = MdCell(
@@ -286,29 +284,29 @@ class MdParser {
           row.add(cell);
           isFirstColumn = false;
         });
-        table!.cellLists.add(row);
-        return;
+        table.cellLists.add(row);
+        continue;
       }
       if (result.isNotEmpty && result.last.runtimeType == MdElement) {
-        var newLine = result.last.content + "\n" + line;
+        var newLine = "${result.last.content}\n$line";
         result.removeLast();
         result.add(MdElement(content: newLine));
       } else {
         result.add(MdElement(content: line));
       }
-    });
+    }
     if (table != null) {
-      result.add(table!);
+      result.add(table);
     }
 
     return result;
   }
 
-  static final int sNone = 0x00000000;
-  static final int sBold = 0x00000200;
-  static final int sItalic = 0x00000400;
-  static final int sLineThrough = 0x00001000;
-  static final int sColor = 0x00002000;
+  static const int sNone = 0x00000000;
+  static const int sBold = 0x00000200;
+  static const int sItalic = 0x00000400;
+  static const int sLineThrough = 0x00001000;
+  static const int sColor = 0x00002000;
 
   static final colorStartExp = RegExp(
       r"\&color\( *(?<text>#[a-zA-Z0-9]{6,6}){1,1}? *[, ]*(?<bgcolor>#[a-zA-Z0-9]{6,6}){0,1}? *\) *\{(?<content>[^}]*?)\}");
@@ -334,8 +332,8 @@ class MdParser {
     final normalText = baseStyle;
 
     // TODO 動作確認用に決め打ち 要検討
-    final issueIdorKey = "APITEST-2";
-    final attachmentId = "6167186";
+    const issueIdorKey = "APITEST-2";
+    const attachmentId = "6167186";
     // TODO 外部から渡す、などに変えるべき
     final credentialInfo = Provider.of<CredentialInfo>(context);
     final space = credentialInfo.space!;
@@ -595,9 +593,9 @@ class MdParser {
     List<MdElement> elements,
   ) {
     List<Widget> children = List<Widget>.empty(growable: true);
-    elements.forEach((element) {
+    for (var element in elements) {
       // TODO 共通のmarginを生成するコンポーネントを全てに噛ませたほうがいいかも？
-      final normalText = Theme.of(context).textTheme.bodyText2!;
+      final normalText = Theme.of(context).textTheme.bodyMedium!;
       final normalFontSize = normalText.fontSize ?? 12.0;
       // 見出し
       if (element is MdTitle) {
@@ -645,9 +643,9 @@ class MdParser {
         final text = MdParser.toRichText(context, textStyle, element);
         if (element.level == 1) {
           final pad = Container(
-            padding: EdgeInsets.symmetric(vertical: 4),
+            padding: const EdgeInsets.symmetric(vertical: 4),
             width: double.infinity,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               border: Border(
                 bottom: BorderSide(
                   color: Colors.green,
@@ -655,15 +653,15 @@ class MdParser {
                 ),
               ),
             ),
-            margin: EdgeInsets.symmetric(vertical: 16),
+            margin: const EdgeInsets.symmetric(vertical: 16),
             child: text,
           );
           children.add(pad);
         } else if (element.level == 2) {
           final pad = Container(
-            padding: EdgeInsets.symmetric(vertical: 4),
+            padding: const EdgeInsets.symmetric(vertical: 4),
             width: double.infinity,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               border: Border(
                 bottom: BorderSide(
                   color: Colors.green,
@@ -671,18 +669,18 @@ class MdParser {
                 ),
               ),
             ),
-            margin: EdgeInsets.symmetric(vertical: 8),
+            margin: const EdgeInsets.symmetric(vertical: 8),
             child: text,
           );
           children.add(pad);
         } else {
           final e = Container(
-            margin: EdgeInsets.symmetric(vertical: 4),
+            margin: const EdgeInsets.symmetric(vertical: 4),
             child: text,
           );
           children.add(e);
         }
-        return;
+        continue;
       }
 
       // 箇条書き
@@ -690,9 +688,9 @@ class MdParser {
         final indent = (element.level - 1) * 16;
         final Widget widget;
         final isCheckList = element is MdUnorderedCheckList;
-        final checkedIcon = Icon(Icons.check_box, color: Colors.blue);
-        final uncheckedIcon = Icon(Icons.check_box_outline_blank);
-        final margin = SizedBox(width: 8);
+        const checkedIcon = Icon(Icons.check_box, color: Colors.blue);
+        const uncheckedIcon = Icon(Icons.check_box_outline_blank);
+        const margin = SizedBox(width: 8);
         final lineThrough = normalText.copyWith(
           color: Colors.grey.shade400,
           decoration: TextDecoration.lineThrough,
@@ -701,7 +699,7 @@ class MdParser {
         switch (element.level) {
           case 1:
             widget = Container(
-              margin: EdgeInsets.symmetric(vertical: 4),
+              margin: const EdgeInsets.symmetric(vertical: 4),
               padding: EdgeInsets.only(left: indent.toDouble()),
               child: Row(
                 children: [
@@ -712,7 +710,7 @@ class MdParser {
                       !((element as MdUnorderedCheckList).checked))
                     uncheckedIcon
                   else
-                    Icon(Icons.circle, size: 8),
+                    const Icon(Icons.circle, size: 8),
                   margin,
                   if (isCheckList && (element as MdUnorderedCheckList).checked)
                     MdParser.toRichText(context, lineThrough, element)
@@ -725,7 +723,7 @@ class MdParser {
             break;
           case 2:
             widget = Container(
-              margin: EdgeInsets.symmetric(vertical: 4),
+              margin: const EdgeInsets.symmetric(vertical: 4),
               padding: EdgeInsets.only(left: indent.toDouble()),
               child: Row(
                 children: [
@@ -736,7 +734,7 @@ class MdParser {
                       !((element as MdUnorderedCheckList).checked))
                     uncheckedIcon
                   else
-                    Icon(Icons.radio_button_unchecked, size: 10),
+                    const Icon(Icons.radio_button_unchecked, size: 10),
                   margin,
                   if (isCheckList && (element as MdUnorderedCheckList).checked)
                     MdParser.toRichText(context, lineThrough, element)
@@ -750,7 +748,7 @@ class MdParser {
           case 3:
           default:
             widget = Container(
-              margin: EdgeInsets.symmetric(vertical: 4),
+              margin: const EdgeInsets.symmetric(vertical: 4),
               padding: EdgeInsets.only(left: indent.toDouble()),
               child: Row(
                 children: [
@@ -761,7 +759,7 @@ class MdParser {
                       !((element as MdUnorderedCheckList).checked))
                     uncheckedIcon
                   else
-                    Icon(Icons.stop, size: 12),
+                    const Icon(Icons.stop, size: 12),
                   margin,
                   if (isCheckList && (element as MdUnorderedCheckList).checked)
                     MdParser.toRichText(context, lineThrough, element)
@@ -773,7 +771,7 @@ class MdParser {
             children.add(widget);
             break;
         }
-        return;
+        continue;
       }
 
       // 番号付き箇条書き
@@ -781,19 +779,19 @@ class MdParser {
         final indent = (element.level - 1) * 16;
         final Widget widget;
         final isCheckList = element is MdOrderedCheckList;
-        final checkedIcon = Icon(Icons.check_box, color: Colors.blue);
-        final uncheckedIcon = Icon(Icons.check_box_outline_blank);
-        final margin = SizedBox(width: 8);
+        const checkedIcon = Icon(Icons.check_box, color: Colors.blue);
+        const uncheckedIcon = Icon(Icons.check_box_outline_blank);
+        const margin = SizedBox(width: 8);
         final lineThrough = normalText.copyWith(
           color: Colors.grey.shade400,
           decoration: TextDecoration.lineThrough,
         );
         widget = Container(
-          margin: EdgeInsets.symmetric(vertical: 4),
+          margin: const EdgeInsets.symmetric(vertical: 4),
           padding: EdgeInsets.only(left: indent.toDouble()),
           child: Row(
             children: [
-              Text(element.order.toString() + "."),
+              Text("${element.order}."),
               margin,
               if (isCheckList && (element as MdOrderedCheckList).checked)
                 checkedIcon
@@ -809,14 +807,14 @@ class MdParser {
           ),
         );
         children.add(widget);
-        return;
+        continue;
       }
 
       // 引用文
       if (element is MdQuoteBlock) {
         final textStyle = normalText.copyWith(color: Colors.grey.shade600);
         final pad = Container(
-          padding: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
           width: double.infinity,
           decoration: BoxDecoration(
             border: Border(
@@ -826,27 +824,27 @@ class MdParser {
               ),
             ),
           ),
-          margin: EdgeInsets.symmetric(vertical: 16),
+          margin: const EdgeInsets.symmetric(vertical: 16),
           child: Text(element.content, style: textStyle),
         );
         children.add(pad);
-        return;
+        continue;
       }
 
       // コードブロック
       if (element is MdCodeBlock) {
         final block = Container(
-          padding: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
           width: double.infinity,
           decoration: BoxDecoration(
             border: Border.all(color: Colors.grey.shade300, width: 1.0),
             color: Colors.grey.shade100,
           ),
-          margin: EdgeInsets.symmetric(vertical: 8),
+          margin: const EdgeInsets.symmetric(vertical: 8),
           child: Text(element.content, style: normalText),
         );
         children.add(block);
-        return;
+        continue;
       }
 
       // 表
@@ -859,7 +857,7 @@ class MdParser {
             maxColumnCount = row.length;
           }
           final List<Widget> rowWidgets = row.map<Widget>((e) {
-            var bgColor;
+            Color? bgColor;
             if (e.columnHeader || e.rowHeader) {
               bgColor = Theme.of(context)
                   .dataTableTheme
@@ -871,7 +869,6 @@ class MdParser {
             top = e.firstRow ? defaultBorder : BorderSide.none;
             left = e.firstColumn ? defaultBorder : BorderSide.none;
             return Container(
-              child: MdParser.toRichText(context, normalText, e),
               decoration: BoxDecoration(
                 border: Border(
                   top: top,
@@ -881,48 +878,49 @@ class MdParser {
                 ),
                 color: bgColor,
               ),
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 vertical: 4,
                 horizontal: 8,
               ),
+              child: MdParser.toRichText(context, normalText, e),
             );
           }).toList(growable: true);
           return TableRow(children: rowWidgets);
         }).toList();
         // must be equal each column count of each rows.
-        tableCells.forEach((element) {
+        for (var element in tableCells) {
           for (; element.children!.length < maxColumnCount;) {
-            element.children!.add(SizedBox());
+            element.children!.add(const SizedBox());
           }
-        });
+        }
 
         final table = Table(
-          defaultColumnWidth: IntrinsicColumnWidth(),
+          defaultColumnWidth: const IntrinsicColumnWidth(),
           children: tableCells,
         );
         final block = Container(
-          padding: EdgeInsets.symmetric(vertical: 4),
-          margin: EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          margin: const EdgeInsets.symmetric(vertical: 8),
           child: Scrollbar(
             child: SingleChildScrollView(
-              child: table,
               scrollDirection: Axis.horizontal,
+              child: table,
             ),
           ),
         );
         children.add(block);
-        return;
+        continue;
       }
 
       //
       if (element is MdElement) {
         children.add(Container(
-          margin: EdgeInsets.symmetric(vertical: 4),
+          margin: const EdgeInsets.symmetric(vertical: 4),
           child: MdParser.toRichText(context, normalText, element),
         ));
-        return;
+        continue;
       }
-    });
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: children,

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -23,7 +22,7 @@ class IssueList extends StatelessWidget {
   Widget build(BuildContext context) {
     final selectedProject = Provider.of<SelectedProject>(context, listen: true);
     if (selectedProject.project == null) {
-      return Center(child: Text("プロジェクトを選択してください"));
+      return const Center(child: Text("プロジェクトを選択してください"));
     }
     return IssueListView();
   }
@@ -41,7 +40,7 @@ class IssueListView extends StatefulWidget {
 
 class _IssueListViewState extends State<IssueListView> {
   IssueField? _selectedSortField;
-  List<Issue> _issues = [];
+  final List<Issue> _issues = [];
 
   int? _sortColumnIndex = 2;
   bool _ascending = false;
@@ -60,7 +59,7 @@ class _IssueListViewState extends State<IssueListView> {
 
   void _toggleSortOrder(int columnIndex, bool ascending) {
     setState(() {
-      print("_toggleSortOrder: ascending = " + ascending.toString());
+      print("_toggleSortOrder: ascending = $ascending");
       _ascending = ascending;
       _sortColumnIndex = columnIndex;
       // TODO カラムのリストと連動させる
@@ -107,7 +106,7 @@ class _IssueListViewState extends State<IssueListView> {
 
   @override
   Widget build(BuildContext context) {
-    print("_IssueListViewState: build() _ascending = " + _ascending.toString());
+    print("_IssueListViewState: build() _ascending = $_ascending");
     final selectedProject = Provider.of<SelectedProject>(context, listen: true);
     return showList(context, selectedProject);
   }
@@ -126,7 +125,7 @@ class _IssueListViewState extends State<IssueListView> {
             });
           },
           onPageChanged: (value) {
-            print('onPageChanged: ' + value.toString());
+            print('onPageChanged: $value');
             setState(() {
               _firstRowIndex = value;
             });
@@ -136,54 +135,54 @@ class _IssueListViewState extends State<IssueListView> {
           columnSpacing: 16,
           columns: [
             DataColumn(
-              label: Expanded(child: Center(child: Text("種別"))),
+              label: const Expanded(child: Center(child: Text("種別"))),
               onSort: _toggleSortOrder,
             ),
             DataColumn(
-              label: Expanded(child: Center(child: Text("キー"))),
+              label: const Expanded(child: Center(child: Text("キー"))),
               onSort: _toggleSortOrder,
             ),
-            DataColumn(label: Expanded(child: Center(child: Text("件名")))),
+            const DataColumn(label: Expanded(child: Center(child: Text("件名")))),
             DataColumn(
-              label: Expanded(child: Center(child: Text("担当者"))),
-              onSort: _toggleSortOrder,
-            ),
-            DataColumn(
-              label: Expanded(child: Center(child: Text("状態"))),
+              label: const Expanded(child: Center(child: Text("担当者"))),
               onSort: _toggleSortOrder,
             ),
             DataColumn(
-              label: Expanded(child: Center(child: Text("優先度"))),
+              label: const Expanded(child: Center(child: Text("状態"))),
               onSort: _toggleSortOrder,
             ),
             DataColumn(
-              label: Expanded(child: Center(child: Text("登録日"))),
+              label: const Expanded(child: Center(child: Text("優先度"))),
               onSort: _toggleSortOrder,
             ),
             DataColumn(
-              label: Expanded(child: Center(child: Text("開始日"))),
+              label: const Expanded(child: Center(child: Text("登録日"))),
               onSort: _toggleSortOrder,
             ),
             DataColumn(
-              label: Expanded(child: Center(child: Text("期限日"))),
+              label: const Expanded(child: Center(child: Text("開始日"))),
               onSort: _toggleSortOrder,
             ),
             DataColumn(
-              label:
-                  Expanded(child: Center(child: Text("予定\n時間", maxLines: 2))),
+              label: const Expanded(child: Center(child: Text("期限日"))),
               onSort: _toggleSortOrder,
             ),
             DataColumn(
               label:
-                  Expanded(child: Center(child: Text("実績\n時間", maxLines: 2))),
+                  const Expanded(child: Center(child: Text("予定\n時間", maxLines: 2))),
               onSort: _toggleSortOrder,
             ),
             DataColumn(
-              label: Expanded(child: Center(child: Text("更新日"))),
+              label:
+                  const Expanded(child: Center(child: Text("実績\n時間", maxLines: 2))),
               onSort: _toggleSortOrder,
             ),
             DataColumn(
-              label: Expanded(child: Center(child: Text("登録者"))),
+              label: const Expanded(child: Center(child: Text("更新日"))),
+              onSort: _toggleSortOrder,
+            ),
+            DataColumn(
+              label: const Expanded(child: Center(child: Text("登録者"))),
               onSort: _toggleSortOrder,
             ),
             // DataColumn(label: Text("添付")),
@@ -208,7 +207,7 @@ class _IssueListViewState extends State<IssueListView> {
             return IssueSimple(_issues[index]);
           },
           separatorBuilder: (context, index) {
-            return Divider();
+            return const Divider();
           },
         ),
       ),
@@ -224,9 +223,9 @@ class _IssueListViewState extends State<IssueListView> {
 
     var dropdownButton = DropdownButton<IssueField>(
       value: _selectedSortField,
-      hint: Text("並び替え"),
+      hint: const Text("並び替え"),
       items: dropDownItems,
-      icon: Icon(Icons.arrow_downward),
+      icon: const Icon(Icons.arrow_downward),
       iconSize: 24,
       elevation: 16,
       underline: Container(
@@ -252,7 +251,7 @@ class _IssueListViewState extends State<IssueListView> {
 class IssueSimple extends StatelessWidget {
   final Issue _issue;
 
-  IssueSimple(this._issue);
+  const IssueSimple(this._issue);
 
   @override
   Widget build(BuildContext context) {
@@ -261,7 +260,7 @@ class IssueSimple extends StatelessWidget {
     final space = credentialInfo.space!;
     Uri userIconUri = Uri.https(
         space,
-        "/api/v2/users/" + _issue.createdUser.id.toString() + "/icon",
+        "/api/v2/users/${_issue.createdUser.id}/icon",
         {'apiKey': apiKey});
     var dateFormat = DateFormat('yyyy/MM/dd HH:mm', 'ja');
     return ListTile(
@@ -296,24 +295,24 @@ class IssueTableSource extends DataTableSource {
   // TODO このへんの数字の辻褄はAPIのリクエスト内容などとあってないので直す
   List<Issue>? cachedIssues;
   int pageOfCachedIssues = 0;
-  int _itemPerPage;
-  int _firstRowIndex;
+  final int _itemPerPage;
+  final int _firstRowIndex;
 
   int? totalRowCount;
 
   late CredentialInfo _credentialInfo;
-  BuildContext _context;
-  Project? _project;
-  IssueField? _sort;
-  bool? _ascending;
+  final BuildContext _context;
+  final Project? _project;
+  final IssueField? _sort;
+  final bool? _ascending;
 
   bool requestInProgress = false;
 
   BacklogApiClient apiClient = BacklogApiClient();
-  final TextStyle textStyleInCells = TextStyle(
+  final TextStyle textStyleInCells = const TextStyle(
     fontSize: 12.0,
   );
-  final TextStyle textStyleInCellsWhile = TextStyle(
+  final TextStyle textStyleInCellsWhile = const TextStyle(
     fontSize: 12.0,
     color: Colors.white,
   );
@@ -381,7 +380,7 @@ class IssueTableSource extends DataTableSource {
     } else {
       var translateIndex = index - (page * _itemPerPage);
       if (cachedIssues!.length <= translateIndex) {
-        Timer(Duration(seconds: 0), () => notifyListeners());
+        Timer(const Duration(seconds: 0), () => notifyListeners());
         return null;
       }
       var issue = cachedIssues![translateIndex];
@@ -402,8 +401,9 @@ class IssueTableSource extends DataTableSource {
         index: index,
         color: MaterialStateProperty.resolveWith<Color?>(
             (Set<MaterialState> states) {
-          if (states.contains(MaterialState.hovered))
+          if (states.contains(MaterialState.hovered)) {
             return Theme.of(_context).colorScheme.secondary.withOpacity(0.08);
+          }
           return null;
         }),
         cells: [
@@ -423,7 +423,7 @@ class IssueTableSource extends DataTableSource {
               width: 400,
               child: Tooltip(
                 message: issue.summary,
-                padding: EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16.0),
                 textStyle: textStyleInCellsWhile,
                 child: Text(
                   issue.summary,
@@ -523,7 +523,7 @@ class IssueTableSource extends DataTableSource {
 
   @override
   bool get isRowCountApproximate {
-    print("called isRowCountApproximate: " + totalRowCount.toString());
+    print("called isRowCountApproximate: $totalRowCount");
     if (totalRowCount != null) {
       return false;
     }
@@ -534,13 +534,13 @@ class IssueTableSource extends DataTableSource {
   int get rowCount {
     print("called rowCount");
     if (_project == null ||
-        (cachedIssues != null && cachedIssues!.length == 0)) {
+        (cachedIssues != null && cachedIssues!.isEmpty)) {
       print("called project is null or cachedIssues.length == 0 ");
       totalRowCount = 0;
       return 0;
     } else {
       if (totalRowCount != null) {
-        print("called totalRowCount = " + totalRowCount!.toString());
+        print("called totalRowCount = ${totalRowCount!}");
         return totalRowCount!;
       } else {
         print("called totalRowCount = 0");

@@ -4,7 +4,7 @@ import 'package:flutter2_sample/models/milestone_version.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  final normal = '''
+  const normal = '''
 { 
     "id": 3, 
     "projectId": 1, 
@@ -31,7 +31,7 @@ void main() {
     },
   );
 
-  final startDate = '''
+  const startDate = '''
 { 
     "id": 3, 
     "projectId": 1, 
@@ -59,7 +59,7 @@ void main() {
     },
   );
 
-  final releaseDueDate = '''
+  const releaseDueDate = '''
 { 
     "id": 3, 
     "projectId": 1, 

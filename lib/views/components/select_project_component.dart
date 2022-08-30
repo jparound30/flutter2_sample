@@ -7,7 +7,7 @@ import '../../providers/credential_info.dart';
 import '../../providers/selected_project.dart';
 
 class SelectProjectDropdown extends StatefulWidget {
-  SelectProjectDropdown({Key? key}) : super(key: key);
+  const SelectProjectDropdown({Key? key}) : super(key: key);
 
   @override
   _SelectProjectDropdownState createState() => _SelectProjectDropdownState();
@@ -31,11 +31,11 @@ class _SelectProjectDropdownState extends State<SelectProjectDropdown> {
         return snapshot.hasData
             ? Container(
           color: Colors.white,
-          padding: EdgeInsets.symmetric(horizontal: 24),
+          padding: const EdgeInsets.symmetric(horizontal: 24),
           child: DropdownButton<Project>(
-            hint: Text("プロジェクトを選択"),
+            hint: const Text("プロジェクトを選択"),
             value: selectedProject.project,
-            icon: Icon(Icons.arrow_downward),
+            icon: const Icon(Icons.arrow_downward),
             iconSize: 24,
             elevation: 16,
             underline: Container(
@@ -54,7 +54,7 @@ class _SelectProjectDropdownState extends State<SelectProjectDropdown> {
             }).toList(),
           ),
         )
-            : Center(child: CircularProgressIndicator());
+            : const Center(child: CircularProgressIndicator());
       },
     );
   }

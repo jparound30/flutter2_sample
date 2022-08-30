@@ -28,22 +28,22 @@ class EntryScreenState extends State<LaunchScreen> {
   }
 
   _startTransition(Space space) async {
-    final d = new Duration(seconds: 0);
+    const d = Duration(seconds: 0);
 
-    final _transition = () {
+    transition() {
       if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) {
             return HomePage(
-              title: '[' + space.name + ']',
+              title: '[${space.name}]',
             );
           },
         ),
       );
-    };
+    }
 
-    return Timer(d, _transition);
+    return Timer(d, transition);
   }
 
   @override
@@ -57,7 +57,7 @@ class EntryScreenState extends State<LaunchScreen> {
         builder: (context, AsyncSnapshot<Space> snapshot) {
           print(snapshot);
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
             print(snapshot.error);
@@ -65,16 +65,16 @@ class EntryScreenState extends State<LaunchScreen> {
           if (snapshot.hasData) {
             print('SHOW RecentActivity');
             _startTransition(snapshot.data!);
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else {
             print('SHOW LoginPage');
-            return LoginPage();
+            return const LoginPage();
           }
         },
       );
     } else {
       print("NO CREDENTIAL");
-      return LoginPage();
+      return const LoginPage();
     }
   }
 }

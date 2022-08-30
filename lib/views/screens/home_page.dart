@@ -7,7 +7,7 @@ import '../components/recent_activity_component.dart';
 import '../components/select_project_component.dart';
 
 class HomePage extends StatelessWidget {
-  HomePage({Key? key, required this.title}) : super(key: key);
+  const HomePage({Key? key, required this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -37,9 +37,9 @@ class HomePage extends StatelessWidget {
             // Here we take the value from the MyHomePage object that was created by
             // the App.build method, and use it to set our appbar title.
             title: Text(title),
-            actions: [SelectProjectDropdown()],
+            actions: const [SelectProjectDropdown()],
             centerTitle: false,
-            bottom: TabBar(
+            bottom: const TabBar(
               tabs: [
                 Tab(
                   text: "最近の更新",
@@ -51,9 +51,9 @@ class HomePage extends StatelessWidget {
             ),
           ),
           body: TabBarView(
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             children: [
-              RecentActivityList(),
+              const RecentActivityList(),
               IssueList(),
             ],
           ),

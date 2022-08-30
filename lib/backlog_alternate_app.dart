@@ -11,7 +11,7 @@ class BacklogAlternateApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    print("START: " + defaultTargetPlatform.toString());
+    print("START: $defaultTargetPlatform");
     // PaginatedDataTableのヘッダ行部分の背景色を設定
     var dataTableThemeData = ThemeData.dark().dataTableTheme.copyWith(
       headingRowColor: MaterialStateProperty.resolveWith<Color?>(
@@ -22,7 +22,7 @@ class BacklogAlternateApp extends StatelessWidget {
     );
 
     // Naviratorでの遷移時のアニメーションを指定（flutter/packages/flutter/lib/src/material/page_transitions_theme.dart）
-    const Map<TargetPlatform, PageTransitionsBuilder> _defaultBuilders = <TargetPlatform, PageTransitionsBuilder>{
+    const Map<TargetPlatform, PageTransitionsBuilder> defaultBuilders = <TargetPlatform, PageTransitionsBuilder>{
       TargetPlatform.android: CupertinoPageTransitionsBuilder(),
       TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
       TargetPlatform.linux: CupertinoPageTransitionsBuilder(),
@@ -47,7 +47,7 @@ class BacklogAlternateApp extends StatelessWidget {
             // textTheme: GoogleFonts.mPlus1pTextTheme(),
             textTheme: GoogleFonts.notoSansTextTheme(),
             dataTableTheme: dataTableThemeData,
-            pageTransitionsTheme: PageTransitionsTheme(builders: _defaultBuilders)
+            pageTransitionsTheme: const PageTransitionsTheme(builders: defaultBuilders)
         ),
         home: LaunchScreen(),
         debugShowCheckedModeBanner: false,

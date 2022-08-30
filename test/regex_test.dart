@@ -2,11 +2,11 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('row', () {
-    final tableRowExp = new RegExp(r'^\|.*\|h?');
+    final tableRowExp = RegExp(r'^\|.*\|h?');
 
-    final ng1 = "aaaaa";
-    final ok1 = "| ホスト名 | IPアドレス   |     備考      |";
-    final ok2 = "| ホスト名 | IPアドレス   |     備考      |h";
+    const ng1 = "aaaaa";
+    const ok1 = "| ホスト名 | IPアドレス   |     備考      |";
+    const ok2 = "| ホスト名 | IPアドレス   |     備考      |h";
 
     expect(tableRowExp.hasMatch(ng1), false);
     expect(tableRowExp.hasMatch(ok1), true);
@@ -14,12 +14,12 @@ void main() {
   });
 
   test('image', () {
-    final imageExp = new RegExp(r'#image\((?<name>[^()]+?)\)');
+    final imageExp = RegExp(r'#image\((?<name>[^()]+?)\)');
 
     // final ng1 = "aaaaa";
-    final ok1 =
+    const ok1 =
         "この課題の問題点#image(スクリーンショット 2021-03-26 19.30.01.png) ppppptruyvjygjytvkjhgouigliyglygljhgjkhbljhjhbljhbljhblkjh;kjhkjhkljh";
-    final ok2 =
+    const ok2 =
         "この課題の問題点#image(data1.png) ppppptruyvjygjytvkjhgouigliyglygljhgjkhbljhjhbljhbljhblkjh;#image(data2.png)kjhkjhkljh";
     // final ok2 = "| ホスト名 | IPアドレス   |     備考      |h";
 

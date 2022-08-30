@@ -15,13 +15,13 @@ class MockHttpClient extends Mock implements HttpClient {
 
   @override
   Future<HttpClientRequest> getUrl(Uri url) {
-    return Future.value(this.request);
+    return Future.value(request);
   }
 }
 
 class MockHttpClientRequest extends Mock implements HttpClientRequest {
-  HttpHeaders _headers;
-  HttpClientResponse _response;
+  final HttpHeaders _headers;
+  final HttpClientResponse _response;
 
   MockHttpClientRequest(HttpHeaders headers, HttpClientResponse response)
       : _headers = headers,
@@ -46,13 +46,14 @@ class MockHttpClientResponse extends Mock implements HttpClientResponse {
   int get statusCode => HttpStatus.ok;
 
   @override
-  StreamSubscription<List<int>> listen(void onData(List<int> event)?,
-      {Function? onError, void onDone()?, bool? cancelOnError}) {
+  StreamSubscription<List<int>> listen(void Function(List<int> event)? onData,
+      {Function? onError, void Function()? onDone, bool? cancelOnError}) {
     return Stream<List<int>>.fromIterable(<List<int>>[_transparentImage])
         .listen(onData,
             onDone: onDone, onError: onError, cancelOnError: cancelOnError);
   }
 
+  @override
   HttpClientResponseCompressionState get compressionState =>
       HttpClientResponseCompressionState.notCompressed;
 }
@@ -71,7 +72,7 @@ HttpClient _createMockImageHttpClient(SecurityContext? _) {
   return client;
 }
 
-const List<int> _transparentImage = const <int>[
+const List<int> _transparentImage = <int>[
   0x89,
   0x50,
   0x4E,
@@ -140,7 +141,7 @@ const List<int> _transparentImage = const <int>[
 
 void main() {
   MaterialApp _buildAppWith(
-      RichText func(BuildContext context, TextStyle baseStyle, MdElement el),
+      RichText Function(BuildContext context, TextStyle baseStyle, MdElement el) func,
       String content,
       {ThemeData? theme,
       double textScaleFactor = 1.0}) {
@@ -152,7 +153,7 @@ void main() {
               CredentialInfo(space: "example.com", apiKey: "APIKEYYYYYY"),
           child: Builder(
             builder: (BuildContext context) {
-              final baseStyle = Theme.of(context).textTheme.bodyText2!;
+              final baseStyle = Theme.of(context).textTheme.bodyMedium!;
               return MediaQuery(
                 data: MediaQuery.of(context)
                     .copyWith(textScaleFactor: textScaleFactor),
@@ -165,7 +166,7 @@ void main() {
     );
   }
 
-  final image = '''
+  const image = '''
 #image(data1.png)
 ''';
   testWidgets('添付ファイル画像の表示', (WidgetTester tester) async {
@@ -187,7 +188,7 @@ void main() {
     }, createHttpClient: _createMockImageHttpClient);
   });
 
-  final image2 = '''
+  const image2 = '''
 #image(data1.png)
 
 #image(data2.png)
@@ -211,7 +212,7 @@ void main() {
     }, createHttpClient: _createMockImageHttpClient);
   });
 
-  final image3 = '''
+  const image3 = '''
 #image(data1.png)
 
 あいだに ** #image(data2.png) ** 装飾

@@ -7,7 +7,7 @@ import '../../providers/credential_info.dart';
 import 'home_page.dart';
 
 class LoginPage extends StatelessWidget {
-  LoginPage({Key? key}) : super(key: key);
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +21,13 @@ class LoginPage extends StatelessWidget {
       body: Center(
         child: Container(
           width: width,
-          padding: EdgeInsets.symmetric(vertical: 48.0),
+          padding: const EdgeInsets.symmetric(vertical: 48.0),
           child: Column(
             children: [
-              Spacer(),
-              Text("Welcome to Backlog Alternate with Flutter2"),
+              const Spacer(),
+              const Text("Welcome to Backlog Alternate with Flutter2"),
               LoginForm(),
-              Spacer(),
+              const Spacer(),
             ],
           ),
         ),
@@ -61,14 +61,14 @@ class LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     var spaceField = TextFormField(
       controller: _userController,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         labelText: "スペース",
         helperText: 'Backlogのスペース名を入力してください 例) example.backlog.jp',
         enabled: true,
       ),
-      autofillHints: [AutofillHints.username],
+      autofillHints: const [AutofillHints.username],
       obscureText: false,
-      onSaved: (value) => print("スペース: " + value!),
+      onSaved: (value) => print("スペース: ${value!}"),
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -80,14 +80,14 @@ class LoginFormState extends State<LoginForm> {
 
     final apiKeyField = TextFormField(
       controller: _passwordController,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         labelText: "APIキー",
         helperText: 'Backlogの個人設定で払い出したAPIキーを入力してください',
         enabled: true,
       ),
-      autofillHints: [AutofillHints.password],
+      autofillHints: const [AutofillHints.password],
       obscureText: true,
-      onSaved: (value) => print("APIキー: " + value!),
+      onSaved: (value) => print("APIキー: ${value!}"),
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -123,7 +123,7 @@ class LoginFormState extends State<LoginForm> {
                   }
                   final pass = _passwordController.value.text;
                   final user = _userController.value.text;
-                  print("Login pressed:" + user + ":" + pass);
+                  print("Login pressed:$user:$pass");
                   final backlogApiClient = BacklogApiClient();
                   try {
                     final space =
@@ -137,7 +137,7 @@ class LoginFormState extends State<LoginForm> {
                       MaterialPageRoute(
                         builder: (context) {
                           return HomePage(
-                            title: '[' + space.name + ']',
+                            title: '[${space.name}]',
                           );
                         },
                       ),
@@ -147,7 +147,7 @@ class LoginFormState extends State<LoginForm> {
                     print(e);
                   }
                 },
-                child: Text("ログイン"),
+                child: const Text("ログイン"),
               ),
             ),
           ],

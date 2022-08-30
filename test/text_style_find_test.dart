@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  final colorStart = '''
+  const colorStart = '''
 これは&color( #ffffff,  #8abe00  ) { 背景色 }です。これは&color(#ffffff, #8abe00) { 背景色 }です。&color(#ffffff) { 背景色 }
 ''';
   test(
@@ -12,19 +12,19 @@ void main() {
 
       expect(colorStartExp.hasMatch(colorStart), true);
       var allMatches = colorStartExp.allMatches(colorStart);
-      allMatches.forEach((element) {
-        print("start:" + element.start.toString());
-        print("end  :" + element.end.toString());
+      for (var element in allMatches) {
+        print("start:${element.start}");
+        print("end  :${element.end}");
         print(element.groupCount);
         print(element.group(0)); // 全部
         print(element.namedGroup("text"));
         print(element.namedGroup("bgcolor"));
         print(element.namedGroup("content"));
-      });
+      }
     },
   );
 
-  final colorEnd = '''
+  const colorEnd = '''
 これは&color( #ffffff,  #8abe00  ) { 背景色 }です。これは&color(#ffffff, #8abe00) { 背景色 }です。
 ''';
   test(
@@ -34,16 +34,16 @@ void main() {
 
       expect(colorStartExp.hasMatch(colorEnd), true);
       var allMatches = colorStartExp.allMatches(colorEnd);
-      allMatches.forEach((element) {
-        print("start:" + element.start.toString());
-        print("end  :" + element.end.toString());
+      for (var element in allMatches) {
+        print("start:${element.start}");
+        print("end  :${element.end}");
         print(element.groupCount);
         print(element.group(0)); // 全部
-      });
+      }
     },
   );
 
-  final boldStart = '''
+  const boldStart = '''
 これは''太字''です。 これは''太'字''です。
 ''';
   test(
@@ -53,17 +53,17 @@ void main() {
 
       expect(boldStartExp.hasMatch(boldStart), true);
       var allMatches = boldStartExp.allMatches(boldStart);
-      allMatches.forEach((element) {
-        print("start:" + element.start.toString());
-        print("end  :" + element.end.toString());
+      for (var element in allMatches) {
+        print("start:${element.start}");
+        print("end  :${element.end}");
         print(element.groupCount);
         print(element.group(0)); // 全部
         print(element.namedGroup("content"));
-      });
+      }
     },
   );
 
-  final boldEnd = '''
+  const boldEnd = '''
 これは''太字''です。 これは''太字''です。
 ''';
   test(
@@ -73,15 +73,15 @@ void main() {
 
       expect(boldEndExp.hasMatch(boldEnd), true);
       var allMatches = boldEndExp.allMatches(boldEnd);
-      allMatches.forEach((element) {
-        print("start:" + element.start.toString());
-        print("end  :" + element.end.toString());
+      for (var element in allMatches) {
+        print("start:${element.start}");
+        print("end  :${element.end}");
         print(element.groupCount);
         print(element.group(0)); // 全部
-      });
+      }
     },
   );
-  final italicStart = """
+  const italicStart = """
 これは''太字''です。 これは''太字''です。 これは'''斜体文字'''です。 これは'''斜体文字'''です。
 """;
   test(
@@ -91,17 +91,17 @@ void main() {
 
       expect(italicStartExp.hasMatch(italicStart), true);
       var allMatches = italicStartExp.allMatches(italicStart);
-      allMatches.forEach((element) {
-        print("start:" + element.start.toString());
-        print("end  :" + element.end.toString());
+      for (var element in allMatches) {
+        print("start:${element.start}");
+        print("end  :${element.end}");
         print(element.groupCount);
         print(element.group(0)); // 全部
         print(element.namedGroup("content"));
-      });
+      }
     },
   );
 
-  final italicEnd = """
+  const italicEnd = """
 これは''太字''です。 これは''太字''です。 これは'''斜体文字'''です。 これは'''斜体文字'''です。
 """;
   test(
@@ -111,16 +111,16 @@ void main() {
 
       expect(italicEndExp.hasMatch(italicEnd), true);
       var allMatches = italicEndExp.allMatches(italicEnd);
-      allMatches.forEach((element) {
-        print("start:" + element.start.toString());
-        print("end  :" + element.end.toString());
+      for (var element in allMatches) {
+        print("start:${element.start}");
+        print("end  :${element.end}");
         print(element.groupCount);
         print(element.group(0)); // 全部
-      });
+      }
     },
   );
 
-  final lineThroughStart = '''
+  const lineThroughStart = '''
 これは%%取り消し%%です。 これは%%取り消し%%です。
 ''';
   test(
@@ -130,17 +130,17 @@ void main() {
 
       expect(lineThroughStartExp.hasMatch(lineThroughStart), true);
       var allMatches = lineThroughStartExp.allMatches(lineThroughStart);
-      allMatches.forEach((element) {
-        print("start:" + element.start.toString());
-        print("end  :" + element.end.toString());
+      for (var element in allMatches) {
+        print("start:${element.start}");
+        print("end  :${element.end}");
         print(element.groupCount);
         print(element.group(0)); // 全部
         print(element.namedGroup("content"));
-      });
+      }
     },
   );
 
-  final lineThroughEnd = '''
+  const lineThroughEnd = '''
 これは%%取り消し%%です。 これは%%取り消し%%です。
 ''';
   test(
@@ -150,12 +150,12 @@ void main() {
 
       expect(lineThroughEndExp.hasMatch(lineThroughEnd), true);
       var allMatches = lineThroughEndExp.allMatches(lineThroughEnd);
-      allMatches.forEach((element) {
-        print("start:" + element.start.toString());
-        print("end  :" + element.end.toString());
+      for (var element in allMatches) {
+        print("start:${element.start}");
+        print("end  :${element.end}");
         print(element.groupCount);
         print(element.group(0)); // 全部
-      });
+      }
     },
   );
 }

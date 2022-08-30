@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  final title = '''
+  const title = '''
 *見出し1
 ** 見出し2
 ***  見出し3
@@ -27,7 +27,7 @@ void main() {
     },
   );
 
-  final unorderedList = '''
+  const unorderedList = '''
 - 箇条書き1
 - 箇条書き2
 -- 箇条書き2-1
@@ -59,7 +59,7 @@ void main() {
     },
   );
 
-  final orderedList = '''
+  const orderedList = '''
 + 箇条書き1
 + 箇条書き2
 + 箇条書き3
@@ -94,7 +94,7 @@ void main() {
     },
   );
 
-  final checkList = '''
+  const checkList = '''
 - [ ] Item-A
 - [x] Item-B
 -- [ ] Item-B-1
@@ -124,7 +124,7 @@ void main() {
     },
   );
 
-  final orderedCheckList = '''
+  const orderedCheckList = '''
 + [ ] Item-A
 + [x] Item-B
 ++ [ ] Item-B-1
@@ -158,7 +158,7 @@ void main() {
     },
   );
 
-  final quote1 = '''
+  const quote1 = '''
 
 >引用した内容です。
 >引用した内容です。
@@ -175,7 +175,7 @@ void main() {
     },
   );
 
-  final quote2 = '''
+  const quote2 = '''
 
 >引用した内容です。
 >引用した内容です。
@@ -200,7 +200,7 @@ void main() {
     },
   );
 
-  final quote3 = '''
+  const quote3 = '''
 
 >引用した内容です。
 {quote}
@@ -226,7 +226,7 @@ void main() {
     },
   );
 
-  final codeBlock = '''
+  const codeBlock = '''
 AAAAAA
 {code:java}
     package helloworld;
@@ -240,7 +240,7 @@ CCCCCC''';
   test(
     'コードブロック1',
     () {
-      final code = '''
+      const code = '''
     package helloworld;
     public class Hello {
         public String sayHello {
@@ -260,7 +260,7 @@ CCCCCC''';
   );
 
   MaterialApp _buildAppWith(
-      RichText func(BuildContext context, TextStyle baseStyle, MdElement el),
+      RichText Function(BuildContext context, TextStyle baseStyle, MdElement el) func,
       String content,
       {ThemeData? theme,
       double textScaleFactor = 1.0}) {
@@ -272,7 +272,7 @@ CCCCCC''';
               CredentialInfo(space: "example.com", apiKey: "APIKEYYYYYY"),
           child: Builder(
             builder: (BuildContext context) {
-              final baseStyle = Theme.of(context).textTheme.bodyText2!;
+              final baseStyle = Theme.of(context).textTheme.bodyMedium!;
               return MediaQuery(
                 data: MediaQuery.of(context)
                     .copyWith(textScaleFactor: textScaleFactor),
@@ -285,7 +285,7 @@ CCCCCC''';
     );
   }
 
-  final bold1 = """
+  const bold1 = """
 これは''太字''です。""";
   testWidgets(
     '太字',
@@ -298,26 +298,26 @@ CCCCCC''';
       expect((richText.text as TextSpan).text, null);
       expect(
           richText.text
-              .getSpanForPosition(TextPosition(offset: 0))!
+              .getSpanForPosition(const TextPosition(offset: 0))!
               .toPlainText(
                   includeSemanticsLabels: false, includePlaceholders: false),
           "これは");
       expect(
           richText.text
-              .getSpanForPosition(TextPosition(offset: 3))!
+              .getSpanForPosition(const TextPosition(offset: 3))!
               .toPlainText(
                   includeSemanticsLabels: false, includePlaceholders: false),
           "太字");
       expect(
           richText.text
-              .getSpanForPosition(TextPosition(offset: 5))!
+              .getSpanForPosition(const TextPosition(offset: 5))!
               .toPlainText(
                   includeSemanticsLabels: false, includePlaceholders: false),
           "です。");
     },
   );
 
-  final italic1 = """
+  const italic1 = """
 これは'''斜体文字'''です。""";
   testWidgets(
     '斜体文字',
@@ -330,26 +330,26 @@ CCCCCC''';
       expect((richText.text as TextSpan).text, null);
       expect(
           richText.text
-              .getSpanForPosition(TextPosition(offset: 0))!
+              .getSpanForPosition(const TextPosition(offset: 0))!
               .toPlainText(
                   includeSemanticsLabels: false, includePlaceholders: false),
           "これは");
       expect(
           richText.text
-              .getSpanForPosition(TextPosition(offset: 3))!
+              .getSpanForPosition(const TextPosition(offset: 3))!
               .toPlainText(
                   includeSemanticsLabels: false, includePlaceholders: false),
           "斜体文字");
       expect(
           richText.text
-              .getSpanForPosition(TextPosition(offset: 7))!
+              .getSpanForPosition(const TextPosition(offset: 7))!
               .toPlainText(
                   includeSemanticsLabels: false, includePlaceholders: false),
           "です。");
     },
   );
 
-  final lineThrough = """
+  const lineThrough = """
 これは%%打ち消し%%です。""";
   testWidgets(
     '打ち消し',
@@ -362,26 +362,26 @@ CCCCCC''';
       expect((richText.text as TextSpan).text, null);
       expect(
           richText.text
-              .getSpanForPosition(TextPosition(offset: 0))!
+              .getSpanForPosition(const TextPosition(offset: 0))!
               .toPlainText(
                   includeSemanticsLabels: false, includePlaceholders: false),
           "これは");
       expect(
           richText.text
-              .getSpanForPosition(TextPosition(offset: 3))!
+              .getSpanForPosition(const TextPosition(offset: 3))!
               .toPlainText(
                   includeSemanticsLabels: false, includePlaceholders: false),
           "打ち消し");
       expect(
           richText.text
-              .getSpanForPosition(TextPosition(offset: 7))!
+              .getSpanForPosition(const TextPosition(offset: 7))!
               .toPlainText(
                   includeSemanticsLabels: false, includePlaceholders: false),
           "です。");
     },
   );
 
-  final color1 = """
+  const color1 = """
 これは&color(#FF0000) { 赤 }です。""";
   testWidgets(
     '色',
@@ -394,26 +394,26 @@ CCCCCC''';
       expect((richText.text as TextSpan).text, null);
       expect(
           richText.text
-              .getSpanForPosition(TextPosition(offset: 0))!
+              .getSpanForPosition(const TextPosition(offset: 0))!
               .toPlainText(
                   includeSemanticsLabels: false, includePlaceholders: false),
           "これは");
       expect(
           richText.text
-              .getSpanForPosition(TextPosition(offset: 3))!
+              .getSpanForPosition(const TextPosition(offset: 3))!
               .toPlainText(
                   includeSemanticsLabels: false, includePlaceholders: false),
           " 赤 ");
       expect(
           richText.text
-              .getSpanForPosition(TextPosition(offset: 6))!
+              .getSpanForPosition(const TextPosition(offset: 6))!
               .toPlainText(
                   includeSemanticsLabels: false, includePlaceholders: false),
           "です。");
     },
   );
 
-  final bgColor1 = """
+  const bgColor1 = """
 これは&color(#ffffff, #8abe00) { 背景色 }です。""";
   testWidgets(
     '背景色',
@@ -426,26 +426,26 @@ CCCCCC''';
       expect((richText.text as TextSpan).text, null);
       expect(
           richText.text
-              .getSpanForPosition(TextPosition(offset: 0))!
+              .getSpanForPosition(const TextPosition(offset: 0))!
               .toPlainText(
                   includeSemanticsLabels: false, includePlaceholders: false),
           "これは");
       expect(
           richText.text
-              .getSpanForPosition(TextPosition(offset: 3))!
+              .getSpanForPosition(const TextPosition(offset: 3))!
               .toPlainText(
                   includeSemanticsLabels: false, includePlaceholders: false),
           " 背景色 ");
       expect(
           richText.text
-              .getSpanForPosition(TextPosition(offset: 8))!
+              .getSpanForPosition(const TextPosition(offset: 8))!
               .toPlainText(
                   includeSemanticsLabels: false, includePlaceholders: false),
           "です。");
     },
   );
 
-  final table1 = '''
+  const table1 = '''
 | ホスト名 | IPアドレス   |     備考      |h
 |~ sun        | 192.168.100.1   |                  |
 |~ earth     | 192.168.100.2   |                  |
